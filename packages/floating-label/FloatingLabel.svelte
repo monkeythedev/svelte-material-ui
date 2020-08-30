@@ -21,7 +21,7 @@
   import {MDCFloatingLabel} from '@material/floating-label';
   import {onMount, onDestroy, getContext} from 'svelte';
   import {get_current_component} from 'svelte/internal';
-  import {forwardEventsBuilder} from '@smui/common/forwardEvents.js';
+  import {forwardEventsBuilder} from '@smui/common/forwardEvents';
   import {exclude} from '@smui/common/exclude.js';
   import {useActions} from '@smui/common/useActions.js';
 

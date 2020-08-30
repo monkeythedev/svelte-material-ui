@@ -6,7 +6,7 @@
 
 <script>
   import {get_current_component} from 'svelte/internal';
-  import {forwardEventsBuilder} from './forwardEvents.js';
+  import {forwardEventsBuilder} from './forwardEvents';
   import {exclude} from './exclude.js';
   import {useActions} from './useActions.js';
 

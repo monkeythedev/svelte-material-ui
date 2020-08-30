@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "target": "ES2019",
+    "lib": ["ES2019", "dom", "WebWorker"],
+    "types": ["svelte", "node"],
+    "checkJs": true,
+    "allowJs": true,
+    "strictNullChecks": false,
+    "allowSyntheticDefaultImports": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "keyofStringsOnly": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true
+  },
+  "include": ["src"],
+  "exclude": ["__sapper__", "src/**/*.scss.d.ts"]
+}

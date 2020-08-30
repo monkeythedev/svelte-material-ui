@@ -13,7 +13,8 @@
   ],
   "scripts": {
     "prepare": "echo \"$(npx glob '**/*' | sed 's/^/-I /' | paste -s -d ' ' -) --no-source-map _style.scss bare.css\" | xargs sass",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "tsc": "tsc"
   },
   "publishConfig": {
     "access": "public"
@@ -28,7 +29,7 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
-    "@material/ripple": "^3.2.0"
+    "@material/ripple": "^7.0.0"
   },
   "devDependencies": {
     "glob-cmd": "0.0.7",

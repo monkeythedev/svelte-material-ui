@@ -13,7 +13,8 @@
   ],
   "scripts": {
     "prepare": "echo \"$(npx glob '**/*' | sed 's/^/-I /' | paste -s -d ' ' -) --no-source-map _style.scss bare.css\" | xargs sass",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "tsc": "tsc"
   },
   "publishConfig": {
     "access": "public"
@@ -27,10 +28,13 @@
     "url": "https://github.com/hperrin/svelte-material-ui/issues"
   },
   "license": "Apache-2.0",
+  "files": [
+    "dist"
+  ],
   "dependencies": {
-    "@material/button": "^3.2.0",
-    "@material/elevation": "^3.1.0",
-    "@material/feature-targeting": "^3.1.0",
+    "@material/button": "^7.0.0",
+    "@material/elevation": "^7.0.0",
+    "@material/feature-targeting": "^7.0.0",
     "@smui/common": "^1.0.0",
     "@smui/ripple": "^1.0.0"
   },

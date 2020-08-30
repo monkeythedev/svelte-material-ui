@@ -91,7 +91,7 @@
   import {MDCTextField} from '@material/textfield';
   import {onMount, onDestroy, getContext} from 'svelte';
   import {get_current_component} from 'svelte/internal';
-  import {forwardEventsBuilder} from '@smui/common/forwardEvents.js';
+  import {forwardEventsBuilder} from '@smui/common/forwardEvents';
   import {exclude} from '@smui/common/exclude.js';
   import {prefixFilter} from '@smui/common/prefixFilter.js';
   import {useActions} from '@smui/common/useActions.js';

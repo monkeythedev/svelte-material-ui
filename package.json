@@ -13,7 +13,8 @@
   ],
   "scripts": {
     "pages": "git checkout site -- && git rebase master && cd site && npm install && npm run export && cd .. && git add . && git commit -m 'chore: update built files' && git push origin $(git subtree split --prefix site/dist site):gh-pages --force && git reset --hard HEAD^ && git push --force origin site && git checkout master",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "tsc": "tsc"
   },
   "commitlint": {
     "extends": [
@@ -68,7 +69,9 @@
     "@commitlint/config-conventional": "^9.1.1",
     "husky": "^4.2.5",
     "lerna": "^3.22.1",
-    "svelte": "^3.24.0"
+    "svelte": "^3.24.1",
+    "svelte-preprocess": "^4.1.2",
+    "typescript": "^4.0.2"
   },
   "husky": {
     "hooks": {
