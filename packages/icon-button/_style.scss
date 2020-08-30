@@ -1,2 +1,9 @@
-@import "@material/icon-button/mdc-icon-button";
-@import "@smui/ripple/style";
+@use "@material/icon-button";
+@use "@smui/ripple/style";
+@use "@material/feature-targeting/functions" as feature-targeting-functions;
+
+:root {
+  $query: feature-targeting-functions.all()
+}
+
+@include icon-button.core-styles();

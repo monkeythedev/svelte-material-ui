@@ -1,0 +1,11 @@
+@use "@material/theme" with (
+  // Svelte Colors!
+  $primary: #ff3e00,
+  $secondary: #676778,
+  // Other Svelte color: #40b3ff
+
+  $background: #fff,
+  $surface: #fff,
+
+  $error: #b71c1c
+);

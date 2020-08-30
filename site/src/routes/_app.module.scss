@@ -1,0 +1,57 @@
+@use "@material/top-app-bar";
+@use "@material/elevation";
+// Main Top App Bar styling.
+@use "@smui/top-app-bar" as smui-top-app-bar;
+
+.mdc-top-app-bar.demo-top-app-bar {
+  // Color the top bar with "surface" colors.
+  @include top-app-bar.fill-color-accessible(surface);
+  @include top-app-bar.icon-ink-color(on-surface);
+  // Give it a shadow.
+  @include elevation.elevation(4);
+  // Position it above the drawer.
+  z-index: 7;
+}
+
+
+
+.demoDrawer,
+.demoMainContent {
+  overflow: auto;
+  height: 100%;
+}
+
+.demoDrawer.demoDrawerAdjust {
+  padding-bottom: top-app-bar.$row-height;
+}
+
+.demoAppContent {
+  flex: auto;
+  position: relative;
+  width: 0;
+  flex-grow: 1;
+}
+
+.demoMainContent {
+  overflow: auto;
+  display: flex;
+
+  section {
+    padding: 16px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  section:after {
+    height: 32px;
+    display: block;
+    content: " ";
+  }
+}
+
+.status {
+  max-width: 100%;
+  font-size: 0.9em;
+  word-break: break-word;
+  white-space: normal;
+}

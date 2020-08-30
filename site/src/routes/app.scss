@@ -1,0 +1,27 @@
+//
+// Demo App Styles
+//
+
+// Import the typography styles.
+//@use "demo/typography.scss";
+
+// We need the theming variables for the following styles.
+@use "smui-theme";
+// This adds classes like "mdc-theme--primary-bg".
+@use "@material/theme/mdc-theme";
+
+html {
+  height: 100vh;
+  width: 100vw;
+  position: fixed;
+}
+
+body, app {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+section > div {
+  margin: 1em 0 0.6em;
+}

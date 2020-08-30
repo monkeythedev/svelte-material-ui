@@ -1,7 +1,7 @@
 import Tab from './Tab.svelte';
 
-import Label from '@smui/common/Label.svelte';
-import Icon from '@smui/common/Icon.svelte';
+import Label from '@smui/common/dom/Label.svelte';
+import Icon from '@smui/common/dom/Icon.svelte';
 
 export default Tab;
 

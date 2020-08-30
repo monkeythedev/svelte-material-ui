@@ -33,7 +33,7 @@
 
 <script>
   import {tick} from 'svelte';
-  import Label from '@smui/common/Label.svelte';
+  import Label from '@smui/common/dom/Label.svelte';
   import Button from '@smui/button/Button.svelte';
   import IconButton from '@smui/icon-button/IconButton.svelte';
   import {prefixFilter} from '@smui/common/prefixFilter.js';

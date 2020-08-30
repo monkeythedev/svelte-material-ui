@@ -1,0 +1,4 @@
+@use "@material/top-app-bar/mdc-top-app-bar";
+@use "./mixins";
+
+@include mixins.smui-top-app-bar-core-styles;

@@ -1,0 +1,83 @@
+$breakpoint--up--lg: 1200px;
+$breakpoint--down--lg: 1199px;
+$breakpoint--up--md: 960px;
+$breakpoint--down--md: 959px;
+$breakpoint--up--sm: 600px;
+$breakpoint--down--sm: 599px;
+
+@function __breakpoint-to-value-start($breakpoint: "mobile") {
+  @if $breakpoint == "mobile" {
+    @return 0px;
+  } @else if "tablet" {
+    @return $breakpoint--up--sm;
+  } @else if "desktop" {
+    @return $breakpoint--up--md;
+  } @else if "big-desktop" {
+    @return $breakpoint--up--lg;
+  } @else {
+    @error "Unknown breakpoint #{$breakpoint}.";
+  }
+}
+
+@function __breakpoint-to-value-end($breakpoint) {
+  @if $breakpoint == "mobile" {
+    @return $breakpoint--down--sm;
+  } @else if "tablet" {
+    @return $breakpoint--down--md;
+  } @else if "desktop" {
+    @return $breakpoint--down--lg;
+  } @else if "big-desktop" {
+    @return $breakpoint--down--lg;
+  } @else {
+    @error "Unknown breakpoint #{$direction}.";
+  }
+}
+
+/**
+ *  Accepted breakpoints: "mobile" (<600px), "tablet" (<960px), "desktop" (<1200px), "big-desktop" (>1200px);
+ */
+@mixin in($from, $to: null) {
+  @if not $to {
+    $to: $from;
+  }
+
+  $from-px: __breakpoint-to-value-start($from);
+  $to-px: __breakpoint-to-value-end($from);
+  
+  $media-query: null;
+  @if $from-px and $to-px {
+    @media (min-width: #{$from-px}) and (max-width: #{$to-px}) {
+      @content;
+    }
+  } @else if $to-px {
+    @media (max-width: #{$to-px}) {
+      @content;
+    }
+  } @else {
+    @media (min-width: #{$from-px}) {
+      @content;
+    }
+  }
+}
+
+/**
+ *  Accepted breakpoints: "mobile" (>600px), "tablet" (>960px), "desktop" (>1200px), "big-desktop" (>1200px);
+ */
+@mixin from($from) {
+  $from-px: __breakpoint-to-value-start($from);
+
+  @media (min-width: #{$from-px}) {
+    @content;
+  }
+}
+
+/**
+ *  Accepted breakpoints: "mobile" (<600px), "tablet" (<960px), "desktop" (<1200px), "big-desktop" (>1200px);
+ */
+@mixin to($to) {
+  $to-px: __breakpoint-to-value-end($to);
+
+  @media (max-width: #{$to-px}) {
+    @content;
+  }
+}
