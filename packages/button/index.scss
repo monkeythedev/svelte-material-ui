@@ -1,6 +1,1 @@
 @use "./style";
-@use "@material/feature-targeting/functions" as feature-targeting-functions;
-
-:root {
-  $query: feature-targeting-functions.all()
-}
