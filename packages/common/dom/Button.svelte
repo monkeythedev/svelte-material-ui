@@ -1,32 +1,31 @@
+<script lang="ts" context="module">
+  export interface ButtonProps {
+    disabled?: boolean;
+  }
+</script>
+
 <script lang="ts">
-  import { forwardAllDOMEvents } from "../forwardEvents";
-  import { Ripple, RippleProps } from "@smui/ripple/bare";
-import { createEventDispatcher } from "svelte";
-  // import { exclude } from "./exclude.js";
-  // import { useActions } from "./useActions.js";
-
-  const dispatcher = createEventDispatcher();
-
+  // Base
+  import { DOMEventsForwarder } from "@smui/common/actions/DOMEventsForwarder";
+  const forwardDOMEvents = DOMEventsForwarder();
   export let dom: HTMLButtonElement = null;
-  let className: string = "";
+  let className = "";
   export { className as class };
   export let style: string = "";
 
-  export let disabled: boolean = null;
+  export let props: ButtonProps = {};
 
+  // Button
+  import { Ripple, RippleProps } from "@smui/ripple/bare";
   export let useRipple: RippleProps = null;
 </script>
 
 <button
+  {...props}
   bind:this={dom}
-  use:forwardAllDOMEvents={dispatcher}
-  class={className}
-  use:Ripple={useRipple}
+  class="{className}"
   {style}
-  {disabled}>
+  use:forwardDOMEvents
+  use:Ripple={useRipple}>
   <slot />
 </button>
-
-<!-- <button bind:this={dom} use:useActions={use} use:forwardAllDOMEvents {...exclude($$props, ['use'])}>
-  <slot />
-</button> -->

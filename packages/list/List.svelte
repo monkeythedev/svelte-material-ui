@@ -7,7 +7,7 @@
   import { useActions } from "@smui/common/useActions.js";
   import Nav from "@smui/common/dom/Nav.svelte";
   import Ul from "@smui/common/dom/Ul.svelte";
-  import { domEventsForwarder } from "@smui/common/events/forwardEvents";
+  import { DOMEventsForwarder } from "@smui/common/events/DOMEventsForwarder";
 
   const forwardEvents = forwardEventsBuilder(get_current_component(), [
     "MDCList:action",
@@ -53,7 +53,7 @@
   let addLayoutListener = getContext("SMUI:addLayoutListener") as any;
   let removeLayoutListener;
 
-  const forwardDomEvents = domEventsForwarder();
+  const forwardDomEvents = DOMEventsForwarder();
 
   let component: typeof Nav | typeof Ul;
   $: component = nav ? Nav : Ul;

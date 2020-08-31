@@ -1,5 +1,5 @@
 import {classAdderBuilder} from '@smui/common/classAdderBuilder';
-import H2 from '@smui/common/H2.svelte';
+import H2 from '@smui/common/dom/H2.svelte';
 
 export default classAdderBuilder({
   class: 'mdc-dialog__title',

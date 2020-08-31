@@ -1,5 +1,5 @@
 import {classAdderBuilder} from '@smui/common/classAdderBuilder';
-import H5 from '@smui/common/H5.svelte';
+import H5 from '@smui/common/dom/H5.svelte';
 
 export default classAdderBuilder({
   class: 'smui-paper__title',

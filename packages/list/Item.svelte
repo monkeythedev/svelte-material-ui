@@ -18,10 +18,10 @@
   import Li from "@smui/common/dom/Li.svelte";
   import A from "@smui/common/dom/A.svelte";
   import Span from "@smui/common/dom/Span.svelte";
-  import { domEventsForwarder } from "@smui/common/events/forwardEvents";
+  import { DOMEventsForwarder } from "@smui/common/events/DOMEventsForwarder";
 
   const dispatch = createEventDispatcher();
-  const forwardDOMEvents = domEventsForwarder();
+  const forwardDOMEvents = DOMEventsForwarder();
   let checked = false;
 
   // export let use = [];

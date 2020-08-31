@@ -1,9 +1,9 @@
 <script lang="ts">
   import A from "@smui/common/dom/A.svelte";
   import Span from "@smui/common/dom/Span.svelte";
-  import { domEventsForwarder } from "@smui/common/events/forwardEvents";
+  import { DOMEventsForwarder } from "@smui/common/events/DOMEventsForwarder";
 
-  const forwardDOMEvents = domEventsForwarder();
+  const forwardDOMEvents = DOMEventsForwarder();
 
   export let dom: HTMLAnchorElement | HTMLSpanElement = null;
   export let href = null;

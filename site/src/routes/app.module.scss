@@ -3,7 +3,7 @@
 // Main Top App Bar styling.
 @use "@smui/top-app-bar" as smui-top-app-bar;
 
-.mdc-top-app-bar.demo-top-app-bar {
+.demoTopAppBar {
   // Color the top bar with "surface" colors.
   @include top-app-bar.fill-color-accessible(surface);
   @include top-app-bar.icon-ink-color(on-surface);
@@ -12,8 +12,6 @@
   // Position it above the drawer.
   z-index: 7;
 }
-
-
 
 .demoDrawer,
 .demoMainContent {

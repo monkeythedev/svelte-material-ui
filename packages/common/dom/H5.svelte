@@ -9,11 +9,11 @@
   export let props: any = {};
 </script>
 
-<span
+<h5
   bind:this={dom}
   class="{className}"
   {style}
   use:forwardDOMEvents
   {...props}>
   <slot />
-</span>
+</h5>

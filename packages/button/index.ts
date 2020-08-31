@@ -1,2 +1,2 @@
-import './index.scss';
-export * from './bare';
+import './src/index.scss';
+export * from './src';

@@ -1,19 +1,24 @@
 <script lang="ts">
-  // Base component
+  // Base
   import { DOMEventsForwarder } from "@smui/common/actions/DOMEventsForwarder";
   const forwardDOMEvents = DOMEventsForwarder();
-  export let dom: HTMLHeadingElement = null;
+  export let dom: HTMLDivElement = null;
   let className = "";
   export { className as class };
   export let style: string = "";
+
   export let props: any = {};
+
+  // Group
+  export let variant = "";
 </script>
 
-<span
+<div
+  {...props}
   bind:this={dom}
-  class="{className}"
+  class="smui-button__group {className}
+  {variant === 'raised' ? 'smui-button__group--raised' : ''}"
   {style}
-  use:forwardDOMEvents
-  {...props}>
+  use:forwardDOMEvents>
   <slot />
-</span>
+</div>

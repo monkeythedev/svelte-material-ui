@@ -18,7 +18,7 @@ npm install --save-dev @smui/drawer
 <script>
   import Drawer, {AppContent, Content, Header, Title, Subtitle, Scrim} from '@smui/drawer';
   import List, {Item, Text, Separator, Subheader} from '@smui/list';
-  import H6 from '@smui/common/H6.svelte';
+  import H6 from '@smui/common/dom/H6.svelte';
   import {starred} from './store.js';
 
   let current = 'main';

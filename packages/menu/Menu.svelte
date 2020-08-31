@@ -9,7 +9,7 @@
     Corner,
     CornerBit,
   } from "@smui/menu-surface/MenuSurface.svelte";
-import { domEventsForwarder } from "@smui/common/events/forwardEvents";
+import { DOMEventsForwarder } from "@smui/common/events/DOMEventsForwarder";
 import { MDCMenuDistance } from "@material/menu-surface";
 
   // export let use = [];
@@ -22,7 +22,7 @@ import { MDCMenuDistance } from "@material/menu-surface";
   export let anchorCorner: Corner = null; // Purposely omitted from the exclude call above.
   export let wrapFocus = false;
 
-  const forwardDOMEvents = domEventsForwarder();
+  const forwardDOMEvents = DOMEventsForwarder();
 
   let dom: HTMLDivElement;
   let menu: MDCMenu;

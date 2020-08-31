@@ -14,6 +14,10 @@ const alias = { svelte: path.resolve("node_modules", "svelte"), src: path.resolv
 const extensions = [".ts", ".mjs", ".js", ".json", ".html"];
 const mainFields = ["svelte", "module", "browser", "main"];
 
+const cssOptions = {
+  sourceMap: dev
+}
+
 const sassOptions = {
   includePaths: [path.resolve("./src/styles/smui"), path.resolve("./node_modules")],
   sourceMap: dev
@@ -79,7 +83,10 @@ module.exports = {
           use: [
             "style-loader",
             MiniCssExtractPlugin.loader,
-            "css-loader",
+            {
+              loader: "css-loader",
+              options: cssOptions
+            },
             {
               loader: "sass-loader",
               options: {
@@ -176,7 +183,10 @@ module.exports = {
           use: [
             "style-loader",
             MiniCssExtractPlugin.loader,
-            "css-loader",
+            {
+              loader: "css-loader",
+              options: cssOptions
+            },
             {
               loader: "sass-loader",
               options: {

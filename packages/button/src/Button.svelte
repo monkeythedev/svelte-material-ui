@@ -1,21 +1,24 @@
 <script lang="ts">
+  // Base
+  import { DOMEventsForwarder } from "@smui/common/events/DOMEventsForwarder";
+  const forwardDOMEvents = DOMEventsForwarder();
+  export let dom: HTMLElement = null;
+  let className = "";
+  export { className as class };
+  export let style: string = "";
+
+  export let props: any = {};
+
+  // Button
+  import { A, Button, ButtonProps } from "@smui/common/dom";
   import {
     setContext,
     getContext,
     onMount,
     createEventDispatcher,
   } from "svelte";
-  import { exclude } from "../common/exclude.js";
-  import { useActions } from "../common/useActions.js";
-  import A from "../common/dom/A.svelte";
-  import Button from "../common/dom/Button.svelte";
-  import { RippleProps } from "../ripple/bare";
-  import { domEventsForwarder } from "../common/events/forwardEvents";
+  import { RippleProps } from "@smui/ripple/bare";
 
-  export let dom: HTMLElement = null;
-  export let use = [];
-  let className: string = "";
-  export { className as class };
   export let ripple: boolean = true;
   export let color: "primary" | "secondary" = "primary";
   export let variant: "raised" | "unelevated" | "outlined" = null;
@@ -27,10 +30,7 @@
   export { defaultAction as default };
   export let component = href == null ? Button : A;
   export let disabled: boolean = false;
-  export let style: string = "";
   export let target: string = null;
-
-  const forwardDomEvents = domEventsForwarder();
 
   let context = getContext("SMUI:button:context");
   let rippleClasses = [];
@@ -50,17 +50,18 @@
   setContext("SMUI:icon:context", "button");
 
   let useRipple: RippleProps;
-  $: useRipple = ripple ? {
-    classForward: (classes) => (rippleClasses = classes)
-  } : null;
+  $: useRipple = ripple
+    ? {
+        classForward: (classes) => (rippleClasses = classes),
+      }
+    : null;
   ///
 </script>
 
 <svelte:component
   this={component}
   bind:dom
-  on:domEvent={forwardDomEvents}
-  use={[...use]}
+  on:domEvent={forwardDOMEvents}
   class="mdc-button {className}
   {rippleClasses.join(' ')}
   {variant ? `mdc-button--${variant}` : ''}
@@ -74,10 +75,8 @@
   {context === 'snackbar' ? 'mdc-snackbar__action' : ''}"
   {...actionProp}
   {...defaultProp}
-  {disabled}
-  {useRipple}
-  {style}
-  {target}>
+  props={{ ...props, disabled, useRipple, target, href }}
+  {style}>
   <div class="mdc-button__ripple" />
   <slot />
 </svelte:component>

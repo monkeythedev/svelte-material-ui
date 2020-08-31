@@ -8,9 +8,9 @@
   import { Ripple, RippleProps } from "../ripple/bare";
   import A from "@smui/common/dom/A.svelte";
   import Button from "@smui/common/dom/Button.svelte";
-  import { domEventsForwarder } from "../common/events/forwardEvents";
+  import { DOMEventsForwarder } from "../common/events/DOMEventsForwarder";
 
-  const forwardDOMEvents = domEventsForwarder();
+  const forwardDOMEvents = DOMEventsForwarder();
 
   export let use = [];
   let className = "";

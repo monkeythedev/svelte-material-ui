@@ -1,5 +1,5 @@
-import { bubble, createEventDispatcher, listen } from "svelte/internal";
-import { listenEvents, ListenerOpt } from "./mdcEvents";
+import { createEventDispatcher } from "svelte/internal";
+import { listenEvents, ListenerOpt } from "../mdcEvents";
 
 const domEvents: DOMEvents[] = [
   "focus",
@@ -51,43 +51,31 @@ const domEvents: DOMEvents[] = [
   "lostpointercapture",
 ];
 
-export function forwardEventsBuilder(component, additionalEvents = []) {
-  const events = [...domEvents, ...additionalEvents];
+export function DOMEventsForwarder() {
+  const dispatch = createEventDispatcher();
 
-  function forward(e) {
-    bubble(component, e);
-  }
-
-  return (node) => {
-    const destructors = [];
-
-    for (let i = 0; i < events.length; i++) {
-      destructors.push(listen(node, events[i], forward));
+  return function forwardAllDOMEvents(
+    node: HTMLElement
+  ) {
+    function listener(event: Event) {
+      dispatch(event.type, event);
+      dispatch("domEvent", event);
     }
 
+    const { destroy } = listenAllDOMEvents(node, listener);
+
     return {
-      destroy: () => {
-        for (let i = 0; i < destructors.length; i++) {
-          destructors[i]();
-        }
-      },
+      destroy,
     };
   };
 }
 
-export function listenDOMEvents(
-  node: HTMLElement,
-  opts: ListenerOpt<Event>[]
-) {
-  return listenEvents(node, opts);
-}
-
-export function listenAllDOMEvents(
+function listenAllDOMEvents(
   node: HTMLElement,
   listener: (event: Event) => void
 ) {
   const domListeners = createDOMEventsListeners(listener);
-  const {update: parentUpdate, destroy} = listenEvents(node, domListeners)
+  const {update: parentUpdate, destroy} = listenDOMEvents(node, domListeners)
 
   return {
     update(listener: (event: Event) => void) {
@@ -98,25 +86,19 @@ export function listenAllDOMEvents(
   };
 }
 
+function listenDOMEvents(
+  node: HTMLElement,
+  opts: ListenerOpt<Event>[]
+) {
+  return listenEvents(node, opts);
+}
+
 function createDOMEventsListeners(listener: (event: Event) => void): ListenerOpt<Event>[] {
   function domEventListener(event: Event) {
     listener(event);
   }
 
   return domEvents.map(eventName => ({eventName, listener: domEventListener}));
-}
-
-export function forwardAllDOMEvents(node: HTMLElement, dispatch: (eventName: string, event: Event) => void) {
-  function listener(event: Event) {
-    dispatch(event.type, event);
-    dispatch("domEvent", event);
-  }
-
-  const { destroy } = listenAllDOMEvents(node, listener);
-
-  return {
-    destroy,
-  };
 }
 
 export type DOMEvents = keyof DocumentEventMap;

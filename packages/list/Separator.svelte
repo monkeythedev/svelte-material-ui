@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { domEventsForwarder } from "@smui/common/events/forwardEvents";
+  import { DOMEventsForwarder } from "@smui/common/events/DOMEventsForwarder";
   import Li from "@smui/common/Li.svelte";
   import Hr from "@smui/common/dom/Hr.svelte";
   import { get_current_component } from "svelte/internal";
@@ -7,7 +7,7 @@
   import { exclude } from "@smui/common/exclude.js";
   import { useActions } from "@smui/common/useActions.js";
 
-  const forwardDOMEvents = domEventsForwarder();
+  const forwardDOMEvents = DOMEventsForwarder();
 
   let className = "";
   export { className as class };

@@ -1,4 +1,4 @@
-export function listenCustomEvents<E extends Event = CustomEvent>(
+export function listenEvents<E extends Event = Event>(
   node: HTMLElement,
   opts: ListenerOpt<E>[]
 ) {

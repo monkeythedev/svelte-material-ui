@@ -11,7 +11,7 @@
   import { forwardAllDOMEvents } from "../common/forwardEvents";
   import { exclude } from "../common/exclude.js";
   import { useActions } from "../common/useActions.js";
-  import { listenCustomEvents, ListenerOpt } from "../common/mdcEvents";
+  import { listenEvents, ListenerOpt } from "../common/mdcEvents";
 
   export let use = [];
   let className = "";
@@ -153,7 +153,7 @@
   {isStatic ? 'mdc-menu-surface--open' : ''}
   {isStatic ? 'smui-menu-surface--static' : ''}
   "
-  use:listenCustomEvents={[{ eventName: 'MDCMenuSurface:closed', listener: updateOpen }, { eventName: 'MDCMenuSurface:opened', listener: updateOpen }]}
+  use:listenEvents={[{ eventName: 'MDCMenuSurface:closed', listener: updateOpen }, { eventName: 'MDCMenuSurface:opened', listener: updateOpen }]}
   {...exclude($$props, [
     'use',
     'class',
