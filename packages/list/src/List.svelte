@@ -1,33 +1,92 @@
 <script lang="ts">
+  // Base
+  import { DOMEventsForwarder } from "@smui/common/events/DOMEventsForwarder";
+  const forwardDOMEvents = DOMEventsForwarder();
+  let className = "";
+  export { className as class };
+  export let style: string = "";
+
+  export let dom: HTMLDivElement | HTMLUListElement = null;
+  export let props: any = {};
+
+  // List
   import { MDCList } from "@material/list";
   import { onMount, onDestroy, getContext, setContext } from "svelte";
-  import { get_current_component } from "svelte/internal";
   import { forwardEventsBuilder } from "@smui/common/forwardEvents";
   import { exclude } from "@smui/common/exclude.js";
   import { useActions } from "@smui/common/useActions.js";
   import Nav from "@smui/common/dom/Nav.svelte";
   import Ul from "@smui/common/dom/Ul.svelte";
-  import { DOMEventsForwarder } from "@smui/common/events/DOMEventsForwarder";
+  import { createListContext } from "./ListContext";
+  import A from "@smui/common/dom/A.svelte";
+import { ItemContext } from "./ItemContext";
 
-  const forwardEvents = forwardEventsBuilder(get_current_component(), [
-    "MDCList:action",
-  ]);
+  const { listItems$ } = createListContext();
+
+  // The first item of the list must have the attribute tabindex="0"
+  $: if (!nonInteractive && $listItems$.length) {
+    function findNonDisabledItemWithTabIndex0() {
+      return $listItems$.find(
+        (item) => item.tabindex === "0" && !item.disabled
+      );
+    }
+
+    function findSelectedItem() {
+      return $listItems$.find((item) => item.selected);
+    }
+
+    function findFirstNonDisabledItem() {
+      return $listItems$.find((item) => !item.disabled);
+    }
+
+    function setTabIndex(firstItem: ItemContext) {
+      const firstItemIndex = $listItems$.indexOf(firstItem);
+      firstItem.setTabIndex("0");
+
+      $listItems$.forEach((item, index) => {
+        if (index !== firstItemIndex) {
+          item.setTabIndex("-1");
+        }
+      });
+    }
+
+    let firstItem = findSelectedItem();
+
+    if (firstItem) {
+      setTabIndex(firstItem);
+    } else if (!firstItem && !findNonDisabledItemWithTabIndex0()) {
+      firstItem = findFirstNonDisabledItem();
+      setTabIndex(firstItem);
+    }
+  }
 
   // export let use = [];
-  let className = "";
-  export { className as class };
-  export let nonInteractive = false;
-  export let dense = false;
-  export let avatarList = false;
-  export let twoLine = false;
-  export let threeLine = false;
-  export let vertical = true;
-  export let wrapFocus = false;
-  export let singleSelection = false;
-  export let selectedIndex = null;
-  export let radiolist = false;
-  export let checklist = false;
-  export let dom: HTMLDivElement | HTMLUListElement = null;
+  export let nonInteractive: boolean = false;
+  export let dense: boolean = false;
+  export let avatarList: boolean = false;
+  export let twoLine: boolean = false;
+  export let threeLine: boolean = false;
+  export let vertical: boolean = true;
+  export let wrapFocus: boolean = false;
+  export let singleSelection: boolean = false;
+  export let selectedIndex: number = null;
+  export let radiolist: boolean = false;
+  export let checklist: boolean = false;
+
+  // The first item of the list must have the attribute tabindex="0"
+  // $: if (!nonInteractive && $listItems$.length) {
+  //   const firstItem = $listItems$.find(
+  //     (item) => !item.disabled
+  //   );
+  //   const firstItemIndex = $listItems$.indexOf(firstItem);
+  //   firstItem.dom.setAttribute("tabindex", "0");
+
+  //   $listItems$.forEach((item, index) => {
+  //     if (index !== firstItemIndex) {
+  //       item.dom.setAttribute("tabindex", "-1");
+  //     }
+  //   });
+  // }
 
   $: props = exclude($$props, [
     "use",
@@ -151,12 +210,12 @@
   bind:dom
   on:domEvent={forwardDomEvents}
   class="mdc-list {className}
-  {nonInteractive ? 'mdc-list--non-interactive' : ''}
-  {dense ? 'mdc-list--dense' : ''}
-  {avatarList ? 'mdc-list--avatar-list' : ''}
-  {twoLine ? 'mdc-list--two-line' : ''}
-  {threeLine && !twoLine ? 'smui-list--three-line' : ''}
-  ">
+    {style}
+    {nonInteractive ? 'mdc-list--non-interactive' : ''}
+    {dense ? 'mdc-list--dense' : ''}
+    {avatarList ? 'mdc-list--avatar-list' : ''}
+    {twoLine ? 'mdc-list--two-line' : ''}
+    {threeLine && !twoLine ? 'smui-list--three-line' : ''}">
   <slot />
 </svelte:component>
 

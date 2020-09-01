@@ -15,6 +15,7 @@ import H4 from "./H4.svelte";
 import H5 from "./H5.svelte";
 import H6 from "./H6.svelte";
 import P from "./P.svelte";
+import Div from "./P.svelte";
 
 export {
   A,
@@ -33,4 +34,5 @@ export {
   H5,
   H6,
   P,
+  Div
 };

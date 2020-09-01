@@ -1,30 +1,31 @@
+<script lang="ts" context="module">
+  import { RippleableComponentProps, BaseProps } from "./Props";
+  export interface LiProps extends RippleableComponentProps, BaseProps {}
+</script>
+
 <script lang="ts">
-import { Ripple, RippleProps } from "@smui/ripple";
-
-import { createEventDispatcher } from "svelte";
-
-  // import { get_current_component } from "svelte/internal";
-  import { forwardAllDOMEvents } from "../forwardEvents";
-  // import { exclude } from "./exclude.js";
-  // import { useActions } from "./useActions.js";
-
-  const dispatcher = createEventDispatcher();
-
-  // export let use = [];
+  // Base
+  import { DOMEventsForwarder } from "@smui/common/actions/DOMEventsForwarder";
+  const forwardDOMEvents = DOMEventsForwarder();
   export let dom: HTMLLIElement = null;
-  let className: string = "";
+  let className = "";
   export { className as class };
   export let style: string = "";
 
-  export let useRipple: RippleProps = null;
+  export let props: LiProps = {};
+
+  // Li
+  import { Ripple } from "@smui/ripple";
+
+  console.log(props);
 </script>
 
-<li bind:this={dom} use:forwardAllDOMEvents={dispatcher} use:Ripple={useRipple} class={className} {style}>
+<li
+  {...props}
+  bind:this={dom}
+  class={className}
+  {style}
+  use:forwardDOMEvents
+  use:Ripple={props.useRipple}>
   <slot />
 </li>
-
-<!-- <li
-  use:useActions={use}
-  use:forwardAllDOMEvents
-  {...exclude($$props, ['use'])}
-><slot></slot></li> -->

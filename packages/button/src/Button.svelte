@@ -2,11 +2,11 @@
   // Base
   import { DOMEventsForwarder } from "@smui/common/events/DOMEventsForwarder";
   const forwardDOMEvents = DOMEventsForwarder();
-  export let dom: HTMLElement = null;
   let className = "";
   export { className as class };
   export let style: string = "";
 
+  export let dom: HTMLElement = null;
   export let props: any = {};
 
   // Button
@@ -63,6 +63,7 @@
   bind:dom
   on:domEvent={forwardDOMEvents}
   class="mdc-button {className}
+  {style}
   {rippleClasses.join(' ')}
   {variant ? `mdc-button--${variant}` : ''}
   {dense ? 'mdc-button--dense' : ''}
@@ -76,7 +77,7 @@
   {...actionProp}
   {...defaultProp}
   props={{ ...props, disabled, useRipple, target, href }}
-  {style}>
+  >
   <div class="mdc-button__ripple" />
   <slot />
 </svelte:component>
