@@ -48,6 +48,8 @@
   let clickedGroup = "nothing yet";
   let selectedRadio = "Tom Hanks";
   let selectedCheckbox = ["Tom Hanks"];
+
+  let selectedIndexListVal = 0;
 </script>
 
 <style>
@@ -67,17 +69,17 @@
   <div>
     A simple list:
     <List class="demo-list">
-      <Item on:click={() => (clickedSimple = 'Cut')}>
+      <Item on:selected={() => (clickedSimple = 'Cut')}>
         <Text>Cut</Text>
       </Item>
-      <Item on:click={() => (clickedSimple = 'Copy')}>
+      <Item on:selected={() => (clickedSimple = 'Copy')}>
         <Text>Copy</Text>
       </Item>
-      <Item on:click={() => (clickedSimple = 'Paste')}>
+      <Item on:selected={() => (clickedSimple = 'Paste')}>
         <Text>Paste</Text>
       </Item>
       <Separator />
-      <Item on:click={() => (clickedSimple = 'Delete')}>
+      <Item on:selected={() => (clickedSimple = 'Delete')}>
         <Text>Delete</Text>
       </Item>
     </List>
@@ -86,22 +88,41 @@
   <pre class="status">Clicked: {clickedSimple}</pre>
 
   <div>
+    A simple horizontal list:
+    <List class="demo-list" orientation={"horizontal"}>
+      <Item>
+        <Text>Cut</Text>
+      </Item>
+      <Item>
+        <Text>Copy</Text>
+      </Item>
+      <Item>
+        <Text>Paste</Text>
+      </Item>
+      <Separator />
+      <Item>
+        <Text>Delete</Text>
+      </Item>
+    </List>
+  </div>
+
+  <div>
     A dense list with graphics and tabindex:
     <List class="demo-list" dense>
-      <Item on:click={() => (clickedDense = 'Edit')}>
+      <Item on:selected={() => (clickedDense = 'Edit')}>
         <Graphic icon>edit</Graphic>
         <Text>Edit</Text>
       </Item>
-      <Item on:click={() => (clickedDense = 'Send')}>
+      <Item on:selected={() => (clickedDense = 'Send')}>
         <Graphic icon>send</Graphic>
         <Text>Send</Text>
       </Item>
-      <Item on:click={() => (clickedDense = 'Archive')}>
+      <Item on:selected={() => (clickedDense = 'Archive')}>
         <Graphic icon>archive</Graphic>
         <Text>Archive</Text>
       </Item>
       <Separator />
-      <Item on:click={() => (clickedDense = 'Delete')}>
+      <Item on:selected={() => (clickedDense = 'Delete')}>
         <Graphic icon>clear</Graphic>
         <Text>Delete</Text>
       </Item>
@@ -136,11 +157,11 @@
       class="demo-list"
       twoLine
       avatarList
-      singleSelection
+      role="listbox"
       bind:selectedIndex={selectionIndex}>
       {#each optionsTwoLine as item}
         <Item
-          on:SMUI:action={() => (selectionTwoLine = item.name)}
+          on:selected={() => (selectionTwoLine = item.name)}
           disabled={item.disabled}
           selected={selectionTwoLine === item.name}>
           <Graphic
@@ -190,38 +211,38 @@
     <Group>
       <Subheader>Actors</Subheader>
       <List class="demo-list">
-        <Item on:click={() => (clickedGroup = 'Bruce Willis')}>
+        <Item on:selected={() => (clickedGroup = 'Bruce Willis')}>
           <Text>Bruce Willis</Text>
         </Item>
-        <Item on:click={() => (clickedGroup = 'Tom Hanks')}>
+        <Item on:selected={() => (clickedGroup = 'Tom Hanks')}>
           <Text>Tom Hanks</Text>
         </Item>
-        <Item on:click={() => (clickedGroup = 'Jack Nicholson')}>
+        <Item on:selected={() => (clickedGroup = 'Jack Nicholson')}>
           <Text>Jack Nicholson</Text>
         </Item>
-        <Item on:click={() => (clickedGroup = 'Leonardo DiCaprio')}>
+        <Item on:selected={() => (clickedGroup = 'Leonardo DiCaprio')}>
           <Text>Leonardo DiCaprio</Text>
         </Item>
-        <Item on:click={() => (clickedGroup = 'Matt Damon')}>
+        <Item on:selected={() => (clickedGroup = 'Matt Damon')}>
           <Text>Matt Damon</Text>
         </Item>
       </List>
       <Subheader>Books</Subheader>
       <List class="demo-list">
-        <Item on:click={() => (clickedGroup = 'To Kill a Mockingbird')}>
+        <Item on:selected={() => (clickedGroup = 'To Kill a Mockingbird')}>
           <Text>To Kill a Mockingbird</Text>
         </Item>
-        <Item on:click={() => (clickedGroup = 'The Great Gatsby')}>
+        <Item on:selected={() => (clickedGroup = 'The Great Gatsby')}>
           <Text>The Great Gatsby</Text>
         </Item>
-        <Item on:click={() => (clickedGroup = '1984')}>
+        <Item on:selected={() => (clickedGroup = '1984')}>
           <Text>1984</Text>
         </Item>
-        <Item on:click={() => (clickedGroup = 'Catch-22')}>
+        <Item on:selected={() => (clickedGroup = 'Catch-22')}>
           <Text>Catch-22</Text>
         </Item>
         <Item
-          on:click={() => (clickedGroup = "Alice's Adventures in Wonderland")}>
+          on:selected={() => (clickedGroup = "Alice's Adventures in Wonderland")}>
           <Text>Alice's Adventures in Wonderland</Text>
         </Item>
       </List>
@@ -229,10 +250,34 @@
   </div>
 
   <pre class="status">Clicked: {clickedGroup}</pre>
+
+  <div>
+    Select item list using selectedIndex prop:
+    <input type="number" bind:value={selectedIndexListVal} />
+    <List class="demo-list" bind:selectedIndex={selectedIndexListVal} role="listbox">
+      <Item>
+        <Text>Bruce Willis</Text>
+      </Item>
+      <Item>
+        <Text>Tom Hanks</Text>
+      </Item>
+      <Item>
+        <Text>Jack Nicholson</Text>
+      </Item>
+      <Item>
+        <Text>Leonardo DiCaprio</Text>
+      </Item>
+      <Item>
+        <Text>Matt Damon</Text>
+      </Item>
+    </List>
+  </div>
+
+  <pre class="status">Clicked: {clickedGroup}</pre>
 <!-- 
   <div>
     A radio list:
-    <List class="demo-list" radiolist>
+    <List class="demo-list" role="radiogroup">
       <Item>
         <Graphic>
           <Radio bind:group={selectedRadio} value="Bruce Willis" />
@@ -270,7 +315,7 @@
 
   <div>
     A check list with trailing checkboxes:
-    <List class="demo-list" checklist>
+    <List class="demo-list" role="group">
       <Item>
         <Label>Bruce Willis</Label>
         <Meta>

@@ -1,39 +1,23 @@
-import { Readable, writable } from "svelte/store";
-import { ContextId } from "./ContextBuilder";
+import { Readable, Writable, writable } from "svelte/store";
 
-export function createContextsStoreBuilder<T extends ContextId>(): () => ContextsStore<T> {
-  return function createContextsStore(): ContextsStore<T> {
-    const { subscribe, update } = writable<(T)[]>([]);
-
-    function find(items: (T)[], id) {
-      return items.find((item) => item.__id === id);
-    }
+export function createContextsStoreBuilder<T>(): () => ContextsStore<Writable<T>> {
+  return function createContextsStore(): ContextsStore<Writable<T>> {
+    const { subscribe, update } = writable<(Writable<T>)[]>([]);
 
     return {
       subscribe,
-      add(item: T) {
+      add(item: Writable<T>) {
         update((items) => {
-          if (!find(items, item.__id)) {
+          if (!~items.indexOf(item)) {
             items = [...items, item];
           }
 
           return items;
         });
       },
-      update(item: T) {
+      remove(item: Writable<T>) {
         update((items) => {
-          const index = items.indexOf(find(items, item.__id));
-          if (~index) {
-            items[index] = item;
-            items = [...items];
-          }
-
-          return items;
-        });
-      },
-      remove(item: T) {
-        update((items) => {
-          const index = items.indexOf(find(items, item.__id));
+          const index = items.indexOf(item);
           if (~index) {
             items = [...items.splice(index, 1)];
           }
@@ -45,8 +29,7 @@ export function createContextsStoreBuilder<T extends ContextId>(): () => Context
   };
 }
 
-export interface ContextsStore<T extends ContextId> extends Readable<(T)[]> {
+export interface ContextsStore<T> extends Readable<(T)[]> {
   add(item: T);
-  update(item: T);
   remove(item: T);
 }

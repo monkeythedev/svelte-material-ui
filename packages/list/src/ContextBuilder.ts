@@ -1,22 +1,16 @@
 import { getContext, setContext } from "svelte";
+import { writable, Writable } from "svelte/store";
 
-export function createContextBuilder<T extends ContextId>() {
+export function createContextBuilder<T>() {
   const CONTEXT_ID = {};
 
-  function createContext() {
-    const __id = {};
-
-    return function setContextValue(value: T) {
-      const context = {
-        ...value,
-        __id,
-      };
-      setContext(CONTEXT_ID, context);
-      return context;
-    };
+  function createContext(context: Partial<T> = {}) {
+    const context$ = writable(context);
+    setContext(CONTEXT_ID, context$);
+    return context$;
   }
 
-  function getContextValue(): T {
+  function getContextValue(): Writable<T> {
     return getContext(CONTEXT_ID);
   }
 
@@ -24,8 +18,4 @@ export function createContextBuilder<T extends ContextId>() {
     typeof createContext,
     typeof getContextValue
   ];
-}
-
-export interface ContextId {
-  __id?: {};
 }

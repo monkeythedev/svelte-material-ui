@@ -11,211 +11,211 @@
 
   // List
   import { MDCList } from "@material/list";
-  import { onMount, onDestroy, getContext, setContext } from "svelte";
-  import { forwardEventsBuilder } from "@smui/common/forwardEvents";
-  import { exclude } from "@smui/common/exclude.js";
-  import { useActions } from "@smui/common/useActions.js";
+  import {
+    onMount,
+    onDestroy,
+    getContext,
+    setContext,
+    createEventDispatcher,
+  } from "svelte";
   import Nav from "@smui/common/dom/Nav.svelte";
   import Ul from "@smui/common/dom/Ul.svelte";
-  import { createListContext } from "./ListContext";
+  import { createListContext, ListRole } from "./ListContext";
   import A from "@smui/common/dom/A.svelte";
-import { ItemContext } from "./ItemContext";
+  import { ItemContext } from "./ItemContext";
+  import { createItemsStore } from "./ListStores";
+  import { writable, Writable } from "svelte/store";
 
-  const { listItems$ } = createListContext();
+  export let role: ListRole = "list";
+  export let nonInteractive: boolean = false;
+  export let orientation: "vertical" | "horizontal" = "vertical";
+  export let selectedIndex: number = null;
+
+  export let dense: boolean = false;
+  export let avatarList: boolean = false;
+  export let twoLine: boolean = false;
+  export let threeLine: boolean = false;
+  export let wrapFocus: boolean = false;
+
+  const dispatch = createEventDispatcher();
+
+  let nav: boolean = getContext("SMUI:list:nav"); // TODO: $navContext$
+  const context$ = createListContext({
+    notifyFocus(itemToFocus: ItemContext) {
+      itemToFocus.setTabIndex("0");
+      $context$.listItems.forEach((item) => {
+        if (item !== itemToFocus) {
+          item.setTabIndex("-1");
+        }
+      });
+    },
+    notifySelected(itemToSelect: ItemContext, selected: boolean) {
+      const index = getListItems().indexOf(itemToSelect);
+      if (selected) {
+        selectedIndex = index;
+
+        $context$.listItems.forEach((item) => {
+          if (
+            item !== itemToSelect &&
+            (role === "listbox" || role === "radiogroup")
+          ) {
+            item.setSelected(false);
+          }
+        });
+
+        dispatch("change", {
+          selectedIndex,
+          dom: itemToSelect.dom,
+        });
+      } else {
+        itemToSelect.setSelected(false);
+        if (list.selectedIndex === index) {
+          list.selectedIndex = -1;
+        }
+      }
+    },
+    listItems: new Set(),
+  });
 
   // The first item of the list must have the attribute tabindex="0"
-  $: if (!nonInteractive && $listItems$.length) {
+  $: {
     function findNonDisabledItemWithTabIndex0() {
-      return $listItems$.find(
+      return Array.from($context$.listItems).find(
         (item) => item.tabindex === "0" && !item.disabled
       );
     }
 
     function findSelectedItem() {
-      return $listItems$.find((item) => item.selected);
+      return Array.from($context$.listItems).find((item) => item.selected);
     }
 
     function findFirstNonDisabledItem() {
-      return $listItems$.find((item) => !item.disabled);
+      return Array.from($context$.listItems).find((item) => !item.disabled);
     }
 
     function setTabIndex(firstItem: ItemContext) {
-      const firstItemIndex = $listItems$.indexOf(firstItem);
       firstItem.setTabIndex("0");
 
-      $listItems$.forEach((item, index) => {
-        if (index !== firstItemIndex) {
+      $context$.listItems.forEach((item) => {
+        if (item !== firstItem) {
           item.setTabIndex("-1");
         }
       });
     }
 
-    let firstItem = findSelectedItem();
+    if (!nonInteractive && $context$.listItems.size) {
+      let firstItem = findSelectedItem();
 
-    if (firstItem) {
-      setTabIndex(firstItem);
-    } else if (!firstItem && !findNonDisabledItemWithTabIndex0()) {
-      firstItem = findFirstNonDisabledItem();
-      setTabIndex(firstItem);
+      if (firstItem) {
+        setTabIndex(firstItem);
+      } else if (!firstItem && !findNonDisabledItemWithTabIndex0()) {
+        firstItem = findFirstNonDisabledItem();
+        setTabIndex(firstItem);
+      }
+    } else if (nonInteractive) {
+      $context$.listItems.forEach((item) => {
+        item.setTabIndex("-1");
+      });
+      findFirstNonDisabledItem()?.setTabIndex("0");
     }
   }
-
-  // export let use = [];
-  export let nonInteractive: boolean = false;
-  export let dense: boolean = false;
-  export let avatarList: boolean = false;
-  export let twoLine: boolean = false;
-  export let threeLine: boolean = false;
-  export let vertical: boolean = true;
-  export let wrapFocus: boolean = false;
-  export let singleSelection: boolean = false;
-  export let selectedIndex: number = null;
-  export let radiolist: boolean = false;
-  export let checklist: boolean = false;
-
-  // The first item of the list must have the attribute tabindex="0"
-  // $: if (!nonInteractive && $listItems$.length) {
-  //   const firstItem = $listItems$.find(
-  //     (item) => !item.disabled
-  //   );
-  //   const firstItemIndex = $listItems$.indexOf(firstItem);
-  //   firstItem.dom.setAttribute("tabindex", "0");
-
-  //   $listItems$.forEach((item, index) => {
-  //     if (index !== firstItemIndex) {
-  //       item.dom.setAttribute("tabindex", "-1");
-  //     }
-  //   });
-  // }
-
-  $: props = exclude($$props, [
-    "use",
-    "class",
-    "nonInteractive",
-    "dense",
-    "avatarList",
-    "twoLine",
-    "threeLine",
-    "vertical",
-    "wrapFocus",
-    "singleSelection",
-    "selectedIndex",
-    "radiolist",
-    "checklist",
-  ]);
-
-  let list;
-  let role = getContext("SMUI:list:role");
-  let nav = getContext("SMUI:list:nav");
-  // let instantiate = getContext("SMUI:list:instantiate");
-  // let getInstance = getContext("SMUI:list:getInstance");
-  let addLayoutListener = getContext("SMUI:addLayoutListener") as any;
-  let removeLayoutListener;
-
-  const forwardDomEvents = DOMEventsForwarder();
 
   let component: typeof Nav | typeof Ul;
   $: component = nav ? Nav : Ul;
 
-  setContext("SMUI:list:nonInteractive", nonInteractive);
-
-  if (!role) {
-    if (singleSelection) {
-      role = "listbox";
-      setContext("SMUI:list:item:role", "option");
-    } else if (radiolist) {
-      role = "radiogroup";
-      setContext("SMUI:list:item:role", "radio");
-    } else if (checklist) {
-      role = "group";
-      setContext("SMUI:list:item:role", "checkbox");
-    } else {
-      role = "list";
-      setContext("SMUI:list:item:role", undefined);
-    }
-  }
-
-  $: if (list && list.vertical !== vertical) {
-    list.vertical = vertical;
-  }
-
-  $: if (list && list.wrapFocus !== wrapFocus) {
-    list.wrapFocus = wrapFocus;
-  }
-
-  $: if (list && list.singleSelection !== singleSelection) {
-    list.singleSelection = singleSelection;
-  }
-
-  $: if (list && singleSelection && list.selectedIndex !== selectedIndex) {
-    list.selectedIndex = selectedIndex;
-  }
-
-  if (addLayoutListener) {
-    removeLayoutListener = addLayoutListener(layout);
-  }
+  let list: MDCList;
 
   onMount(async () => {
-    // if (instantiate !== false) {
     list = new MDCList(dom);
     list.listen("MDCList:action", handleAction);
-    // } else {
-    //   list = await getInstance();
-    // }
-    if (singleSelection) {
-      list.initializeListType();
-      selectedIndex = list.selectedIndex;
-    }
   });
 
-  onDestroy(() => {
-    // if (instantiate !== false) {
-    list && list.destroy();
-    // }
+  $: $context$ = { ...$context$, role, isNav: nav, list };
 
-    if (removeLayoutListener) {
-      removeLayoutListener();
+  $: if (list) {
+    if (role === "listbox") {
+      list.singleSelection = true;
+    } else {
+      list.singleSelection = false;
     }
+
+    if (
+      orientation === "vertical" &&
+      (list.vertical == null || list.vertical === false)
+    ) {
+      list.vertical = true;
+    } else if (
+      orientation === "horizontal" &&
+      (list.vertical == null || list.vertical === true)
+    ) {
+      list.vertical = false;
+    }
+
+    if (list.wrapFocus !== wrapFocus) {
+      list.wrapFocus = wrapFocus;
+    }
+
+    if (selectedIndex != null && role === "list") {
+      selectedIndex = null;
+    }
+
+    if (selectedIndex != null && list.selectedIndex !== selectedIndex) {
+      if (!getListItems()[selectedIndex]) {
+        selectedIndex = list.selectedIndex as number;
+      } else {
+        list.selectedIndex = selectedIndex;
+        getListItems()[selectedIndex].setSelected(true);
+      }
+    }
+  }
+
+  onDestroy(() => {
+    list && list.destroy();
   });
 
   function handleAction(e) {
-    if (
-      list &&
-      list.listElements[e.detail.index].classList.contains(
-        "mdc-list-item--disabled"
-      )
-    ) {
-      e.preventDefault();
-      list.selectedIndex = selectedIndex;
-    } else if (list && list.selectedIndex === e.detail.index) {
-      selectedIndex = e.detail.index;
+    const item = getListItems()[e.detail.index];
+
+    if (!list || !item || item.disabled) return;
+
+    if (list.selectedIndex === e.detail.index) {
+      item.setSelected(true);
+    } else if (role === "list") {
+      item.sendOnSelected();
     }
   }
 
-  export function layout(...args) {
-    return list.layout(...args);
+  export function layout() {
+    return list.layout();
   }
 
-  export function setEnabled(...args) {
-    return list.setEnabled(...args);
+  export function setEnabled(itemIndex: number, isEnabled: boolean) {
+    getListItems()[itemIndex].setDisabled(!isEnabled);
+    return list.setEnabled(itemIndex, isEnabled);
   }
 
-  export function getDefaultFoundation(...args) {
-    return list.getDefaultFoundation(...args);
+  export function getDefaultFoundation() {
+    return list.getDefaultFoundation();
+  }
+
+  export function getListItems() {
+    return Array.from($context$.listItems);
   }
 </script>
 
 <svelte:component
   this={component}
+  props={{}}
   bind:dom
-  on:domEvent={forwardDomEvents}
+  on:domEvent={forwardDOMEvents}
   class="mdc-list {className}
-    {style}
     {nonInteractive ? 'mdc-list--non-interactive' : ''}
     {dense ? 'mdc-list--dense' : ''}
     {avatarList ? 'mdc-list--avatar-list' : ''}
     {twoLine ? 'mdc-list--two-line' : ''}
-    {threeLine && !twoLine ? 'smui-list--three-line' : ''}">
+    {threeLine && !twoLine ? 'smui-list--three-line' : ''}
+    {orientation === 'horizontal' ? 'smui-list--horizontal' : ''}"
+  {style}>
   <slot />
 </svelte:component>
 

@@ -26,49 +26,44 @@
   import { forwardEventsBuilder } from "@smui/common/forwardEvents";
   import { exclude } from "@smui/common/exclude.js";
   import { useActions } from "@smui/common/useActions.js";
-  import { Ripple, RippleProps } from "@smui/ripple/bare";
+  import { RippleProps } from "@smui/ripple/bare";
+  import Ripple from "@smui/ripple/Ripple.svelte";
   import Li from "@smui/common/dom/Li.svelte";
   import A from "@smui/common/dom/A.svelte";
   import Span from "@smui/common/dom/Span.svelte";
   import { getListContext } from "./ListContext";
   import { createItemContext, ItemContext } from "./ItemContext";
 
-  const listContext = getListContext();
-
-  const dispatch = createEventDispatcher();
-  let checked = false;
-
   export let ripple: boolean = true;
   export let color = null;
-  export let nonInteractive = getContext("SMUI:list:nonInteractive");
   export let activated: boolean = false;
   export let role = getContext("SMUI:list:item:role");
   export let selected: boolean = false;
   export let disabled: boolean = false;
-  export let tabindex: "0" | "-1" =
-    (!nonInteractive && !disabled && (selected || checked) && "0") || "-1";
+  export let tabindex: "0" | "-1" = "-1";
   export let href: string = null;
   export let inputId: string = "SMUI-form-field-list-" + counter++;
 
-  $: props = exclude($$props, [
-    "use",
-    "class",
-    "ripple",
-    "color",
-    "nonInteractive",
-    "activated",
-    "selected",
-    "disabled",
-    "tabindex",
-    "href",
-    "inputId",
-  ]);
+  const listContext$ = getListContext();
 
-  let addTabindexIfNoItemsSelectedRaf;
-  let nav = getContext("SMUI:list:item:nav");
+  const dispatch = createEventDispatcher();
+
+  $: if (disabled && tabindex === "0") tabindex = "-1";
+  $: if (disabled && selected) selected = false;
+  $: if ($listContext$.list) {
+    if (selected) {
+      $listContext$.notifySelected(context, true);
+      dispatch("selected", dom);
+    } else {
+      $listContext$.notifySelected(context, false);
+    }
+  }
+
+  let nav = false;
+  $: nav = $listContext$.isNav;
 
   let component: typeof Li | typeof A | typeof Span;
-  if (nav && href) {
+  $: if (nav && href) {
     component = A;
   } else if (nav && !href) {
     component = Span;
@@ -76,109 +71,75 @@
     component = Li;
   }
 
+  setContext("SMUI:generic:input:props", { id: inputId });
+  setContext("SMUI:generic:input:setChecked", setChecked);
+
+  const context = {} as ItemContext;
+  $: Object.assign(context, {
+    disabled,
+    selected,
+    setTabIndex(newTabindex: "0" | "-1") {
+      tabindex = newTabindex;
+    },
+    setDisabled(_disabled: boolean) {
+      disabled = _disabled;
+    },
+    setSelected(_selected: boolean) {
+      selected = _selected;
+    },
+    sendOnSelected() {
+      dispatch("selected", dom);
+    },
+    tabindex,
+    dom,
+  });
+
+  function onFocus() {
+    $listContext$.notifyFocus(context);
+  }
+
+  onMount(() => {
+    $listContext$.listItems.add(context);
+    $listContext$ = { ...$listContext$ };
+  });
+
+  onDestroy(() => {
+    $listContext$.listItems.delete(context);
+    $listContext$ = { ...$listContext$ };
+  });
+
+  let checked = false;
+  function setChecked(isChecked) {
+    checked = isChecked;
+    $listContext$.notifySelected(context, true);
+  }
+
   let useRipple: RippleProps;
   $: useRipple = ripple
     ? {
         color,
+        component,
+        keyboardEvents: true
       }
     : null;
 
-  setContext("SMUI:generic:input:props", { id: inputId });
-  setContext("SMUI:generic:input:setChecked", setChecked);
-
-  function setTabIndex(newTabindex: "0" | "-1") {
-    tabindex = newTabindex;
-  }
-
-  const setItemContext = createItemContext();
-  let context: ItemContext = {} as ItemContext;
-  $: context = setItemContext({...context, tabindex})
-  $: {context = setItemContext({
-    ...context,
-    disabled,
-    selected,
-    setTabIndex
-  }); listContext.listItems$.update(context);}
-
-  onMount(() => {
-    listContext.listItems$.add(context);
-
-    // Tabindex needs to be '0' if this is the first non-disabled list item, and
-    // no other item is selected.
-
-    // if (!selected && !nonInteractive) {
-    //   let first = true;
-    //   let el = dom;
-    //   while (el.previousElementSibling) {
-    //     el = el.previousElementSibling as typeof dom;
-    //     if (
-    //       el.nodeType === 1 &&
-    //       el.classList.contains("mdc-list-item") &&
-    //       !el.classList.contains("mdc-list-item--disabled")
-    //     ) {
-    //       first = false;
-    //       break;
-    //     }
-    //   }
-    //   if (first) {
-    //     // This is first, so now set up a check that no other items are
-    //     // selected.
-    //     addTabindexIfNoItemsSelectedRaf = window.requestAnimationFrame(
-    //       addTabindexIfNoItemsSelected
-    //     );
-    //   }
-    // }
-  });
-
-  onDestroy(() => {
-    listContext.listItems$.remove(context);
-
-    if (addTabindexIfNoItemsSelectedRaf) {
-      window.cancelAnimationFrame(addTabindexIfNoItemsSelectedRaf);
-    }
-  });
-
-  // function addTabindexIfNoItemsSelected() {
-  //   // Look through next siblings to see if none of them are selected.
-  //   let noneSelected = true;
-  //   let el = dom;
-  //   while (el.nextElementSibling) {
-  //     el = el.nextElementSibling as typeof dom;
-  //     if (
-  //       el.nodeType === 1 &&
-  //       el.classList.contains("mdc-list-item") &&
-  //       el.attributes["tabindex"] &&
-  //       el.attributes["tabindex"].value === "0"
-  //     ) {
-  //       noneSelected = false;
-  //       break;
-  //     }
-  //   }
-  //   if (noneSelected) {
-  //     // This is the first element, and no other element is selected, so the
-  //     // tabindex should be '0'.
-  //     tabindex = "0";
-  //   }
-  // }
-
-  function handleSubmit({ detail: event }: CustomEvent<KeyboardEvent>) {
-    const isEnter = event.key === "Enter" || event.keyCode === 13;
-    const isSpace = event.key === "Space" || event.keyCode === 32;
-    if (isEnter || isSpace) {
-      dispatch("submit", event);
-    }
-  }
-
-  function setChecked(isChecked) {
-    checked = isChecked;
-    // tabindex =
-    //   (!nonInteractive && !disabled && (selected || checked) && "0") || "-1";
-  }
+  $: props = {
+    ...props,
+    tabindex,
+    href,
+    "aria-current": activated ? "page" : null,
+    //"aria-selected": $listContext$.role === "listbox" ? selected : null, Lo setta MDC
+    "aria-checked":
+      $listContext$.role === "group" || $listContext$.role === "radiogroup"
+        ? `${checked}`
+        : null,
+    ripple: useRipple,
+  };
 </script>
 
 <svelte:component
-  this={component}
-  props={{ ...props, tabindex, href, 'aria-current': activated ? 'page' : null, useRipple }}
+  this={useRipple ? Ripple : component}
+  props={{ ...props }}
   bind:dom
   class="mdc-list-item {className}
     {disabled ? 'mdc-list-item--disabled' : ''}
@@ -186,7 +147,7 @@
     {role === 'menuitem' && selected ? 'mdc-menu-item--selected' : ''}"
   {style}
   on:domEvent={forwardDOMEvents}
-  on:keydown={handleSubmit}>
+  on:focus={onFocus}>
   {#if useRipple}<span class="mdc-list-item__ripple" />{/if}
   <slot />
 </svelte:component>
