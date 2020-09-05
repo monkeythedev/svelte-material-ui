@@ -7,6 +7,7 @@ export interface RippleProps extends BaseProps {
   color?: "surface" | "primary" | "secondary";
   classForward?: (classList: string[]) => void;
   keyboardEvents?: boolean;
+  rippleElement?: string;
   component: any;
 }
 

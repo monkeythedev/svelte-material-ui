@@ -1,7 +1,7 @@
 <script lang="ts">
   import "./button.scss";
   import * as classes from "./button.module.scss";
-  import { Button, Icon, Label } from "@smui/button";
+  import { Button, Icon, Label, MenuButton } from "@smui/button";
   import { Group, GroupItem } from "@smui/button/group";
   import { Menu } from "@smui/menu";
   import { List, Item, Text, Separator } from "@smui/list";
@@ -204,12 +204,13 @@ import SelectionGroupIcon from "@smui/menu/src/SelectionGroupIcon.svelte";
         <Label>Do the thing</Label>
       </Button>
       <div use:GroupItem>
-        <Button
-          on:click={() => menu.setOpen(true)}
+        <MenuButton
           variant="raised"
-          style="padding: 0; min-width: 36px;">
+          style="padding: 0; min-width: 36px;"
+          {menu}>
           <Icon class="material-icons" style="margin: 0;">arrow_drop_down</Icon>
-        </Button>
+        </MenuButton>
+
         <Menu bind:this={menu} anchorCorner={Corner.TOP_LEFT} on:selected={() => clicked++}>
           <List>
             <Item>
@@ -240,12 +241,12 @@ import SelectionGroupIcon from "@smui/menu/src/SelectionGroupIcon.svelte";
         <Label>Do the thing</Label>
       </Button>
       <div use:GroupItem>
-        <Button
-          on:click={() => menu2.setOpen(true)}
+        <MenuButton
           variant="outlined"
-          style="padding: 0; min-width: 36px;">
+          style="padding: 0; min-width: 36px;"
+          menu={menu2}>
           <Icon class="material-icons" style="margin: 0;">arrow_drop_down</Icon>
-        </Button>
+        </MenuButton>
         <Menu bind:this={menu2} anchorCorner={Corner.TOP_LEFT}>
           <List>
             <Item on:click={() => clicked++}>

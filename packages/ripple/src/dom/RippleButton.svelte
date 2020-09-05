@@ -10,10 +10,10 @@
   import { BaseProps } from "@smui/common/dom/Props";
   export let props: BaseProps;
 
-  // Ripple Li
+  // RippleButton
   import { RippleProps } from "../Ripple";
   import Ripple from "../Ripple.svelte";
-  import { Li } from "@smui/common/dom";
+  import { Button } from "@smui/common/dom";
 
   export let rippleProps: Omit<RippleProps, "component">;
 </script>
@@ -24,6 +24,6 @@
   on:domEvent={forwardDOMEvents}
   class={className}
   {style}
-  rippleProps={{...rippleProps, component: Li}}>
+  rippleProps={{...rippleProps, component: Button}}>
   <slot />
 </Ripple>

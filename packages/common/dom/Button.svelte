@@ -1,12 +1,9 @@
 <script lang="ts" context="module">
-  import { BaseProps, RippleableComponentProps } from "./Props";
+  import { BaseProps } from "./Props";
 
-  export interface ButtonProps extends RippleableComponentProps, BaseProps {
+  export interface ButtonProps extends BaseProps {
     disabled?: boolean;
   }
-
-  export type XXX = "";
-  export interface ASD {};
 </script>
 
 <script lang="ts">
@@ -21,15 +18,13 @@
   export let props: ButtonProps = {};
 
   // Button
-  import { Ripple } from "@smui/ripple/src";
 </script>
 
 <button
   {...props}
   bind:this={dom}
-  class="{className}"
+  class={className}
   {style}
-  use:forwardDOMEvents
-  use:Ripple={props.useRipple}>
+  use:forwardDOMEvents>
   <slot />
 </button>

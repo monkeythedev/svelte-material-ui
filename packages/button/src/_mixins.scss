@@ -1,41 +1,45 @@
 @use "@material/button";
 @use "@material/elevation";
+@use "@material/feature-targeting/functions";
 @use "@material/ripple";
-/* @import "@material/feature-targeting/functions"; */
 
-@mixin smui-button-core-styles(/* $query: mdc-feature-all() */) {
-  @include smui-button-without-ripple(/* $query */);
-  @include smui-button-ripple(/* $query */);
+@mixin smui-button-core-styles($query: functions.all()) {
+  @include smui-button-without-ripple($query);
+  @include smui-button-ripple($query);
 }
 
-@mixin smui-button-without-ripple(/* $query: mdc-feature-all() */) {
+@mixin smui-button-without-ripple($query: functions.all()) {
   .smui-button--color-secondary {
-    @include button.ink-color(secondary/* , $query */);
+    @include button.ink-color(secondary, $query);
 
     &.mdc-button--raised,
     &.mdc-button--unelevated {
-      @include button.container-fill-color(secondary/* , $query */);
-      @include button.ink-color(on-secondary/* , $query */);
+      @include button.container-fill-color(secondary, $query );
+      @include button.ink-color(on-secondary, $query );
     }
 
     &.mdc-button--outlined {
-      @include button.outline-color(secondary/* , $query */);
+      @include button.outline-color(secondary, $query);
     }
   }
 }
 
-@mixin smui-button-ripple(/* $query: mdc-feature-all() */) {
+@mixin smui-button-ripple($query: functions.all()) {
   .smui-button--color-secondary {
-    @include ripple.states(secondary, false/* , $query */);
+    &, & .mdc-button__ripple {
+      @include ripple.states(secondary, false, $query);
 
-    &.mdc-button--raised,
-    &.mdc-button--unelevated {
-      @include ripple.states(on-secondary, false/* , $query */);
+    }
+
+    &.mdc-button--raised, &.mdc-button--unelevated {
+      &, & .mdc-button__ripple {
+        @include ripple.states(on-secondary, false, $query);
+      }
     }
   }
 }
 
-@mixin smui-button__group-core-styles(/* $query: mdc-feature-all() */) {
+@mixin smui-button__group-core-styles($query: functions.all()) {
   .smui-button__group {
     display: inline-flex;
 
@@ -58,12 +62,12 @@
     }
 
     &.smui-button__group--raised {
-      @include elevation.elevation(2/* , $query: $query */);
+      @include elevation.elevation(2, $query: $query);
     }
 
     & > .mdc-button--raised,
     & > .smui-button__group-item > .mdc-button--raised {
-      @include smui-button__group-mdc-button--raised_(/* $query */);
+      @include smui-button__group-mdc-button--raised_($query);
     }
 
     & > .mdc-button--outlined:not(:last-child),
@@ -73,20 +77,20 @@
   }
 }
 
-@mixin smui-button__group-mdc-button--raised_(/* $query */) {
-  @include button.shape-radius(small/* , $query */);
-  @include elevation.elevation(0/* , $query: $query */);
+@mixin smui-button__group-mdc-button--raised_($query) {
+  @include button.shape-radius(small, $query);
+  @include elevation.elevation(0, $query: $query);
 
   &:hover,
   &:focus {
-    @include elevation.elevation(0/* , $query: $query */);
+    @include elevation.elevation(0, $query: $query);
   }
 
   &:active {
-    @include elevation.elevation(0/* , $query: $query */);
+    @include elevation.elevation(0, $query: $query);
   }
 
   &:disabled {
-    @include elevation.elevation(0/* , $query: $query */);
+    @include elevation.elevation(0, $query: $query);
   }
 }

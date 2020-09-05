@@ -28,7 +28,7 @@
   import { useActions } from "@smui/common/useActions.js";
   import { RippleProps } from "@smui/ripple/src";
   import { Li, A, Span } from "@smui/common/dom";
-  import { Li as RippleLi } from "@smui/ripple/dom";
+  import { RippleLi } from "@smui/ripple/dom";
   import { getListContext } from "./ListContext";
   import { createItemContext, ItemContext } from "./ItemContext";
   import { getMenuSurfaceContext } from "@smui/menu-surface/src/MenuSurfaceContext";
@@ -123,6 +123,7 @@
     ? {
         color,
         component,
+        rippleElement: "mdc-list-item__ripple",
         keyboardEvents: true,
       }
     : null;
@@ -144,7 +145,7 @@
 <svelte:component
   this={component}
   props={{ ...props }}
-  rippleProps
+  {rippleProps}
   bind:dom
   class="mdc-list-item {className}
     {disabled ? 'mdc-list-item--disabled' : ''}
@@ -153,7 +154,6 @@
   {style}
   on:domEvent={forwardDOMEvents}
   on:focus={onFocus}>
-  {#if rippleProps}<span class="mdc-list-item__ripple" />{/if}
   <slot />
 </svelte:component>
 

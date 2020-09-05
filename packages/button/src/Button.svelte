@@ -1,3 +1,13 @@
+<script lang="ts" context="module">
+  import { A, Button } from "@smui/common/dom";
+  import { RippleButton, RippleA } from "@smui/ripple/dom";
+  export type ButtonComponent =
+    | typeof Button
+    | typeof A
+    | typeof RippleButton
+    | typeof RippleA;
+</script>
+
 <script lang="ts">
   // Base
   import { DOMEventsForwarder } from "@smui/common/events/DOMEventsForwarder";
@@ -10,7 +20,7 @@
   export let props: any = {};
 
   // Button
-  import { A, Button, ButtonProps } from "@smui/common/dom";
+  import { ButtonProps } from "@smui/common/dom";
   import {
     setContext,
     getContext,
@@ -28,7 +38,6 @@
   export let action = "close";
   let defaultAction: boolean = false;
   export { defaultAction as default };
-  export let component = href == null ? Button : A;
   export let disabled: boolean = false;
   export let target: string = null;
 
@@ -49,10 +58,18 @@
   setContext("SMUI:label:context", "button");
   setContext("SMUI:icon:context", "button");
 
-  let useRipple: RippleProps;
-  $: useRipple = ripple
+  export let component: ButtonComponent = Button;
+  function getComponent(ripple = false) {
+    if (ripple) return href == null ? RippleButton : RippleA;
+    else return href == null ? Button : A;
+  }
+  $: component = getComponent(ripple);
+
+  let rippleProps: RippleProps;
+  $: rippleProps = ripple
     ? {
-        classForward: (classes) => (rippleClasses = classes),
+        rippleElement: "mdc-button__ripple",
+        component: getComponent(),
       }
     : null;
   ///
@@ -60,24 +77,22 @@
 
 <svelte:component
   this={component}
+  {rippleProps}
   bind:dom
   on:domEvent={forwardDOMEvents}
   class="mdc-button {className}
+    {variant ? `mdc-button--${variant}` : ''}
+    {dense ? 'mdc-button--dense' : ''}
+    {color === 'secondary' ? 'smui-button--color-secondary' : ''}
+    {context === 'card:action' ? 'mdc-card__action' : ''}
+    {context === 'card:action' ? 'mdc-card__action--button' : ''}
+    {context === 'dialog:action' ? 'mdc-dialog__button' : ''}
+    {context === 'top-app-bar:navigation' ? 'mdc-top-app-bar__navigation-icon' : ''}
+    {context === 'top-app-bar:action' ? 'mdc-top-app-bar__action-item' : ''}
+    {context === 'snackbar' ? 'mdc-snackbar__action' : ''}"
   {style}
-  {rippleClasses.join(' ')}
-  {variant ? `mdc-button--${variant}` : ''}
-  {dense ? 'mdc-button--dense' : ''}
-  {color === 'secondary' ? 'smui-button--color-secondary' : ''}
-  {context === 'card:action' ? 'mdc-card__action' : ''}
-  {context === 'card:action' ? 'mdc-card__action--button' : ''}
-  {context === 'dialog:action' ? 'mdc-dialog__button' : ''}
-  {context === 'top-app-bar:navigation' ? 'mdc-top-app-bar__navigation-icon' : ''}
-  {context === 'top-app-bar:action' ? 'mdc-top-app-bar__action-item' : ''}
-  {context === 'snackbar' ? 'mdc-snackbar__action' : ''}"
   {...actionProp}
   {...defaultProp}
-  props={{ ...props, disabled, useRipple, target, href }}
-  >
-  <div class="mdc-button__ripple" />
+  props={{ ...props, disabled, target, href }}>
   <slot />
 </svelte:component>

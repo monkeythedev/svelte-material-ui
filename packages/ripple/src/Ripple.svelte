@@ -24,9 +24,8 @@
         });
       }
 
-      const foundation = new MDCRippleFoundation({
+      const adapter = {
         ...MDCRipple.createAdapter(this),
-        isSurfaceActive: keyboardEvents ? () => this.active : null,
         addClass: (className: string) => {
           const idx = classList.indexOf(className);
           if (idx === -1) {
@@ -47,7 +46,13 @@
             }
           }
         },
-      });
+      };
+
+      if (keyboardEvents) {
+        adapter.isSurfaceActive = () => this.active;
+      }
+
+      const foundation = new MDCRippleFoundation(adapter);
 
       this.ripple = new MDCRipple(this.root, foundation);
 
@@ -83,9 +88,9 @@
   import H1 from "@smui/common/dom/H1.svelte";
   import { RippleProps } from "./Ripple";
 
-
   export let rippleProps: RippleProps;
   export let instance: SMUIRipple = null;
+  let rippleTarget: HTMLDivElement;
 
   onMount(() => {
     instance = new SMUIRipple(dom, {
@@ -111,12 +116,13 @@
   this={rippleProps.component}
   props={{ ...props }}
   bind:dom
-  class="{className}
-    mdc-ripple-upgraded
-    {rippleProps.color !== null ? 'mdc-ripple-surface' : ''}
-    {rippleProps.color === 'primary' ? 'mdc-ripple-surface--primary' : ''}
-    {rippleProps.color === 'secondary' ? 'mdc-ripple-surface--accent' : ''}"
+  class="{className} mdc-ripple-upgraded {rippleProps.color != null ? 'mdc-ripple-surface' : ''}
+    {rippleProps.color == 'primary' ? 'mdc-ripple-surface--primary' : ''}
+    {rippleProps.color == 'secondary' ? 'mdc-ripple-surface--accent' : ''}"
   {style}
   on:domEvent={forwardDOMEvents}>
+  {#if rippleProps.rippleElement}
+    <span class={rippleProps.rippleElement} bind:this={rippleTarget} />
+  {/if}
   <slot />
 </svelte:component>

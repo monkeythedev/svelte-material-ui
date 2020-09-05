@@ -212,7 +212,7 @@
     return Array.from($context$.listItems);
   }
 
-  $: props = {...props, role, "aria-orientation": orientation, "aria-hidden": menuSurfaceContext$ ? !$menuSurfaceContext$.open : null}
+  $: props = {...props, role, "aria-orientation": orientation, "aria-hidden": menuSurfaceContext$ ? !$menuSurfaceContext$.open : null, tabindex: role === "menu" ? "-1" : null }
 </script>
 
 <svelte:component

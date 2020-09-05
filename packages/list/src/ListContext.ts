@@ -14,4 +14,4 @@ export interface ListContext {
   notifySelected(item: ItemContext, selected: boolean): void;
 }
 
-export type ListRole = "listbox" | "radiogroup" | "group" | "list";
+export type ListRole = "listbox" | "radiogroup" | "group" | "list" | "menu";
