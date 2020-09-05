@@ -28,7 +28,7 @@
   import { useActions } from "@smui/common/useActions.js";
   import { RippleProps } from "@smui/ripple/src";
   import { Li, A, Span } from "@smui/common/dom";
-  import { RippleLi } from "@smui/ripple/dom";
+  import { RippleLi, RippleA } from "@smui/ripple/dom";
   import { getListContext } from "./ListContext";
   import { createItemContext, ItemContext } from "./ItemContext";
   import { getMenuSurfaceContext } from "@smui/menu-surface/src/MenuSurfaceContext";
@@ -59,14 +59,9 @@
     }
   }
 
-  let nav = false;
-  $: nav = $listContext$.isNav;
-
   let component: typeof Li | typeof A | typeof Span;
-  $: if (nav && href) {
-    component = A;
-  } else if (nav && !href) {
-    component = Span;
+  $: if ($listContext$.isNav && href) {
+    component = ripple ? RippleA : A;
   } else {
     component = ripple ? RippleLi : Li;
   }

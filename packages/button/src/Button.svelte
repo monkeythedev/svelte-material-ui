@@ -16,8 +16,9 @@
   export { className as class };
   export let style: string = "";
 
-  export let dom: HTMLElement = null;
-  export let props: any = {};
+  export let dom: HTMLButtonElement | HTMLAnchorElement = null;
+  import { BaseProps } from "@smui/common/dom/Props";
+  export let props: BaseProps = {};
 
   // Button
   import { ButtonProps } from "@smui/common/dom";
@@ -77,7 +78,7 @@
 
 <svelte:component
   this={component}
-  {rippleProps}
+  props={{ ...props, disabled, target, href }}
   bind:dom
   on:domEvent={forwardDOMEvents}
   class="mdc-button {className}
@@ -93,6 +94,6 @@
   {style}
   {...actionProp}
   {...defaultProp}
-  props={{ ...props, disabled, target, href }}>
+  {rippleProps}>
   <slot />
 </svelte:component>

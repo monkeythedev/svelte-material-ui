@@ -15,8 +15,6 @@
   import {
     onMount,
     onDestroy,
-    getContext,
-    setContext,
     createEventDispatcher,
   } from "svelte";
   import Nav from "@smui/common/dom/Nav.svelte";
@@ -28,6 +26,7 @@
   import { writable, Writable } from "svelte/store";
   import { getMenuContext } from "@smui/menu/src/MenuContext";
   import { getMenuSurfaceContext } from "@smui/menu-surface/src/MenuSurfaceContext";
+  import { getDrawerContext } from "@smui/drawer/src/DrawerContext";
 
   export let role: ListRole = "list";
   export let nonInteractive: boolean = false;
@@ -42,9 +41,9 @@
 
   const dispatch = createEventDispatcher();
 
-  let nav: boolean = getContext("SMUI:list:nav"); // TODO: $navContext$
   const menuContext$ = getMenuContext();
   const menuSurfaceContext$ = getMenuSurfaceContext();
+  const drawerContext$ = getDrawerContext();
   const context$ = createListContext({
     notifyFocus(itemToFocus: ItemContext) {
       itemToFocus.setTabIndex("0");
@@ -126,21 +125,25 @@
   }
 
   let component: typeof Nav | typeof Ul;
-  $: component = nav ? Nav : Ul;
+  $: component = drawerContext$ ? Nav : Ul;
 
   $: if (menuSurfaceContext$) {
-    role = "menu" as ListRole;
+    role = "menu";
+  }
+
+  $: if (drawerContext$) {
+    wrapFocus = true;
   }
 
   let list: MDCList;
   onMount(async () => {
-    if (!menuContext$) {
+    if (!menuContext$ && $drawerContext$?.variant !== "dismissible" && $drawerContext$?.variant !== "modal") {
       list = new MDCList(dom);
       list.listen("MDCList:action", handleAction);
     }
   });
 
-  $: $context$ = { ...$context$, role, isNav: nav, list };
+  $: $context$ = { ...$context$, role, isNav: !!drawerContext$, list };
 
   $: if (list) {
     if (role === "listbox") {
@@ -212,7 +215,13 @@
     return Array.from($context$.listItems);
   }
 
-  $: props = {...props, role, "aria-orientation": orientation, "aria-hidden": menuSurfaceContext$ ? !$menuSurfaceContext$.open : null, tabindex: role === "menu" ? "-1" : null }
+  $: props = {
+    ...props,
+    role,
+    "aria-orientation": orientation,
+    "aria-hidden": menuSurfaceContext$ ? !$menuSurfaceContext$.open : null,
+    tabindex: role === "menu" ? "-1" : null,
+  };
 </script>
 
 <svelte:component

@@ -1,31 +1,41 @@
+<script lang="ts" context="module">
+  export type DrawerVariant = "dismissible" | "modal";
+</script>
+
 <script lang="ts">
+  // Base
+  import { DOMEventsForwarder } from "@smui/common/actions/DOMEventsForwarder";
+  const forwardDOMEvents = DOMEventsForwarder();
+  let className = "";
+  export { className as class };
+  export let style: string = "";
+
+  export let dom: HTMLDivElement = null;
+  import { BaseProps } from "@smui/common/dom/Props";
+  export let props: BaseProps = {};
+
+  // Drawer
   import { MDCDrawer } from "@material/drawer";
-  import { onMount, onDestroy, afterUpdate, setContext, createEventDispatcher } from "svelte";
-  import { get_current_component } from "svelte/internal";
-  import { forwardAllDOMEvents, forwardEventsBuilder } from "@smui/common/forwardEvents";
-  import { exclude } from "@smui/common/exclude.js";
-  import { useActions } from "@smui/common/useActions.js";
+  import {
+    onMount,
+    onDestroy,
+    afterUpdate,
+    setContext,
+    createEventDispatcher,
+  } from "svelte";
+  import { createDrawerContext } from "./DrawerContext";
 
   const dispatch = createEventDispatcher();
 
-  export let use = [];
-  let className = "";
-  export { className as class };
-  export let variant = null;
+  export let variant: DrawerVariant = null;
   export let open: boolean = false;
 
-  let dom;
   let drawer;
   let listPromiseResolve;
   let listPromise = new Promise((resolve) => (listPromiseResolve = resolve));
 
-  setContext("SMUI:list:nav", true);
-  setContext("SMUI:list:item:nav", true);
-
-  if (variant === "dismissible" || variant === "modal") {
-    setContext("SMUI:list:instantiate", false);
-    setContext("SMUI:list:getInstance", getListInstancePromise);
-  }
+  const context$ = createDrawerContext();
+  $: $context$ = {...$context$, variant}
 
   $: if (drawer && drawer.open !== open) {
     drawer.open = open;
@@ -34,7 +44,6 @@
   onMount(() => {
     if (variant === "dismissible" || variant === "modal") {
       drawer = new MDCDrawer(dom);
-      listPromiseResolve(drawer.list_);
     }
   });
 
@@ -48,15 +57,10 @@
       drawer = undefined;
     } else if (!drawer && (variant === "dismissible" || variant === "modal")) {
       drawer = new MDCDrawer(dom);
-      drawer.listen("MDCDrawer:opened", updateOpen)
-      drawer.listen("MDCDrawer:closed", updateOpen)
-      listPromiseResolve(drawer.list_);
+      drawer.listen("MDCDrawer:opened", updateOpen);
+      drawer.listen("MDCDrawer:closed", updateOpen);
     }
   });
-
-  function getListInstancePromise() {
-    return listPromise;
-  }
 
   function updateOpen() {
     open = drawer.open;
@@ -68,13 +72,13 @@
 </script>
 
 <aside
+  {...props}
   bind:this={dom}
-  use:forwardAllDOMEvents={dispatch}
-  class=" mdc-drawer {className}
-  {variant === 'dismissible' ? 'mdc-drawer--dismissible' : ''}
-  {variant === 'modal' ? 'mdc-drawer--modal' : ''}
-  "
-  >
+  use:forwardDOMEvents
+  class="mdc-drawer {className}
+    {variant === 'dismissible' ? 'mdc-drawer--dismissible' : ''}
+    {variant === 'modal' ? 'mdc-drawer--modal' : ''}"
+  {style}>
   <slot />
 </aside>
 
