@@ -5,7 +5,7 @@
   // import { forwardEventsBuilder } from "@smui/common/forwardEvents";
   // import { exclude } from "@smui/common/exclude.js";
   // import { useActions } from "@smui/common/useActions.js";
-  import { Ripple, RippleProps } from "../ripple/bare";
+  import { Ripple, RippleProps } from "../ripple/src";
   import A from "@smui/common/dom/A.svelte";
   import Button from "@smui/common/dom/Button.svelte";
   import { DOMEventsForwarder } from "../common/events/DOMEventsForwarder";

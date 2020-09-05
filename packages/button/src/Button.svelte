@@ -17,7 +17,7 @@
     onMount,
     createEventDispatcher,
   } from "svelte";
-  import { RippleProps } from "@smui/ripple/bare";
+  import { RippleProps } from "@smui/ripple/src";
 
   export let ripple: boolean = true;
   export let color: "primary" | "secondary" = "primary";

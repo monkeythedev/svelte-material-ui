@@ -26,13 +26,12 @@
   import { forwardEventsBuilder } from "@smui/common/forwardEvents";
   import { exclude } from "@smui/common/exclude.js";
   import { useActions } from "@smui/common/useActions.js";
-  import { RippleProps } from "@smui/ripple/bare";
-  import Ripple from "@smui/ripple/Ripple.svelte";
-  import Li from "@smui/common/dom/Li.svelte";
-  import A from "@smui/common/dom/A.svelte";
-  import Span from "@smui/common/dom/Span.svelte";
+  import { RippleProps } from "@smui/ripple/src";
+  import { Li, A, Span } from "@smui/common/dom";
+  import { Li as RippleLi } from "@smui/ripple/dom";
   import { getListContext } from "./ListContext";
   import { createItemContext, ItemContext } from "./ItemContext";
+  import { getMenuSurfaceContext } from "@smui/menu-surface/src/MenuSurfaceContext";
 
   export let ripple: boolean = true;
   export let color = null;
@@ -45,6 +44,7 @@
   export let inputId: string = "SMUI-form-field-list-" + counter++;
 
   const listContext$ = getListContext();
+  const menuSurfaceContext$ = getMenuSurfaceContext();
 
   const dispatch = createEventDispatcher();
 
@@ -68,7 +68,11 @@
   } else if (nav && !href) {
     component = Span;
   } else {
-    component = Li;
+    component = ripple ? RippleLi : Li;
+  }
+
+  $: if (menuSurfaceContext$) {
+    role = "menuitem";
   }
 
   setContext("SMUI:generic:input:props", { id: inputId });
@@ -114,12 +118,12 @@
     $listContext$.notifySelected(context, true);
   }
 
-  let useRipple: RippleProps;
-  $: useRipple = ripple
+  let rippleProps: RippleProps;
+  $: rippleProps = ripple
     ? {
         color,
         component,
-        keyboardEvents: true
+        keyboardEvents: true,
       }
     : null;
 
@@ -133,13 +137,14 @@
       $listContext$.role === "group" || $listContext$.role === "radiogroup"
         ? `${checked}`
         : null,
-    ripple: useRipple,
+    role
   };
 </script>
 
 <svelte:component
-  this={useRipple ? Ripple : component}
+  this={component}
   props={{ ...props }}
+  rippleProps
   bind:dom
   class="mdc-list-item {className}
     {disabled ? 'mdc-list-item--disabled' : ''}
@@ -148,7 +153,7 @@
   {style}
   on:domEvent={forwardDOMEvents}
   on:focus={onFocus}>
-  {#if useRipple}<span class="mdc-list-item__ripple" />{/if}
+  {#if rippleProps}<span class="mdc-list-item__ripple" />{/if}
   <slot />
 </svelte:component>
 

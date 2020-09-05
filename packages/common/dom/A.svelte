@@ -19,7 +19,7 @@
   };
 
   // Button
-  import { Ripple, RippleProps } from "@smui/ripple/bare";
+  import { Ripple, RippleProps } from "@smui/ripple/src";
   export let useRipple: RippleProps = null;
 </script>
 

@@ -1,5 +1,5 @@
 import { ItemContext } from "./ItemContext";
-import { createContextBuilder } from "./ContextBuilder";
+import { createContextBuilder } from "@smui/common";
 import { MDCList } from '@material/list'
 
 const [createListContext, getListContext] = createContextBuilder<ListContext>();

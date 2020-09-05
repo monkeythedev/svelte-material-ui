@@ -1,7 +1,7 @@
 @import "@material/card/mdc-card";
 @import "@smui/button/style";
 @import "@smui/icon-button/style";
-@import "@smui/ripple/style";
+@import "@smui/ripple";
 
 .smui-card--padded, .smui-card__content, .smui-card__primary-action--padded {
   padding: 16px;

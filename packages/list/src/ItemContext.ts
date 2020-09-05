@@ -1,4 +1,4 @@
-import { createContextBuilder } from "./ContextBuilder";
+import { createContextBuilder } from "@smui/common";
 import { ListItemDOMElement } from "./types";
 
 const [createItemContext, getItemContext] = createContextBuilder<ItemContext>();

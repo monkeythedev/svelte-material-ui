@@ -7,7 +7,8 @@
   export let style: string = "";
 
   export let dom: HTMLDivElement | HTMLUListElement = null;
-  export let props: any = {};
+  import { BaseProps } from "@smui/common/dom/Props";
+  export let props: BaseProps = {};
 
   // List
   import { MDCList } from "@material/list";
@@ -25,6 +26,8 @@
   import { ItemContext } from "./ItemContext";
   import { createItemsStore } from "./ListStores";
   import { writable, Writable } from "svelte/store";
+  import { getMenuContext } from "@smui/menu/src/MenuContext";
+  import { getMenuSurfaceContext } from "@smui/menu-surface/src/MenuSurfaceContext";
 
   export let role: ListRole = "list";
   export let nonInteractive: boolean = false;
@@ -40,6 +43,8 @@
   const dispatch = createEventDispatcher();
 
   let nav: boolean = getContext("SMUI:list:nav"); // TODO: $navContext$
+  const menuContext$ = getMenuContext();
+  const menuSurfaceContext$ = getMenuSurfaceContext();
   const context$ = createListContext({
     notifyFocus(itemToFocus: ItemContext) {
       itemToFocus.setTabIndex("0");
@@ -123,11 +128,16 @@
   let component: typeof Nav | typeof Ul;
   $: component = nav ? Nav : Ul;
 
-  let list: MDCList;
+  $: if (menuSurfaceContext$) {
+    role = "menu" as ListRole;
+  }
 
+  let list: MDCList;
   onMount(async () => {
-    list = new MDCList(dom);
-    list.listen("MDCList:action", handleAction);
+    if (!menuContext$) {
+      list = new MDCList(dom);
+      list.listen("MDCList:action", handleAction);
+    }
   });
 
   $: $context$ = { ...$context$, role, isNav: nav, list };
@@ -201,13 +211,14 @@
   export function getListItems() {
     return Array.from($context$.listItems);
   }
+
+  $: props = {...props, role, "aria-orientation": orientation, "aria-hidden": menuSurfaceContext$ ? !$menuSurfaceContext$.open : null}
 </script>
 
 <svelte:component
   this={component}
-  props={{}}
+  {props}
   bind:dom
-  on:domEvent={forwardDOMEvents}
   class="mdc-list {className}
     {nonInteractive ? 'mdc-list--non-interactive' : ''}
     {dense ? 'mdc-list--dense' : ''}
@@ -215,7 +226,8 @@
     {twoLine ? 'mdc-list--two-line' : ''}
     {threeLine && !twoLine ? 'smui-list--three-line' : ''}
     {orientation === 'horizontal' ? 'smui-list--horizontal' : ''}"
-  {style}>
+  {style}
+  on:domEvent={forwardDOMEvents}>
   <slot />
 </svelte:component>
 

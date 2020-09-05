@@ -3,13 +3,11 @@ import { BaseProps } from "@smui/common/dom/Props";
 import { getContext } from "svelte";
 
 export interface RippleProps extends BaseProps {
-  ripple?: {
-    unbounded?: boolean;
-    color?: "surface" | "primary" | "secondary";
-    classForward?: (classList: string[]) => void;
-    keyboardEvents?: boolean;
-    component: any;
-  };
+  unbounded?: boolean;
+  color?: "surface" | "primary" | "secondary";
+  classForward?: (classList: string[]) => void;
+  keyboardEvents?: boolean;
+  component: any;
 }
 
 export function Ripple(node: HTMLElement, props: RippleProps) {

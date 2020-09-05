@@ -21,7 +21,7 @@
   export let props: ButtonProps = {};
 
   // Button
-  import { Ripple } from "@smui/ripple/bare";
+  import { Ripple } from "@smui/ripple/src";
 </script>
 
 <button

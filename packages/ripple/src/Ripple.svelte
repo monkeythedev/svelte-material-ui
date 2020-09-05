@@ -72,32 +72,28 @@
   export { className as class };
   export let style: string = "";
 
-  export let dom: HTMLDivElement | HTMLUListElement = null;
-  import { RippleProps } from "./Ripple";
-  export let props: RippleProps;
+  export let dom: HTMLDivElement | HTMLLIElement = null;
+  import { BaseProps } from "@smui/common/dom/Props";
+  export let props: BaseProps;
 
   // Ripple
   import { Li, Button, A } from "@smui/common/dom";
   import { MDCRipple, MDCRippleFoundation } from "@material/ripple";
   import { onMount } from "svelte";
   import H1 from "@smui/common/dom/H1.svelte";
-  import { BaseProps } from "@smui/common/dom/Props";
+  import { RippleProps } from "./Ripple";
 
+
+  export let rippleProps: RippleProps;
   export let instance: SMUIRipple = null;
 
   onMount(() => {
     instance = new SMUIRipple(dom, {
-      classForward: props.ripple.classForward,
-      keyboardEvents: props.ripple.keyboardEvents,
+      classForward: rippleProps.classForward,
+      keyboardEvents: rippleProps.keyboardEvents,
     });
-    instance.ripple.unbounded = props.ripple.unbounded;
+    instance.ripple.unbounded = rippleProps.unbounded;
   });
-
-  let propsToFwd: BaseProps;
-  $: {
-    const { ripple, ..._propsToFwd } = props;
-    propsToFwd = _propsToFwd;
-  }
 
   // Fix ripple on selectable items
   $: {
@@ -112,15 +108,15 @@
 </script>
 
 <svelte:component
-  this={props.ripple.component}
-  props={{ ...propsToFwd }}
+  this={rippleProps.component}
+  props={{ ...props }}
   bind:dom
-  on:domEvent={forwardDOMEvents}
   class="{className}
     mdc-ripple-upgraded
-    {props.ripple.color !== null ? 'mdc-ripple-surface' : ''}
-    {props.ripple.color === 'primary' ? 'mdc-ripple-surface--primary' : ''}
-    {props.ripple.color === 'secondary' ? 'mdc-ripple-surface--accent' : ''}"
-  {style}>
+    {rippleProps.color !== null ? 'mdc-ripple-surface' : ''}
+    {rippleProps.color === 'primary' ? 'mdc-ripple-surface--primary' : ''}
+    {rippleProps.color === 'secondary' ? 'mdc-ripple-surface--accent' : ''}"
+  {style}
+  on:domEvent={forwardDOMEvents}>
   <slot />
 </svelte:component>

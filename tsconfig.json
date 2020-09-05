@@ -9,5 +9,6 @@
     "paths": {
       "@smui/*": ["./packages/*"]
     }
-  }
+  },
+  "exclude": ["**/node_modules/**/*"]
 }

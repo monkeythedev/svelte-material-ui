@@ -16,7 +16,7 @@
   import {forwardEventsBuilder} from '@smui/common/forwardEvents';
   import {exclude} from '@smui/common/exclude.js';
   import {useActions} from '@smui/common/useActions.js';
-  import Ripple from '@smui/ripple/bare';
+  import Ripple from '@smui/ripple/src';
 
   const forwardEvents = forwardEventsBuilder(get_current_component());
 

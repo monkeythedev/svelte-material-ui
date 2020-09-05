@@ -9,6 +9,8 @@
   import { A } from "@smui/common/dom";
   import { IconButton } from "@smui/icon-button";
   import { Typography } from "@smui/typography";
+import SelectionGroup from "@smui/menu/src/SelectionGroup.svelte";
+import SelectionGroupIcon from "@smui/menu/src/SelectionGroupIcon.svelte";
 
   let clicked = 0;
   let menu: Menu;
@@ -208,18 +210,26 @@
           style="padding: 0; min-width: 36px;">
           <Icon class="material-icons" style="margin: 0;">arrow_drop_down</Icon>
         </Button>
-        <Menu bind:this={menu} anchorCorner={Corner.TOP_LEFT}>
+        <Menu bind:this={menu} anchorCorner={Corner.TOP_LEFT} on:selected={() => clicked++}>
           <List>
-            <Item on:SMUI:action={() => clicked++}>
+            <Item>
               <Text>Thing 1</Text>
             </Item>
-            <Item on:SMUI:action={() => clicked++}>
+            <Item>
               <Text>Thing 2</Text>
             </Item>
             <Separator />
-            <Item on:SMUI:action={() => clicked++}>
+            <Item>
               <Text>Thing 3</Text>
             </Item>
+            <SelectionGroup>
+              <Item>
+                <SelectionGroupIcon>
+                  check
+                </SelectionGroupIcon>
+                <Text>Thing 4</Text>
+              </Item>
+            </SelectionGroup>
           </List>
         </Menu>
       </div>
@@ -238,14 +248,14 @@
         </Button>
         <Menu bind:this={menu2} anchorCorner={Corner.TOP_LEFT}>
           <List>
-            <Item on:SMUI:action={() => clicked++}>
+            <Item on:click={() => clicked++}>
               <Text>Thing 1</Text>
             </Item>
-            <Item on:SMUI:action={() => clicked++}>
+            <Item on:click={() => clicked++}>
               <Text>Thing 2</Text>
             </Item>
             <Separator />
-            <Item on:SMUI:action={() => clicked++}>
+            <Item on:click={() => clicked++}>
               <Text>Thing 3</Text>
             </Item>
           </List>
