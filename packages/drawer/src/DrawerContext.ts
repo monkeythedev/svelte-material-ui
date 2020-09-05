@@ -1,5 +1,5 @@
 import { createContextBuilder } from "@smui/common";
-import { DrawerVariant } from "./Drawer.svelte";
+import { DrawerVariant } from "./types";
 
 const [createDrawerContext, getDrawerContext] = createContextBuilder<DrawerContext>();
 export { createDrawerContext, getDrawerContext };

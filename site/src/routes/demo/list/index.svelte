@@ -273,13 +273,11 @@
     </List>
   </div>
 
-  <pre class="status">Clicked: {clickedGroup}</pre>
-<!-- 
   <div>
     A radio list:
     <List class="demo-list" role="radiogroup">
       <Item>
-        <Graphic>
+        <Graphic>f
           <Radio bind:group={selectedRadio} value="Bruce Willis" />
         </Graphic>
         <Label>Bruce Willis</Label>
@@ -313,6 +311,7 @@
 
   <pre class="status">Selected: {selectedRadio}</pre>
 
+  <!-- 
   <div>
     A check list with trailing checkboxes:
     <List class="demo-list" role="group">

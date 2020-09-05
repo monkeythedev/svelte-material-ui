@@ -1,42 +1,35 @@
 <script lang="ts">
+  // Base
   import { DOMEventsForwarder } from "@smui/common/events/DOMEventsForwarder";
-  import Li from "@smui/common/Li.svelte";
-  import Hr from "@smui/common/dom/Hr.svelte";
-  import { get_current_component } from "svelte/internal";
-  import { forwardEventsBuilder } from "@smui/common/forwardEvents";
-  import { exclude } from "@smui/common/exclude.js";
-  import { useActions } from "@smui/common/useActions.js";
-
   const forwardDOMEvents = DOMEventsForwarder();
-
   let className = "";
   export { className as class };
-  export let dom: HTMLLIElement | HTMLHRElement;
+  export let style: string = "";
+
+  export let dom: HTMLButtonElement | HTMLAnchorElement = null;
+  import { BaseProps } from "@smui/common/dom/Props";
+  export let props: BaseProps = {};
+
+  // Separator
+  import {Li, Hr} from "@smui/common/dom";
+
   export let group = false;
   export let nav = false;
   export let padded = false;
   export let inset = false;
 
   const component = group || nav ? Hr : Li;
-
-  $: props = exclude($$props, [
-    "use",
-    "class",
-    "group",
-    "nav",
-    "padded",
-    "inset",
-  ]);
 </script>
 
 <svelte:component
   this={component}
   bind:dom
+  props={{...props, role: component === Li ? 'separator' : null}}
   on:domEvent={forwardDOMEvents}
   class=" mdc-list-divider {className}
   {padded ? 'mdc-list-divider--padded' : ''}
   {inset ? 'mdc-list-divider--inset' : ''}"
-  role={component === Li ? 'separator' : null} />
+  {style}/>
 
 <!-- {#if group || nav}
   <hr

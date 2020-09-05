@@ -141,11 +141,11 @@
         {#each sections as section (section.name)}
           <Item
             bind:this={section.component}
-            href={section.route || section.shortcut}
+            style={section.indent ? 'margin-left: ' + section.indent * 25 + 'px;' : ''}
             on:click={() => pickSection(section)}
             activated={'route' in section && section.route === $page.path}
-            title={section.name}
-            style={section.indent ? 'margin-left: ' + section.indent * 25 + 'px;' : ''}>
+            href={section.route || section.shortcut}
+            props={{title: section.name}}>
             <Text class="mdc-theme--on-secondary">{section.name}</Text>
           </Item>
         {/each}

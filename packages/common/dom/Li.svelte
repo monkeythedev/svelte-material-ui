@@ -6,11 +6,11 @@
   let className = "";
   export { className as class };
   export let style: string = "";
-  
+
   import { BaseProps } from "./Props";
   export let props: BaseProps = {};
 </script>
 
-<li {...props} bind:this={dom} class={className} {style} use:forwardDOMEvents>
+<li bind:this={dom} {...props} class={className} {style} use:forwardDOMEvents>
   <slot />
 </li>

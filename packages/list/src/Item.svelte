@@ -139,16 +139,16 @@
 
 <svelte:component
   this={component}
-  props={{ ...props }}
-  {rippleProps}
   bind:dom
+  props={{ ...props }}
   class="mdc-list-item {className}
     {disabled ? 'mdc-list-item--disabled' : ''}
     {selected ? 'mdc-list-item--selected' : ''}
     {role === 'menuitem' && selected ? 'mdc-menu-item--selected' : ''}"
   {style}
   on:domEvent={forwardDOMEvents}
-  on:focus={onFocus}>
+  on:focus={onFocus}
+  {rippleProps}>
   <slot />
 </svelte:component>
 

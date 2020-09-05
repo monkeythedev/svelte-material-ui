@@ -28,7 +28,7 @@
   export let fixed: boolean = false;
   export let open: boolean = false;
   export let quickOpen: boolean = false;
-  export let anchorElement: HTMLElement;
+  export let anchorElement: HTMLElement = null;
   export let anchorCorner: Corner = null;
 
   let menuSurface: MDCMenuSurface;

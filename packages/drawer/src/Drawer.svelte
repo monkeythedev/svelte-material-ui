@@ -1,7 +1,3 @@
-<script lang="ts" context="module">
-  export type DrawerVariant = "dismissible" | "modal";
-</script>
-
 <script lang="ts">
   // Base
   import { DOMEventsForwarder } from "@smui/common/actions/DOMEventsForwarder";
@@ -24,6 +20,7 @@
     createEventDispatcher,
   } from "svelte";
   import { createDrawerContext } from "./DrawerContext";
+  import { DrawerVariant } from "./types"
 
   const dispatch = createEventDispatcher();
 

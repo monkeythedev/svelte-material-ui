@@ -72,8 +72,7 @@
         rippleElement: "mdc-button__ripple",
         component: getComponent(),
       }
-    : null;
-  ///
+    : undefined;
 </script>
 
 <svelte:component
@@ -94,6 +93,6 @@
   {style}
   {...actionProp}
   {...defaultProp}
-  {rippleProps}>
+  {...rippleProps}>
   <slot />
 </svelte:component>

@@ -131,8 +131,8 @@
 </script>
 
 <MenuSurface
-  props={{ ...props }}
   bind:dom
+  props={{ ...props }}
   class="mdc-menu {className}"
   {style}
   on:domEvent={forwardDOMEvents}
