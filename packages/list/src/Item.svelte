@@ -10,9 +10,11 @@
   export { className as class };
   export let style: string = null;
 
-  import { ListItemDOMElement } from "./types";
+  import { ItemRole, ListItemDOMElement } from "./types";
   export let dom: ListItemDOMElement = null;
-  export let props: any = {};
+
+  import { BaseProps } from "@smui/common/dom/Props";
+  export let props: BaseProps = {};
 
   // Item
   import {
@@ -32,51 +34,23 @@
   import { getListContext } from "./ListContext";
   import { createItemContext, ItemContext } from "./ItemContext";
   import { getMenuSurfaceContext } from "@smui/menu-surface/src/MenuSurfaceContext";
+import { memo } from "@smui/common/utils";
 
   export let ripple: boolean = true;
   export let color = null;
   export let activated: boolean = false;
-  export let role = getContext("SMUI:list:item:role");
+  export let role: ItemRole = null; //TODO: forse si può togliere dagli export
   export let selected: boolean = false;
   export let disabled: boolean = false;
   export let tabindex: "0" | "-1" = "-1";
   export let href: string = null;
-  export let inputId: string = "SMUI-form-field-list-" + counter++;
-
-  const listContext$ = getListContext();
-  const menuSurfaceContext$ = getMenuSurfaceContext();
+  export let value: any = null;
 
   const dispatch = createEventDispatcher();
 
-  $: if (disabled && tabindex === "0") tabindex = "-1";
-  $: if (disabled && selected) selected = false;
-  $: if ($listContext$.list) {
-    if (selected) {
-      $listContext$.notifySelected(context, true);
-      dispatch("selected", dom);
-    } else {
-      $listContext$.notifySelected(context, false);
-    }
-  }
-
-  let component: typeof Li | typeof A | typeof Span;
-  $: if ($listContext$.isNav && href) {
-    component = ripple ? RippleA : A;
-  } else {
-    component = ripple ? RippleLi : Li;
-  }
-
-  $: if (menuSurfaceContext$) {
-    role = "menuitem";
-  }
-
-  setContext("SMUI:generic:input:props", { id: inputId });
-  setContext("SMUI:generic:input:setChecked", setChecked);
-
-  const context = {} as ItemContext;
-  $: Object.assign(context, {
-    disabled,
-    selected,
+  const listContext$ = getListContext();
+  const menuSurfaceContext$ = getMenuSurfaceContext();
+  const context$ = createItemContext({
     setTabIndex(newTabindex: "0" | "-1") {
       tabindex = newTabindex;
     },
@@ -86,12 +60,59 @@
     setSelected(_selected: boolean) {
       selected = _selected;
     },
+    setValue(newValue: any) {
+      value = newValue;
+    },
     sendOnSelected() {
       dispatch("selected", dom);
     },
+  });
+
+  $: if ($listContext$.role === "radiogroup") {
+    role = "radio";
+  } else if ($listContext$.role === "menu" || menuSurfaceContext$) {
+    role = "menuitem"
+  } else if ($listContext$.role === "listbox") {
+    role = "option"
+  } else if ($listContext$.role === "group") {
+    role = "checkbox"
+  }
+
+  $: if (disabled && tabindex === "0") tabindex = "-1";
+  $: if (disabled && selected) selected = false;
+
+  let component: typeof Li | typeof A | typeof Span;
+
+  $: if ($listContext$.isNav && href) {
+    component = ripple ? RippleA : A;
+  } else {
+    component = ripple ? RippleLi : Li;
+  }
+
+  const context = {} as ItemContext;
+  $: $context$ = Object.assign(context, {
+    ...$context$,
+    disabled,
+    selected,
     tabindex,
     dom,
+    value
   });
+
+  const selectedMemo = memo(selected);
+
+  $: if (selectedMemo.val !== selected) {
+    if ($listContext$.list) {
+      if (selected) {
+        $listContext$.notifySelected(context);
+        dispatch("selected", dom);
+      } else {
+        $listContext$.notifyDeselected(context);
+      }
+    }
+
+    selectedMemo.val = selected;
+  }
 
   function onFocus() {
     $listContext$.notifyFocus(context);
@@ -106,12 +127,6 @@
     $listContext$.listItems.delete(context);
     $listContext$ = { ...$listContext$ };
   });
-
-  let checked = false;
-  function setChecked(isChecked) {
-    checked = isChecked;
-    $listContext$.notifySelected(context, true);
-  }
 
   let rippleProps: RippleProps;
   $: rippleProps = ripple
@@ -129,10 +144,10 @@
     href,
     "aria-current": activated ? "page" : null,
     //"aria-selected": $listContext$.role === "listbox" ? selected : null, Lo setta MDC
-    "aria-checked":
-      $listContext$.role === "group" || $listContext$.role === "radiogroup"
-        ? `${checked}`
-        : null,
+    // "aria-checked":
+    //   $listContext$.role === "group" || $listContext$.role === "radiogroup"
+    //     ? `${selected}`
+    //     : null,
     role
   };
 </script>
@@ -143,7 +158,7 @@
   props={{ ...props }}
   class="mdc-list-item {className}
     {disabled ? 'mdc-list-item--disabled' : ''}
-    {selected ? 'mdc-list-item--selected' : ''}
+    {role === 'option' && selected ? 'mdc-list-item--selected' : ''}
     {role === 'menuitem' && selected ? 'mdc-menu-item--selected' : ''}"
   {style}
   on:domEvent={forwardDOMEvents}

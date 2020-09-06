@@ -16,6 +16,9 @@
   import { Checkbox } from "@smui/checkbox";
   import { Typography } from "@smui/typography";
   import { Icon } from "@smui/common/dom";
+import RadioList from "./RadioList.svelte";
+import CheckboxList from "./CheckboxList.svelte";
+import ListBox from "./ListBox.svelte";
 
   let clickedSimple = "nothing yet";
   let clickedDense = "nothing yet";
@@ -251,102 +254,8 @@
 
   <pre class="status">Clicked: {clickedGroup}</pre>
 
-  <div>
-    Select item list using selectedIndex prop:
-    <input type="number" bind:value={selectedIndexListVal} />
-    <List class="demo-list" bind:selectedIndex={selectedIndexListVal} role="listbox">
-      <Item>
-        <Text>Bruce Willis</Text>
-      </Item>
-      <Item>
-        <Text>Tom Hanks</Text>
-      </Item>
-      <Item>
-        <Text>Jack Nicholson</Text>
-      </Item>
-      <Item>
-        <Text>Leonardo DiCaprio</Text>
-      </Item>
-      <Item>
-        <Text>Matt Damon</Text>
-      </Item>
-    </List>
-  </div>
-
-  <div>
-    A radio list:
-    <List class="demo-list" role="radiogroup">
-      <Item>
-        <Graphic>f
-          <Radio bind:group={selectedRadio} value="Bruce Willis" />
-        </Graphic>
-        <Label>Bruce Willis</Label>
-      </Item>
-      <Item>
-        <Graphic>
-          <Radio bind:group={selectedRadio} value="Tom Hanks" />
-        </Graphic>
-        <Label>Tom Hanks</Label>
-      </Item>
-      <Item>
-        <Graphic>
-          <Radio bind:group={selectedRadio} value="Jack Nicholson" />
-        </Graphic>
-        <Label>Jack Nicholson</Label>
-      </Item>
-      <Item>
-        <Graphic>
-          <Radio bind:group={selectedRadio} value="Leonardo DiCaprio" />
-        </Graphic>
-        <Label>Leonardo DiCaprio</Label>
-      </Item>
-      <Item>
-        <Graphic>
-          <Radio bind:group={selectedRadio} value="Matt Damon" />
-        </Graphic>
-        <Label>Matt Damon</Label>
-      </Item>
-    </List>
-  </div>
-
-  <pre class="status">Selected: {selectedRadio}</pre>
-
-  <!-- 
-  <div>
-    A check list with trailing checkboxes:
-    <List class="demo-list" role="group">
-      <Item>
-        <Label>Bruce Willis</Label>
-        <Meta>
-          <Checkbox bind:group={selectedCheckbox} value="Bruce Willis" />
-        </Meta>
-      </Item>
-      <Item>
-        <Label>Tom Hanks</Label>
-        <Meta>
-          <Checkbox bind:group={selectedCheckbox} value="Tom Hanks" />
-        </Meta>
-      </Item>
-      <Item>
-        <Label>Jack Nicholson</Label>
-        <Meta>
-          <Checkbox bind:group={selectedCheckbox} value="Jack Nicholson" />
-        </Meta>
-      </Item>
-      <Item>
-        <Label>Leonardo DiCaprio</Label>
-        <Meta>
-          <Checkbox bind:group={selectedCheckbox} value="Leonardo DiCaprio" />
-        </Meta>
-      </Item>
-      <Item>
-        <Label>Matt Damon</Label>
-        <Meta>
-          <Checkbox bind:group={selectedCheckbox} value="Matt Damon" />
-        </Meta>
-      </Item>
-    </List>
-  </div>
-
-  <pre class="status">Selected: {selectedCheckbox.join(', ')}</pre> -->
+  
+  <ListBox></ListBox>
+  <RadioList></RadioList>
+  <CheckboxList></CheckboxList>
 </section>

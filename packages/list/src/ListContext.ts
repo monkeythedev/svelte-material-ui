@@ -11,7 +11,8 @@ export interface ListContext {
   isNav: boolean;
   list: MDCList;
   notifyFocus(item: ItemContext): void;
-  notifySelected(item: ItemContext, selected: boolean): void;
+  notifySelected(item: ItemContext): void;
+  notifyDeselected(item: ItemContext): void;
 }
 
 export type ListRole = "listbox" | "radiogroup" | "group" | "list" | "menu";

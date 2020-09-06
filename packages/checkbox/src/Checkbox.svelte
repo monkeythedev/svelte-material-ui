@@ -6,168 +6,113 @@
   export { className as class };
   export let style: string = "";
 
-  export let dom: HTMLDivElement = null;
-  export let props: any = {};
+  export let dom: HTMLInputElement = null;
+  
+  import { BaseProps } from "@smui/common/dom/Props";
+  export let props: BaseProps = {};
 
   // Checkbox
   import { MDCCheckbox } from "@material/checkbox";
   import { onMount, onDestroy, getContext } from "svelte";
   import { get_current_component } from "svelte/internal";
   import { prefixFilter } from "@smui/common/prefixFilter.js";
+  import { getItemContext, getListContext } from "@smui/list";
+  import { CheckboxContext } from "./CheckboxContext";
 
-  let uninitializedValue = () => {};
-
-  export let disabled = false;
-  export let indeterminate = uninitializedValue;
-  export let group = uninitializedValue;
-  export let checked = uninitializedValue;
-  export let value = null;
-  export let valueKey = uninitializedValue;
+  export let disabled: boolean = false;
+  export let indeterminate: boolean = false;
+  export let checked: boolean = false;
+  export let value: any = null;
   // export let input$use = [];
-  export let input$class = "";
-  export let input$props: any = {};
+  export let input$class: string = "";
+  export let input$props: BaseProps = {};
 
-  let element;
-  let checkbox;
+  //#region Init contexts
+  let itemContext$ = getItemContext();
+  let listContext$ = getListContext();
+  let dataTableContext$ = null;
+  let dataTableHeaderContext$ = null;
+
+  const context = {} as CheckboxContext;
+  $: Object.assign(context, {
+    value
+  });
+
+  $: if (itemContext$) {
+    $itemContext$.setValue(value);
+  }
+
+  $: if ($itemContext$.selected !== checked) {
+    checked = $itemContext$.selected;
+  }
+  //#endregion
+
   // let formField = getContext("SMUI:form-field");
-  // let inputProps = getContext("SMUI:generic:input:props") || {};
-  // let setChecked = getContext("SMUI:generic:input:setChecked");
   // let addChangeHandler = getContext("SMUI:generic:input:addChangeHandler");
-  // let nativeChecked =
-  //   group === uninitializedValue
-  //     ? checked === uninitializedValue
-  //       ? false
-  //       : checked
-  //     : group.indexOf(value) !== -1;
-  let nativeChecked: boolean = false;
-  let context = getContext("SMUI:checkbox:context");
-  let dataTableHeader = getContext("SMUI:data-table:row:header");
-  let getDataTableRowIndex = getContext("SMUI:data-table:row:getIndex");
-  let instantiate = getContext("SMUI:checkbox:instantiate");
-  let getInstance = getContext("SMUI:checkbox:getInstance");
+  // let context = getContext("SMUI:checkbox:context");
+  // let dataTableHeader = getContext("SMUI:data-table:row:header");
+  // let getDataTableRowIndex = getContext("SMUI:data-table:row:getIndex");
+  // let instantiate = getContext("SMUI:checkbox:instantiate");
+  // let getInstance = getContext("SMUI:checkbox:getInstance");
 
-  // $: if (setChecked) {
-  //   setChecked(nativeChecked);
-  // }
-
-  $: if (
-    checkbox &&
-    indeterminate !== uninitializedValue &&
-    checkbox.indeterminate !== indeterminate
-  ) {
-    checkbox.indeterminate = indeterminate;
-  }
-
-  $: if (checkbox) {
-    if (group !== uninitializedValue) {
-      // const isChecked = group.indexOf(value) !== -1;
-      // if (checkbox.checked !== isChecked) {
-      //   checkbox.checked = isChecked;
-      // }
-    } else if (checked !== uninitializedValue && checkbox.checked !== checked) {
-      checkbox.checked = checked;
-    }
-  }
-
-  $: if (checkbox && checkbox.disabled !== disabled) {
-    checkbox.disabled = disabled;
-  }
-
-  $: if (
-    checkbox &&
-    valueKey === uninitializedValue &&
-    checkbox.value !== value
-  ) {
-    checkbox.value = value;
-  }
-
-  $: if (
-    checkbox &&
-    valueKey !== uninitializedValue &&
-    checkbox.value !== valueKey
-  ) {
-    checkbox.value = valueKey;
-  }
-
-  let previousChecked = checked;
-  // $: if (checked !== uninitializedValue) {
-  //   if (checked === previousChecked) {
-  //     checked = nativeChecked;
-  //   } else if (nativeChecked !== checked) {
-  //     nativeChecked = checked;
-  //   }
-  //   previousChecked = checked;
-  // }
-
-  // if (addChangeHandler) {
-  //   addChangeHandler(handleChange);
-  // }
-
+  let checkbox;
   onMount(async () => {
-    // if (instantiate !== false) {
-      checkbox = new MDCCheckbox(element);
-    // } else {
-    //   if (context === "data-table") {
-    //     if (dataTableHeader) {
-    //       checkbox = await getInstance(true);
-    //     } else {
-    //       checkbox = (await getInstance(false))[getDataTableRowIndex()];
-    //     }
-    //   } else {
-    //     checkbox = await getInstance();
-    //   }
-    // }
+    checkbox = new MDCCheckbox(dom);
 
     // if (formField && formField()) {
     //   formField().input = checkbox;
     // }
   });
 
+  $: if (checkbox) {
+    if (checkbox.indeterminate !== indeterminate) {
+      checkbox.indeterminate = indeterminate;
+    }
+
+    if (checkbox.checked !== checked) {
+      checkbox.checked = checked;
+    }
+
+    if (checkbox.disabled !== disabled) {
+      checkbox.disabled = disabled;
+    }
+
+    if (checkbox.value !== value) {
+      checkbox.value = value;
+    }
+  }
+
   onDestroy(() => {
-    // if (instantiate !== false) {
-    //   checkbox && checkbox.destroy();
-    // }
+    checkbox && checkbox.destroy();
   });
 
   function handleChange() {
-    // if (group !== uninitializedValue) {
-    //   const idx = group.indexOf(value);
-    //   if (checkbox.checked && idx === -1) {
-    //     group.push(value);
-    //     group = group;
-    //   } else if (!checkbox.checked && idx !== -1) {
-    //     group.splice(idx, 1);
-    //     group = group;
-    //   }
-    // }
-  }
-
-  export function getId() {
-    // return inputProps && inputProps.id;
+    if (itemContext$) {
+      checked = checkbox.checked;
+      $itemContext$.setSelected(checkbox.checked);
+    }
   }
 </script>
 
 <div
   bind:this={dom}
+  {...props}
   class="mdc-checkbox {className}
     {disabled ? 'mdc-checkbox--disabled' : ''}
-    {context === 'data-table' && dataTableHeader ? 'mdc-data-table__header-row-checkbox' : ''}
-    {context === 'data-table' && !dataTableHeader ? 'mdc-data-table__row-checkbox' : ''}"
-    {style}
-  use:forwardDOMEvents
-  {...props}>
+    {dataTableContext$ && dataTableHeaderContext$ ? 'mdc-data-table__header-row-checkbox' : ''}
+    {dataTableContext$ && !dataTableHeaderContext$ ? 'mdc-data-table__row-checkbox' : ''}"
+  {style}
+  use:forwardDOMEvents>
   <input
     class="mdc-checkbox__native-control {input$class}"
+    use:forwardDOMEvents
     type="checkbox"
     {...input$props}
     {disabled}
-    bind:checked={nativeChecked}
-    value={valueKey === uninitializedValue ? value : valueKey}
+    {checked}
+    {value}
     on:change={handleChange}
-    on:input={handleChange}
-    on:change
-    on:input
-    />
+    on:input={handleChange} />
   <div class="mdc-checkbox__background">
     <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
       <path

@@ -22,8 +22,6 @@
   import { createDrawerContext } from "./DrawerContext";
   import { DrawerVariant } from "./types"
 
-  const dispatch = createEventDispatcher();
-
   export let variant: DrawerVariant = null;
   export let open: boolean = false;
 

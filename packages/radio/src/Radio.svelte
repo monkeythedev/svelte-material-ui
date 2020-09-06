@@ -6,57 +6,56 @@
   export { className as class };
   export let style: string = "";
 
-  export let dom: HTMLDivElement = null;
+  export let dom: HTMLInputElement = null;
 
   import { BaseProps } from "@smui/common/dom/Props";
   export let props: BaseProps = {};
 
   // Radio
-  import {MDCRadio} from '@material/radio';
-  import {onMount, onDestroy, getContext} from 'svelte';
-  import {get_current_component} from 'svelte/internal';
-  import {forwardEventsBuilder} from '@smui/common/forwardEvents';
-  import {exclude} from '@smui/common/exclude.js';
-  import {prefixFilter} from '@smui/common/prefixFilter.js';
-  import {useActions} from '@smui/common/useActions.js';
+  import { MDCRadio } from "@material/radio";
+  import { onMount, onDestroy, getContext } from "svelte";
+  import { get_current_component } from "svelte/internal";
+  import { forwardEventsBuilder } from "@smui/common/forwardEvents";
+  import { exclude } from "@smui/common/exclude.js";
+  import { prefixFilter } from "@smui/common/prefixFilter.js";
+  import { useActions } from "@smui/common/useActions.js";
+  import { getItemContext, getListContext } from "@smui/list";
+  import { RadioContext } from "./RadioContext";
 
   const forwardEvents = forwardEventsBuilder(get_current_component());
-  let uninitializedValue = () => {};
 
-  export let disabled = false;
-  export let group = null;
-  export let value = null;
-  export let valueKey = uninitializedValue;
-  export let input$class = '';
+  export let disabled: boolean = false;
+  export let value: any = null;
+  export let checked: boolean = false;
+  export let input$class: string = "";
   export let input$props: BaseProps = {};
 
-  let radio;
   // let formField = getContext('SMUI:form-field');
-  // let inputProps = getContext('SMUI:generic:input:props') || {};
-  // let setChecked = getContext('SMUI:generic:input:setChecked');
 
-  $: checked = group === value;
+  //#region Init contexts
+  let itemContext$ = getItemContext();
+  let listContext$ = getListContext();
 
-  // $: if (setChecked) {
-  //   setChecked(checked);
-  // }
+  const context = {} as RadioContext;
+  $: Object.assign(context, {
+    value
+  });
 
-  $: if (radio && radio.checked !== checked) {
-    radio.checked = checked;
+  $: if (itemContext$) {
+    $itemContext$.setValue(value);
   }
 
-  $: if (radio && radio.disabled !== disabled) {
-    radio.disabled = disabled;
+  $: if ($itemContext$.selected !== checked) {
+    checked = $itemContext$.selected;
+    if (checked) {
+      $itemContext$.setSelected(true);
+    } else {
+      $itemContext$.setSelected(false);
+    }
   }
+  //#endregion
 
-  $: if (radio && valueKey === uninitializedValue && radio.value !== value) {
-    radio.value = value;
-  }
-
-  $: if (radio && valueKey !== uninitializedValue && radio.value !== valueKey) {
-    radio.value = valueKey;
-  }
-
+  let radio;
   onMount(() => {
     radio = new MDCRadio(dom);
 
@@ -65,45 +64,49 @@
     // }
   });
 
+  $: if (radio) {
+    if (radio.checked !== checked) {
+      radio.checked = checked;
+    }
+
+    if (radio.disabled !== disabled) {
+      radio.disabled = disabled;
+    }
+
+    if (radio.value !== value) {
+      radio.value = value;
+    }
+  }
+
   onDestroy(() => {
     radio && radio.destroy();
   });
 
   function handleChange(e) {
-    if (radio.checked) {
-      group = value;
+    if (radio.checked && itemContext$) {
+      $itemContext$.setSelected(true);
     }
-  }
-
-  export function getId() {
-    // return inputProps && inputProps.id;
   }
 </script>
 
 <div
-  {...props}
   bind:this={dom}
-  use:forwardDOMEvents
-  class="
-    mdc-radio
-    {className}
-    {disabled ? 'mdc-radio--disabled' : ''}
-  "
-  {style}
->
+  {...props}
+  class="mdc-radio {className} {disabled ? 'mdc-radio--disabled' : ''}"
+  {style}>
   <input
     class="mdc-radio__native-control {input$class}"
+    use:forwardDOMEvents
     type="radio"
     {...input$props}
     {disabled}
-    value={valueKey === uninitializedValue ? value : valueKey}
+    {value}
     {checked}
     on:change={handleChange}
-    on:change on:input
-    {...exclude(prefixFilter($$props, 'input$'), ['use', 'class'])}
-  />
+    on:change
+    on:input />
   <div class="mdc-radio__background">
-    <div class="mdc-radio__outer-circle"></div>
-    <div class="mdc-radio__inner-circle"></div>
+    <div class="mdc-radio__outer-circle" />
+    <div class="mdc-radio__inner-circle" />
   </div>
 </div>
