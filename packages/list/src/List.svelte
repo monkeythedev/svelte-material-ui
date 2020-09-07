@@ -77,6 +77,7 @@
       const listItems = getListItems();
       const index = listItems.indexOf(itemDeselected);
       if (isSingleSelectionList() && list.selectedIndex === index) {
+        // The active element has been deselected
         list.selectedIndex = -1;
 
         setResetValue();
@@ -95,10 +96,6 @@
       );
     }
 
-    function findSelectedItem() {
-      return getListItems().find((item) => item.selected);
-    }
-
     function findFirstNonDisabledItem() {
       return getListItems().find((item) => !item.disabled);
     }
@@ -114,7 +111,7 @@
     }
 
     if (hasInteractiveItems()) {
-      let firstItem = findSelectedItem();
+      let firstItem = getSelectedItems()[0];
 
       if (firstItem) {
         setTabIndex(firstItem);
@@ -131,11 +128,14 @@
   }
 
   // Try to use index as values if no items has value or indexHasValues is true
-  $: if ($context$ && indexHasValues !== false && hasInteractiveItems()) {
+  $: if (list && indexHasValues !== false && hasInteractiveItems()) {
     const listItems = getListItems();
-    if (indexHasValues || !listItems.some((item) => item.value != null)) {
+    if (shouldUseIndexHasValues()) {
       listItems.forEach((item, index) => item.setValue(index));
-      if (value == null) setValue(-1);
+      if (value == null) {
+        list.selectedIndex = -1;
+        setValue(-1);
+      }
     }
   }
 
@@ -162,6 +162,7 @@
     }
   });
 
+  // Keep context updated
   $: $context$ = { ...$context$, role, isNav: !!drawerContext$, list };
 
   $: if (list) {
@@ -190,8 +191,8 @@
     }
   }
 
-  // React to value changes
   const valueMemo = memo();
+  // React to value changes
   $: if (list && value !== valueMemo.val) {
     if (role != "list") {
       // If multiselection, value must be an array
@@ -216,7 +217,7 @@
               // Invalid value has been setted
               setValue(valueMemo.val);
             } else {
-              setSelectedIndex(value); // Some bug of reactive declarations makes the declaration behave strange with list.selectedIndex = value
+              list.selectedIndex = value;
               itemToSelect.setSelected(true);
             }
           } else if (isMultiSelectionList()) {
@@ -228,7 +229,7 @@
               // Invalid value has been setted
               setValue(valueMemo.val);
             } else {
-              setSelectedIndex(value); // Some bug of reactive declarations makes the declaration behave strange with list.selectedIndex = value
+              list.selectedIndex = value;
               itemsToSelect.forEach((item) => item.setSelected(true));
             }
           }
@@ -242,6 +243,14 @@
   onDestroy(() => {
     list && list.destroy();
   });
+
+  function shouldUseIndexHasValues() {
+    return indexHasValues || !someItemsHasValue();
+  }
+
+  function someItemsHasValue() {
+    return getListItems().some((item) => item.value != null)
+  }
 
   function setSelectedIndex(value: number | number[]) {
     list.selectedIndex = value;
@@ -263,7 +272,6 @@
   function deselectAll() {
     $context$.listItems.forEach(item => item.setSelected(false));
     if (isSingleSelectionList()) {
-    console.log(value);
 
       list.selectedIndex = -1;
       setResetValue();
@@ -275,7 +283,7 @@
 
   function setResetValue() {
     if (isSingleSelectionList()) {
-      setValue(value === -1 ? -1 : null);
+      setValue(value == null && !shouldUseIndexHasValues() ? null : -1);
     } else if (isMultiSelectionList()) {
       setValue([]);
     }
@@ -343,7 +351,7 @@
   }
 
   function hasInteractiveItems() {
-    return !nonInteractive && $context$?.listItems.size;
+    return !nonInteractive && !!$context$?.listItems.size;
   }
 
   function handleAction(e) {

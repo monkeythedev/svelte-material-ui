@@ -51,6 +51,18 @@ const domEvents: DOMEvents[] = [
   "lostpointercapture",
 ];
 
+const essentialDomEvents: DOMEvents[] = [
+  "keydown",
+  "keypress",
+  "keyup",
+  "click",
+  "change",
+  "select",
+  "focus",
+  "focusout",
+  "focusin"
+]
+
 export function DOMEventsForwarder() {
   const dispatch = createEventDispatcher();
 
@@ -98,7 +110,7 @@ function createDOMEventsListeners(listener: (event: Event) => void): ListenerOpt
     listener(event);
   }
 
-  return domEvents.map(eventName => ({eventName, listener: domEventListener}));
+  return essentialDomEvents.map(eventName => ({eventName, listener: domEventListener}));
 }
 
 export type DOMEvents = keyof DocumentEventMap;

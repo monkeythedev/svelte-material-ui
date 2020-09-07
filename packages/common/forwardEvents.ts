@@ -106,17 +106,4 @@ function createDOMEventsListeners(listener: (event: Event) => void): ListenerOpt
   return domEvents.map(eventName => ({eventName, listener: domEventListener}));
 }
 
-export function forwardAllDOMEvents(node: HTMLElement, dispatch: (eventName: string, event: Event) => void) {
-  function listener(event: Event) {
-    dispatch(event.type, event);
-    dispatch("domEvent", event);
-  }
-
-  const { destroy } = listenAllDOMEvents(node, listener);
-
-  return {
-    destroy,
-  };
-}
-
 export type DOMEvents = keyof DocumentEventMap;

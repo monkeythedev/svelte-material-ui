@@ -51,8 +51,6 @@ import ListBox from "./ListBox.svelte";
   let clickedGroup = "nothing yet";
   let selectedRadio = "Tom Hanks";
   let selectedCheckbox = ["Tom Hanks"];
-
-  let selectedIndexListVal = 0;
 </script>
 
 <style>
@@ -160,8 +158,7 @@ import ListBox from "./ListBox.svelte";
       class="demo-list"
       twoLine
       avatarList
-      role="listbox"
-      bind:selectedIndex={selectionIndex}>
+      role="listbox">
       {#each optionsTwoLine as item}
         <Item
           on:selected={() => (selectionTwoLine = item.name)}
@@ -184,7 +181,7 @@ import ListBox from "./ListBox.svelte";
   </div>
 
   <pre class="status">
-    Selected: {selectionTwoLine}, value of selectedIndex: {selectionIndex}
+    Selected: {selectionTwoLine}, value of selectedIndex: {optionsTwoLine.map(item => item.name).indexOf(selectionTwoLine)}
   </pre>
 
   <div>
