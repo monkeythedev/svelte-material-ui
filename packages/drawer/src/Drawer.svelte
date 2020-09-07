@@ -25,10 +25,6 @@
   export let variant: DrawerVariant = null;
   export let open: boolean = false;
 
-  let drawer;
-  let listPromiseResolve;
-  let listPromise = new Promise((resolve) => (listPromiseResolve = resolve));
-
   const context$ = createDrawerContext();
   $: $context$ = {...$context$, variant}
 
@@ -36,9 +32,12 @@
     drawer.open = open;
   }
 
+  let drawer;
   onMount(() => {
     if (variant === "dismissible" || variant === "modal") {
       drawer = new MDCDrawer(dom);
+      drawer.listen("MDCDrawer:opened", updateOpen);
+      drawer.listen("MDCDrawer:closed", updateOpen);
     }
   });
 
@@ -47,17 +46,20 @@
   });
 
   afterUpdate(() => {
-    if (drawer && !(variant === "dismissible" || variant === "modal")) {
-      drawer.destroy();
-      drawer = undefined;
-    } else if (!drawer && (variant === "dismissible" || variant === "modal")) {
-      drawer = new MDCDrawer(dom);
-      drawer.listen("MDCDrawer:opened", updateOpen);
-      drawer.listen("MDCDrawer:closed", updateOpen);
-    }
+    // if (drawer && !(variant === "dismissible" || variant === "modal")) {
+    //   drawer.destroy();
+    //   drawer = undefined;
+    // } else if (!drawer && (variant === "dismissible" || variant === "modal")) {
+    //   drawer = new MDCDrawer(dom);
+    //   drawer.listen("MDCDrawer:opened", updateOpen);
+    //   drawer.listen("MDCDrawer:closed", updateOpen);
+    // }
   });
 
+  
+
   function updateOpen() {
+    console.log("aaa")
     open = drawer.open;
   }
 

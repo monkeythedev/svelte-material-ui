@@ -24,6 +24,7 @@
   on:domEvent={forwardDOMEvents}
   class={className}
   {style}
-  rippleProps={{...rippleProps, component: Li}}>
+  {...rippleProps}
+  component={Li}>
   <slot />
 </Ripple>

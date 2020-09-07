@@ -77,22 +77,22 @@
 
 <svelte:component
   this={component}
-  props={{ ...props, disabled, target, href }}
   bind:dom
-  on:domEvent={forwardDOMEvents}
+  props={{ ...props, disabled, target, href }}
   class="mdc-button {className}
-    {variant ? `mdc-button--${variant}` : ''}
-    {dense ? 'mdc-button--dense' : ''}
-    {color === 'secondary' ? 'smui-button--color-secondary' : ''}
-    {context === 'card:action' ? 'mdc-card__action' : ''}
-    {context === 'card:action' ? 'mdc-card__action--button' : ''}
-    {context === 'dialog:action' ? 'mdc-dialog__button' : ''}
-    {context === 'top-app-bar:navigation' ? 'mdc-top-app-bar__navigation-icon' : ''}
-    {context === 'top-app-bar:action' ? 'mdc-top-app-bar__action-item' : ''}
-    {context === 'snackbar' ? 'mdc-snackbar__action' : ''}"
+  {variant ? `mdc-button--${variant}` : ''}
+  {dense ? 'mdc-button--dense' : ''}
+  {color === 'secondary' ? 'smui-button--color-secondary' : ''}
+  {context === 'card:action' ? 'mdc-card__action' : ''}
+  {context === 'card:action' ? 'mdc-card__action--button' : ''}
+  {context === 'dialog:action' ? 'mdc-dialog__button' : ''}
+  {context === 'top-app-bar:navigation' ? 'mdc-top-app-bar__navigation-icon' : ''}
+  {context === 'top-app-bar:action' ? 'mdc-top-app-bar__action-item' : ''}
+  {context === 'snackbar' ? 'mdc-snackbar__action' : ''}"
   {style}
+  on:domEvent={forwardDOMEvents}
   {...actionProp}
   {...defaultProp}
-  {...rippleProps}>
+  {rippleProps}>
   <slot />
 </svelte:component>

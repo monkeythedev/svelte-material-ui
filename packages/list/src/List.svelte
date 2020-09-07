@@ -88,6 +88,17 @@
     listItems: new Set(),
   });
 
+  let component: typeof Nav | typeof Ul;
+  $: component = drawerContext$ ? Nav : Ul;
+
+  $: if (menuSurfaceContext$) {
+    role = "menu";
+  }
+
+  $: if (drawerContext$) {
+    wrapFocus = true;
+  }
+
   // The first item of the list must have the attribute tabindex="0"
   $: {
     function findNonDisabledItemWithTabIndex0() {
@@ -137,17 +148,6 @@
         setValue(-1);
       }
     }
-  }
-
-  let component: typeof Nav | typeof Ul;
-  $: component = drawerContext$ ? Nav : Ul;
-
-  $: if (menuSurfaceContext$) {
-    role = "menu";
-  }
-
-  $: if (drawerContext$) {
-    wrapFocus = true;
   }
 
   let list: MDCList;

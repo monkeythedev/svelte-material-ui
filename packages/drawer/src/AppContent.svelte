@@ -4,6 +4,6 @@
   export let style = "";
 </script>
 
-<div class={className} {style}>
+<div class="mdc-drawer-app-content {className}" {style}>
   <slot />
-</div>;
+</div>

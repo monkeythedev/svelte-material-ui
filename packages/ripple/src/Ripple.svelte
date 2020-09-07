@@ -88,16 +88,23 @@
   import H1 from "@smui/common/dom/H1.svelte";
   import { RippleProps } from "./Ripple";
 
-  export let rippleProps: RippleProps;
+  export let unbounded: RippleProps["unbounded"] = null;
+  export let color: RippleProps["color"] = null;
+  export let classForward: RippleProps["classForward"] = null;
+  export let keyboardEvents: RippleProps["keyboardEvents"] = null;
+  export let rippleElement: RippleProps["rippleElement"] = null;
+  export let component: RippleProps["component"];
+
   export let instance: SMUIRipple = null;
+
   let rippleTarget: HTMLDivElement;
 
   onMount(() => {
     instance = new SMUIRipple(dom, {
-      classForward: rippleProps.classForward,
-      keyboardEvents: rippleProps.keyboardEvents,
+      classForward: classForward,
+      keyboardEvents: keyboardEvents,
     });
-    instance.ripple.unbounded = rippleProps.unbounded;
+    instance.ripple.unbounded = unbounded;
   });
 
   // Fix ripple on selectable items
@@ -113,16 +120,16 @@
 </script>
 
 <svelte:component
-  this={rippleProps.component}
+  this={component}
   props={{ ...props }}
   bind:dom
-  class="{className} mdc-ripple-upgraded {rippleProps.color != null ? 'mdc-ripple-surface' : ''}
-    {rippleProps.color == 'primary' ? 'mdc-ripple-surface--primary' : ''}
-    {rippleProps.color == 'secondary' ? 'mdc-ripple-surface--accent' : ''}"
+  class="{className} mdc-ripple-upgraded {color != null ? 'mdc-ripple-surface' : ''}
+    {color == 'primary' ? 'mdc-ripple-surface--primary' : ''}
+    {color == 'secondary' ? 'mdc-ripple-surface--accent' : ''}"
   {style}
   on:domEvent={forwardDOMEvents}>
-  {#if rippleProps.rippleElement}
-    <span class={rippleProps.rippleElement} bind:this={rippleTarget} />
+  {#if rippleElement}
+    <span class={rippleElement} bind:this={rippleTarget} />
   {/if}
   <slot />
 </svelte:component>

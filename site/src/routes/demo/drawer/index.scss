@@ -1,0 +1,5 @@
+.mdc-drawer--modal,
+.mdc-drawer-scrim {
+  /* This is not needed for a page-wide modal. */
+  position: absolute;
+}

@@ -13,10 +13,10 @@
   // Separator
   import {Li, Hr} from "@smui/common/dom";
 
-  export let group = false;
-  export let nav = false;
-  export let padded = false;
-  export let inset = false;
+  export let group: boolean = false;
+  export let nav: boolean = false;
+  export let padded: boolean = false;
+  export let inset: boolean = false;
 
   const component = group || nav ? Hr : Li;
 </script>
