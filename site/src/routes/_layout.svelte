@@ -12,7 +12,7 @@
   import { mdiFileDocument, mdiCodeTags, mdiTwitter, mdiGithub } from "@mdi/js";
 
   const { page } = stores();
-  const iframe = $page.path.startsWith("/demo/top-app-bar-iframe");
+  const iframe = $page.path.startsWith("/demo/top-app-bar/iframe");
 
   let mainContent;
   let miniWindow = false;
@@ -69,96 +69,100 @@
     href="https://fonts.googleapis.com/css?family=Roboto+Mono" />
 </svelte:head>
 
-<TopAppBar variant="static" class={appClasses.demoTopAppBar}>
-  <Row>
-    <Section>
-      {#if miniWindow}
-        <IconButton
-          class="material-icons"
-          on:click={() => (drawerOpen = !drawerOpen)}>
-          menu
-        </IconButton>
-      {/if}
-      <Title
-        component={A}
-        href="/"
-        on:click={() => (activeSection = null)}
-        class="mdc-theme--primary"
-        style={miniWindow ? 'padding-left: 0;' : ''}>
-        Svelte Material UI
-      </Title>
-    </Section>
-    <Section align="end" toolbar>
-      {#each repos as repo}
-        <IconButton
-          href={repo}
-          title={`View Component: ${repo.split('/').slice(-1)[0]}`}>
-          <Icon>
-            <svg style="width:24px;height:24px" viewBox="0 0 24 24">
-              <path fill="#000000" d={mdiFileDocument} />
-            </svg>
-          </Icon>
-        </IconButton>
-      {/each}
-      {#if activeSection}
-        <IconButton
-          href={`https://github.com/hperrin/svelte-material-ui/blob/master/site/src/routes${activeSection.route}.svelte`}
-          title={`View Demo Code: ${activeSection.route
-              .split('/')
-              .slice(-1)[0]}`}>
-          <Icon>
-            <svg style="width:24px;height:24px" viewBox="0 0 24 24">
-              <path fill="#000000" d={mdiCodeTags} />
-            </svg>
-          </Icon>
-        </IconButton>
-      {/if}
-      <IconButton href="https://twitter.com/SciActive">
-        <Icon>
-          <svg style="width:24px;height:24px" viewBox="0 0 24 24">
-            <path fill="#000000" d={mdiTwitter} />
-          </svg>
-        </Icon>
-      </IconButton>
-      <IconButton href="https://github.com/hperrin/svelte-material-ui">
-        <Icon>
-          <svg style="width:24px;height:24px" viewBox="0 0 24 24">
-            <path fill="#000000" d={mdiGithub} />
-          </svg>
-        </Icon>
-      </IconButton>
-    </Section>
-  </Row>
-</TopAppBar>
-
-<div class="drawer-container">
-  <Drawer
-    variant={miniWindow ? 'modal' : null}
-    bind:open={drawerOpen}
-    class="{appClasses.demoDrawer} mdc-theme--secondary-bg {miniWindow ? appClasses.demoDrawerAdjust : ''}">
-    <Content>
-      <List>
-        {#each sections as section (section.name)}
-          <Item
-            bind:this={section.component}
-            style={section.indent ? 'margin-left: ' + section.indent * 25 + 'px;' : ''}
-            on:click={() => pickSection(section)}
-            activated={'route' in section && section.route === $page.path}
-            href={section.route || section.shortcut}
-            props={{title: section.name}}>
-            <Text class="mdc-theme--on-secondary">{section.name}</Text>
-          </Item>
+{#if iframe}
+  <slot />
+{:else}
+  <TopAppBar variant="static" class={appClasses.demoTopAppBar}>
+    <Row>
+      <Section>
+        {#if miniWindow}
+          <IconButton
+            class="material-icons"
+            on:click={() => (drawerOpen = !drawerOpen)}>
+            menu
+          </IconButton>
+        {/if}
+        <Title
+          component={A}
+          href="/"
+          on:click={() => (activeSection = null)}
+          class="mdc-theme--primary"
+          style={miniWindow ? 'padding-left: 0;' : ''}>
+          Svelte Material UI
+        </Title>
+      </Section>
+      <Section align="end" toolbar>
+        {#each repos as repo}
+          <IconButton
+            href={repo}
+            title={`View Component: ${repo.split('/').slice(-1)[0]}`}>
+            <Icon>
+              <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+                <path fill="#000000" d={mdiFileDocument} />
+              </svg>
+            </Icon>
+          </IconButton>
         {/each}
-      </List>
-    </Content>
-  </Drawer>
+        {#if activeSection}
+          <IconButton
+            href={`https://github.com/hperrin/svelte-material-ui/blob/master/site/src/routes${activeSection.route}.svelte`}
+            title={`View Demo Code: ${activeSection.route
+                .split('/')
+                .slice(-1)[0]}`}>
+            <Icon>
+              <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+                <path fill="#000000" d={mdiCodeTags} />
+              </svg>
+            </Icon>
+          </IconButton>
+        {/if}
+        <IconButton href="https://twitter.com/SciActive">
+          <Icon>
+            <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+              <path fill="#000000" d={mdiTwitter} />
+            </svg>
+          </Icon>
+        </IconButton>
+        <IconButton href="https://github.com/hperrin/svelte-material-ui">
+          <Icon>
+            <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+              <path fill="#000000" d={mdiGithub} />
+            </svg>
+          </Icon>
+        </IconButton>
+      </Section>
+    </Row>
+  </TopAppBar>
 
-  {#if miniWindow}
-    <Scrim />
-  {/if}
-  <AppContent class={appClasses.demoAppContent}>
-    <main class={appClasses.demoMainContent} bind:this={mainContent}>
-      <slot />
-    </main>
-  </AppContent>
-</div>
+  <div class="drawer-container">
+    <Drawer
+      variant={miniWindow ? 'modal' : null}
+      bind:open={drawerOpen}
+      class="{appClasses.demoDrawer} mdc-theme--secondary-bg {miniWindow ? appClasses.demoDrawerAdjust : ''}">
+      <Content>
+        <List>
+          {#each sections as section (section.name)}
+            <Item
+              bind:this={section.component}
+              style={section.indent ? 'margin-left: ' + section.indent * 25 + 'px;' : ''}
+              on:click={() => pickSection(section)}
+              activated={'route' in section && section.route === $page.path}
+              href={section.route || section.shortcut}
+              props={{ title: section.name }}>
+              <Text class="mdc-theme--on-secondary">{section.name}</Text>
+            </Item>
+          {/each}
+        </List>
+      </Content>
+    </Drawer>
+
+    {#if miniWindow}
+      <Scrim />
+    {/if}
+    <AppContent class={appClasses.demoAppContent}>
+      <main class={appClasses.demoMainContent} bind:this={mainContent}>
+        <slot />
+      </main>
+    </AppContent>
+  </div>
+{/if}

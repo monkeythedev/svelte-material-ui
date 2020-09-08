@@ -28,23 +28,23 @@
   export let input$props: BaseProps = {};
 
   //#region Init contexts
-  let itemContext$ = getItemContext();
-  let listContext$ = getListContext();
-  let dataTableContext$ = null;
-  let dataTableHeaderContext$ = null;
+    let itemContext$ = getItemContext();
+    let listContext$ = getListContext();
+    let dataTableContext$ = null;
+    let dataTableHeaderContext$ = null;
 
-  const context = {} as CheckboxContext;
-  $: Object.assign(context, {
-    value
-  });
+    const context = {} as CheckboxContext;
+    $: Object.assign(context, {
+      value
+    });
 
-  $: if (itemContext$) {
-    $itemContext$.setValue(value);
-  }
+    $: if (itemContext$) {
+      $itemContext$.setValue(value);
 
-  $: if ($itemContext$.selected !== checked) {
-    checked = $itemContext$.selected;
-  }
+      if ($itemContext$.selected !== checked) {
+        checked = $itemContext$.selected;
+      }
+    }
   //#endregion
 
   // let formField = getContext("SMUI:form-field");
@@ -87,9 +87,10 @@
   });
 
   function handleChange() {
+    checked = checkbox.checked;
+
     if (itemContext$) {
-      checked = checkbox.checked;
-      $itemContext$.setSelected(checkbox.checked);
+      $itemContext$.setSelected(checked);
     }
   }
 </script>

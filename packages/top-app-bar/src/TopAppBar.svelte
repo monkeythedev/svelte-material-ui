@@ -14,13 +14,13 @@
   import { MDCTopAppBar } from "@material/top-app-bar";
   import { onMount, onDestroy } from "svelte";
 
-  export let variant = "standard";
-  export let color = "primary";
-  export let collapsed = false;
-  export let prominent = false;
-  export let dense = false;
+  export let variant: "standard" | "short" | "fixed" | "static" = "standard" ;
+  export let color: "primary" | "secondary" = "primary";
+  export let collapsed: boolean = false;
+  export let prominent: boolean = false;
+  export let dense: boolean = false;
 
-  let topAppBar;
+  let topAppBar: MDCTopAppBar;
 
   onMount(() => {
     topAppBar = new MDCTopAppBar(dom);
