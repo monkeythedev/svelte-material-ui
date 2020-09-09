@@ -1,35 +1,38 @@
-<script>
-  import { setContext } from "svelte";
-  // import { get_current_component } from "svelte/internal";
-  // import { forwardEventsBuilder } from "@smui/common/forwardEvents";
-  // import { exclude } from "@smui/common/exclude.js";
-  // import { useActions } from "@smui/common/useActions.js";
-
-  // const forwardEvents = forwardEventsBuilder(get_current_component(), [
-  //   "MDCList:action",
-  // ]);
-
-  // export let use = [];
+<script lang="ts">
+  //#region Base
+  import { DOMEventsForwarder } from "@smui/common/actions/DOMEventsForwarder";
+  const forwardDOMEvents = DOMEventsForwarder();
   let className = "";
   export { className as class };
+  export let style: string = "";
+
+  export let dom: HTMLAnchorElement | HTMLButtonElement = null;
+  import { BaseProps } from "@smui/common/dom/Props";
+  export let props: BaseProps = {};
+  //#endregion
+
+  // Section
+  import { setIconButtonBehaviour } from "@smui/icon-button";
+  import { setContext } from "svelte";
+  import { setButtonBehaviour } from "@smui/button/src";
+
   export let align = "start";
   export let toolbar = false;
 
-  setContext(
-    "SMUI:icon-button:context",
+  setIconButtonBehaviour(
     toolbar ? "top-app-bar:action" : "top-app-bar:navigation"
   );
-  setContext(
-    "SMUI:button:context",
-    toolbar ? "top-app-bar:action" : "top-app-bar:navigation"
-  );
+  setButtonBehaviour(toolbar ? "top-app-bar:action" : "top-app-bar:navigation");
 </script>
 
 <section
-  class=" mdc-top-app-bar__section {className}
-  {align === 'start' ? 'mdc-top-app-bar__section--align-start' : ''}
-  {align === 'end' ? 'mdc-top-app-bar__section--align-end' : ''}
-  "
+  bind:this={dom}
+  {...props}
+  class="mdc-top-app-bar__section {className}
+    {align === 'start' ? 'mdc-top-app-bar__section--align-start' : ''}
+    {align === 'end' ? 'mdc-top-app-bar__section--align-end' : ''}"
+  {style}
+  use:forwardDOMEvents
   {...toolbar ? { role: 'toolbar' } : {}}>
   <slot />
 </section>

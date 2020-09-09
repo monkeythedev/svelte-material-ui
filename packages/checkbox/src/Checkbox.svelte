@@ -1,5 +1,5 @@
 <script lang="ts">
-  // Base
+  //#region Base
   import { DOMEventsForwarder } from "@smui/common/actions/DOMEventsForwarder";
   const forwardDOMEvents = DOMEventsForwarder();
   let className = "";
@@ -7,18 +7,22 @@
   export let style: string = "";
 
   export let dom: HTMLInputElement = null;
-  
+
   import { BaseProps } from "@smui/common/dom/Props";
   export let props: BaseProps = {};
+  //#endregion
 
   // Checkbox
+  //#region  imports
   import { MDCCheckbox } from "@material/checkbox";
   import { onMount, onDestroy, getContext } from "svelte";
   import { get_current_component } from "svelte/internal";
   import { prefixFilter } from "@smui/common/prefixFilter.js";
   import { getItemContext, getListContext } from "@smui/list";
   import { CheckboxContext } from "./CheckboxContext";
+  //#endregion
 
+  //#region exports
   export let disabled: boolean = false;
   export let indeterminate: boolean = false;
   export let checked: boolean = false;
@@ -26,35 +30,37 @@
   // export let input$use = [];
   export let input$class: string = "";
   export let input$props: BaseProps = {};
+  //#endregion
 
   //#region Init contexts
-    let itemContext$ = getItemContext();
-    let listContext$ = getListContext();
-    let dataTableContext$ = null;
-    let dataTableHeaderContext$ = null;
+  let itemContext$ = getItemContext();
+  let listContext$ = getListContext();
+  let dataTableContext$ = null;
+  let dataTableHeaderContext$ = null;
 
-    const context = {} as CheckboxContext;
-    $: Object.assign(context, {
-      value
-    });
+  const context = {} as CheckboxContext;
+  $: Object.assign(context, {
+    value,
+  });
 
-    $: if (itemContext$) {
-      $itemContext$.setValue(value);
+  $: if (itemContext$) {
+    $itemContext$.setValue(value);
 
-      if ($itemContext$.selected !== checked) {
-        checked = $itemContext$.selected;
-      }
+    if ($itemContext$.selected !== checked) {
+      checked = $itemContext$.selected;
     }
+  }
   //#endregion
 
   // let formField = getContext("SMUI:form-field");
-  // let addChangeHandler = getContext("SMUI:generic:input:addChangeHandler");
+  // let addChangeHandler = g etContext("SMUI:generic:input:addChangeHandler");
   // let context = getContext("SMUI:checkbox:context");
   // let dataTableHeader = getContext("SMUI:data-table:row:header");
   // let getDataTableRowIndex = getContext("SMUI:data-table:row:getIndex");
   // let instantiate = getContext("SMUI:checkbox:instantiate");
   // let getInstance = getContext("SMUI:checkbox:getInstance");
-
+  
+  //#region MDC init/destroy
   let checkbox;
   onMount(async () => {
     checkbox = new MDCCheckbox(dom);
@@ -85,6 +91,7 @@
   onDestroy(() => {
     checkbox && checkbox.destroy();
   });
+  //#endregion
 
   function handleChange() {
     checked = checkbox.checked;

@@ -1,5 +1,5 @@
 <script lang="ts">
-  // Base
+  //#region Base
   import { DOMEventsForwarder } from "@smui/common/actions/DOMEventsForwarder";
   const forwardDOMEvents = DOMEventsForwarder();
   let className = "";
@@ -9,6 +9,7 @@
   export let dom: HTMLHeadingElement = null;
   import { BaseProps } from "./Props";
   export let props: BaseProps = {};
+  //#endregion
 </script>
 
 <span {...props} bind:this={dom} class={className} {style} use:forwardDOMEvents>

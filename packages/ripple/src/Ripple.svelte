@@ -7,6 +7,7 @@
   class SMUIRipple {
     public active = false;
     public ripple: MDCRipple;
+    #unbounded: boolean = false;
 
     constructor(
       public root: HTMLElement,
@@ -24,7 +25,7 @@
         });
       }
 
-      const adapter = {
+      const adapter: Partial<MDCRippleAdapter> = {
         ...MDCRipple.createAdapter(this),
         addClass: (className: string) => {
           const idx = classList.indexOf(className);
@@ -60,6 +61,15 @@
         this.ripple.deactivate();
       });
     }
+
+    get unbounded() {
+      return this.ripple?.unbounded ?? this.#unbounded;
+    }
+
+    set unbounded(unbounded: boolean) {
+      this.ripple.unbounded = unbounded;
+      this.#unbounded = unbounded;
+    }
   }
 
   function isSubmitKey(event: KeyboardEvent) {
@@ -70,7 +80,7 @@
 </script>
 
 <script lang="ts">
-  // Base
+  //#region Base
   import { DOMEventsForwarder } from "@smui/common/events/DOMEventsForwarder";
   const forwardDOMEvents = DOMEventsForwarder();
   let className = "";
@@ -80,10 +90,15 @@
   export let dom: HTMLDivElement | HTMLLIElement = null;
   import { BaseProps } from "@smui/common/dom/Props";
   export let props: BaseProps;
+  //#endregion
 
   // Ripple
   import { Li, Button, A } from "@smui/common/dom";
-  import { MDCRipple, MDCRippleFoundation } from "@material/ripple";
+  import {
+    MDCRipple,
+    MDCRippleAdapter,
+    MDCRippleFoundation,
+  } from "@material/ripple";
   import { onMount } from "svelte";
   import H1 from "@smui/common/dom/H1.svelte";
   import { RippleProps } from "./Ripple";
@@ -104,7 +119,8 @@
       classForward: classForward,
       keyboardEvents: keyboardEvents,
     });
-    instance.ripple.unbounded = unbounded;
+
+    instance.unbounded = unbounded;
   });
 
   // Fix ripple on selectable items

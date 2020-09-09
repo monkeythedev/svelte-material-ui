@@ -9,7 +9,7 @@
 </script>
 
 <script lang="ts">
-  // Base
+  //#region Base
   import { DOMEventsForwarder } from "@smui/common/events/DOMEventsForwarder";
   const forwardDOMEvents = DOMEventsForwarder();
   let className = "";
@@ -19,6 +19,7 @@
   export let dom: HTMLButtonElement | HTMLAnchorElement = null;
   import { BaseProps } from "@smui/common/dom/Props";
   export let props: BaseProps = {};
+  //#endregion
 
   // Button
   import { ButtonProps } from "@smui/common/dom";
@@ -29,12 +30,12 @@
     createEventDispatcher,
   } from "svelte";
   import { RippleProps } from "@smui/ripple/src";
+  import { getButtonBehaviour } from "./ButtonContextProps";
 
   export let ripple: boolean = true;
   export let color: "primary" | "secondary" = "primary";
   export let variant: "raised" | "unelevated" | "outlined" = null;
   export let dense: boolean = false;
-  // Purposely left out of props exclude.
   export let href: string = null;
   export let action = "close";
   let defaultAction: boolean = false;
@@ -42,17 +43,18 @@
   export let disabled: boolean = false;
   export let target: string = null;
 
-  let context = getContext("SMUI:button:context");
+  let behaviour = getButtonBehaviour();
   let rippleClasses = [];
 
-  $: dialogExcludes = context === "dialog:action" ? ["action", "default"] : [];
+  $: dialogExcludes =
+    behaviour === "dialog:action" ? ["action", "default"] : [];
 
   $: actionProp =
-    context === "dialog:action" && action !== null
+    behaviour === "dialog:action" && action !== null
       ? { "data-mdc-dialog-action": action }
       : {};
   $: defaultProp =
-    context === "dialog:action" && defaultAction
+    behaviour === "dialog:action" && defaultAction
       ? { "data-mdc-dialog-button-default": "" }
       : {};
 
@@ -80,15 +82,15 @@
   bind:dom
   props={{ ...props, disabled, target, href }}
   class="mdc-button {className}
-  {variant ? `mdc-button--${variant}` : ''}
-  {dense ? 'mdc-button--dense' : ''}
-  {color === 'secondary' ? 'smui-button--color-secondary' : ''}
-  {context === 'card:action' ? 'mdc-card__action' : ''}
-  {context === 'card:action' ? 'mdc-card__action--button' : ''}
-  {context === 'dialog:action' ? 'mdc-dialog__button' : ''}
-  {context === 'top-app-bar:navigation' ? 'mdc-top-app-bar__navigation-icon' : ''}
-  {context === 'top-app-bar:action' ? 'mdc-top-app-bar__action-item' : ''}
-  {context === 'snackbar' ? 'mdc-snackbar__action' : ''}"
+    {variant ? `mdc-button--${variant}` : ''}
+    {dense ? 'mdc-button--dense' : ''}
+    {color === 'secondary' ? 'smui-button--color-secondary' : ''}
+    {behaviour === 'card:action' ? 'mdc-card__action' : ''}
+    {behaviour === 'card:action' ? 'mdc-card__action--button' : ''}
+    {behaviour === 'dialog:action' ? 'mdc-dialog__button' : ''}
+    {behaviour === 'top-app-bar:navigation' ? 'mdc-top-app-bar__navigation-icon' : ''}
+    {behaviour === 'top-app-bar:action' ? 'mdc-top-app-bar__action-item' : ''}
+    {behaviour === 'snackbar' ? 'mdc-snackbar__action' : ''}"
   {style}
   on:domEvent={forwardDOMEvents}
   {...actionProp}

@@ -8,6 +8,6 @@ const GroupItem_js_1 = require("./GroupItem.js");
 exports.GroupItem = GroupItem_js_1.default;
 const Label_svelte_1 = require("@smui/common/dom/Label.svelte");
 exports.Label = Label_svelte_1.default;
-const Icon_svelte_1 = require("@smui/common/dom/Icon.svelte");
+const Icon_svelte_1 = require("@smui/common/dom/icon/Icon.svelte");
 exports.Icon = Icon_svelte_1.default;
 exports.default = Button_svelte_1.default;
