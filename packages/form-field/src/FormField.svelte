@@ -1,0 +1,70 @@
+<script lang="ts" context="module">
+  let counter: number = 0;
+</script>
+
+<script lang="ts">
+  //#region Base
+  import { DOMEventsForwarder } from "@smui/common/actions/DOMEventsForwarder";
+  const forwardDOMEvents = DOMEventsForwarder();
+  let className = "";
+  export { className as class };
+  export let style: string = "";
+
+  export let dom: HTMLDivElement = null;
+  import { BaseProps } from "@smui/common/dom/Props";
+  export let props: BaseProps = {};
+  //#endregion
+
+  // FormField
+  import { MDCFormField } from "@material/form-field";
+  import { onMount, onDestroy, setContext } from "svelte";
+  import { createFormFieldContext } from "./FormFieldContext";
+
+  export let align: "start" | "end" = "start";
+  export let inputId = `SMUI-form-field-${counter}`;
+  counter++;
+
+  const context$ = createFormFieldContext({ inputId });
+  //setContext('SMUI:generic:input:props', {id: inputId});
+
+  let formField: MDCFormField;
+  onMount(() => {
+    formField = new MDCFormField(dom);
+  });
+
+  onDestroy(() => {
+    formField && formField.destroy();
+  });
+</script>
+
+<div
+  bind:this={dom}
+  {...props}
+  class="mdc-form-field {className}
+    {align === 'end' ? 'mdc-form-field--align-end' : ''}"
+  {style}
+  use:forwardDOMEvents>
+  <slot />
+  <label for={inputId}>
+    <slot name="label" />
+  </label>
+</div>
+
+<!-- <div
+  bind:this={element}
+  use:useActions={use}
+  use:forwardEvents
+  class="
+    mdc-form-field
+    {className}
+    {align === 'end' ? 'mdc-form-field--align-end' : ''}
+  "
+  {...exclude($$props, ['use', 'class', 'alignEnd', 'inputId', 'label$'])}
+>
+  <slot></slot>
+  <label
+    use:useActions={label$use}
+    for={inputId}
+    {...exclude(prefixFilter($$props, 'label$'), ['use'])}
+  ><slot name="label"></slot></label>
+</div> -->

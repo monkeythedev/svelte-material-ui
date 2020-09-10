@@ -5,6 +5,7 @@
   let className = "";
   export { className as class };
   export let style: string = "";
+  export let id: string = "";
 
   export let dom: HTMLInputElement = null;
 
@@ -20,6 +21,7 @@
   import { prefixFilter } from "@smui/common/prefixFilter.js";
   import { getItemContext, getListContext } from "@smui/list";
   import { CheckboxContext } from "./CheckboxContext";
+import { getFormFieldContext } from "@smui/form-field/src/FormFieldContext";
   //#endregion
 
   //#region exports
@@ -27,16 +29,16 @@
   export let indeterminate: boolean = false;
   export let checked: boolean = false;
   export let value: any = null;
-  // export let input$use = [];
   export let input$class: string = "";
   export let input$props: BaseProps = {};
   //#endregion
 
   //#region Init contexts
-  let itemContext$ = getItemContext();
-  let listContext$ = getListContext();
-  let dataTableContext$ = null;
-  let dataTableHeaderContext$ = null;
+  const itemContext$ = getItemContext();
+  const listContext$ = getListContext();
+  const formFieldContext$ = getFormFieldContext();
+  const dataTableContext$ = null;
+  const dataTableHeaderContext$ = null;
 
   const context = {} as CheckboxContext;
   $: Object.assign(context, {
@@ -52,7 +54,6 @@
   }
   //#endregion
 
-  // let formField = getContext("SMUI:form-field");
   // let addChangeHandler = g etContext("SMUI:generic:input:addChangeHandler");
   // let context = getContext("SMUI:checkbox:context");
   // let dataTableHeader = getContext("SMUI:data-table:row:header");
@@ -64,10 +65,6 @@
   let checkbox;
   onMount(async () => {
     checkbox = new MDCCheckbox(dom);
-
-    // if (formField && formField()) {
-    //   formField().input = checkbox;
-    // }
   });
 
   $: if (checkbox) {
@@ -88,6 +85,10 @@
     }
   }
 
+  $: if (checkbox && $formFieldContext$?.instance) {
+    $formFieldContext$.instance.input = checkbox;
+  }
+
   onDestroy(() => {
     checkbox && checkbox.destroy();
   });
@@ -105,6 +106,7 @@
 <div
   bind:this={dom}
   {...props}
+  {id}
   class="mdc-checkbox {className}
     {disabled ? 'mdc-checkbox--disabled' : ''}
     {dataTableContext$ && dataTableHeaderContext$ ? 'mdc-data-table__header-row-checkbox' : ''}
@@ -112,10 +114,11 @@
   {style}
   use:forwardDOMEvents>
   <input
+    {...input$props}
     class="mdc-checkbox__native-control {input$class}"
     use:forwardDOMEvents
+    id={$formFieldContext$.inputId}
     type="checkbox"
-    {...input$props}
     {disabled}
     {checked}
     {value}
