@@ -8,3 +8,6 @@ const [setCheckboxBehaviour, getCheckboxBehaviour] = createContextPropBuilder<Ch
 export {setCheckboxBehaviour, getCheckboxBehaviour};
 
 export type CheckboxBehaviour = "data-table-header" | "data-table-row";
+
+const [setDisableCheckboxMDCIstance, getDisableCheckboxMDCIstance] = createContextPropBuilder<CheckboxBehaviour>()
+export {setDisableCheckboxMDCIstance, getDisableCheckboxMDCIstance};

@@ -21,15 +21,23 @@
   $: props = { ...props, "aria-selected": selected ? "true" : "false" };
 </script>
 
-<Selectable bind:selected>
+{#if behaviour === 'header'}
   <tr
     bind:this={dom}
-    class="{className}
-      {behaviour === 'header' ? 'mdc-data-table__header-row' : ''}
-      {behaviour !== 'header' ? 'mdc-data-table__row' : ''}
-      {behaviour !== 'header' && selected ? 'mdc-data-table__row--selected' : ''}"
+    class="mdc-data-table__header-row {className}"
     {style}
     {...props}>
     <slot />
   </tr>
-</Selectable>
+{:else}
+  <Selectable bind:selected>
+    <tr
+      bind:this={dom}
+      class="mdc-data-table__row {className}
+        {selected ? 'mdc-data-table__row--selected' : ''}"
+      {style}
+      {...props}>
+      <slot />
+    </tr>
+  </Selectable>
+{/if}

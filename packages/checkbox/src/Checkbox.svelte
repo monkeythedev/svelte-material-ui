@@ -20,7 +20,11 @@
   import { get_current_component } from "svelte/internal";
   import { prefixFilter } from "@smui/common/prefixFilter.js";
   import { getItemContext, getListContext } from "@smui/list";
-  import { CheckboxContext, getCheckboxBehaviour } from "./CheckboxContext";
+  import {
+    CheckboxContext,
+    getCheckboxBehaviour,
+    getDisableCheckboxMDCIstance,
+  } from "./CheckboxContext";
   import { getFormFieldContext } from "@smui/form-field/src/FormFieldContext";
   import { getDataTableContext } from "@smui/data-table/src/DataTableContext";
   import { getSelectableContext } from "@smui/common/hoc";
@@ -36,6 +40,7 @@
   //#endregion
 
   const behaviour = getCheckboxBehaviour();
+  const disableMDC = getDisableCheckboxMDCIstance();
 
   //#region Init contexts
   //const itemContext$ = getItemContext();
@@ -67,7 +72,7 @@
   //#region MDC init/destroy
   let checkbox;
   onMount(async () => {
-    checkbox = new MDCCheckbox(dom);
+    if (!disableMDC) checkbox = new MDCCheckbox(dom);
   });
 
   $: if (checkbox) {
@@ -97,11 +102,13 @@
   });
   //#endregion
 
-  function handleChange() {
-    checked = checkbox.checked;
+  function handleChange(event: Event) {
+    if (checkbox) {
+      checked = checkbox?.checked;
 
-    if (selectable$) {
-      $selectable$.setSelected(checked);
+      if (selectable$) {
+        $selectable$.setSelected(checked);
+      }
     }
   }
 </script>

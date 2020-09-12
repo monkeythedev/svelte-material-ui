@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { createEventDispatcher } from "svelte";
+  import { createEventDispatcher, onMount } from "svelte";
 
   import { arrEquals, memo } from "../utils";
 
@@ -14,6 +14,8 @@
   export let selectionType: SelectionType = "multi";
   export let selectedIndex: number = -1;
   export let indexHasValues: boolean = null;
+
+  let mounted = false;
 
   const dispatch = createEventDispatcher();
 
@@ -58,9 +60,19 @@
 
   $: $context$ = { ...$context$, value };
 
-  const valueMemo = memo();
+  const valueMemo = memo(value);
   //#region React to value changes
-  $: if (value !== valueMemo.val) {
+  $: if (mounted && value !== valueMemo.val) {
+    handleValueChange();
+  }
+  //#endregion
+
+  onMount(() => {
+    mounted = true;
+    handleValueChange();
+  });
+
+  function handleValueChange() {
     if (selectionType) {
       // If multiselection, value must be an array
       if (selectionType === "multi") {
@@ -124,7 +136,6 @@
       setValue(null);
     }
   }
-  //#endregion
 
   function updateMultiSelectionValue() {
     const selectedItems = getSelectedItems();
@@ -182,7 +193,7 @@
     }
   }
 
-  export function _setValue(_value: any) {
+  function _setValue(_value: any) {
     if (valueMemo.val !== _value && selectionType) {
       value = _value;
       valueMemo.val = value;
@@ -191,6 +202,18 @@
 
   export function setValue(_value: any) {
     if (value !== _value && selectionType) value = _value;
+  }
+
+  export function setItemSelected(index: number, selected: boolean) {
+    Array.from(items)[index]?.setSelected(selected);
+  }
+
+  export function selectAll() {
+    items.forEach(item => item.setSelected(true));
+  }
+
+  export function unselectAll() {
+    items.forEach(item => item.setSelected(false));
   }
 </script>
 

@@ -13,7 +13,7 @@
 
   // List
   //#region imports
-  import { MDCList } from "@material/list";
+  import { MDCList, MDCListActionEvent } from "@material/list";
   import { onMount, onDestroy, createEventDispatcher } from "svelte";
   import Nav from "@smui/common/dom/Nav.svelte";
   import Ul from "@smui/common/dom/Ul.svelte";
@@ -207,13 +207,13 @@
     return !nonInteractive && !!items.size;
   }
 
-  function handleAction(e) {
-    const item = Array.from(items)[e.detail.index];
+  function handleAction(event: MDCListActionEvent) {
+    const item = Array.from(items)[event.detail.index];
 
     if (!list || !item || item.disabled) return;
 
-    if (list.selectedIndex === e.detail.index) {
-      item.setSelected(true);
+    if (list.selectedIndex === event.detail.index) {
+      selectableList.setItemSelected(event.detail.index, true);
     } else if (role === "list") {
       item.sendOnSelected();
     }

@@ -10,6 +10,5 @@
       "@smui/*": ["./packages/*"]
     }
   },
-  "include": ["./packages", "./site"],
-  "exclude": ["**/node_modules/**/*", "**/site_old/**"]
+  "exclude": ["**/node_modules/**/*", "**/site_old/**/*", "**/site/**/*"]
 }

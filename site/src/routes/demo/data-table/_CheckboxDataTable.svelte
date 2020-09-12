@@ -2,7 +2,7 @@
   import {DataTable, Head, Body, Row, Cell} from '@smui/data-table';
   import {Checkbox} from '@smui/checkbox';
 
-  $: selectedPrice = selected.reduce((total, option) => option.price + total, 0);
+  //$: selectedPrice = selected.reduce((total, option) => option.price + total, 0);
 
   let options = [
     {
@@ -33,7 +33,7 @@
   With Row Selection:
 
   <div>
-    <DataTable>
+    <DataTable bind:value={selected}>
       <Head>
         <Row>
           <Cell checkbox>
@@ -61,4 +61,4 @@
 </div>
 
 <pre class="status">Selected: {selected.map(option => option.name).join(', ')}</pre>
-<pre class="status">Total: {selectedPrice}</pre>
+<!-- <pre class="status">Total: {selectedPrice}</pre> -->

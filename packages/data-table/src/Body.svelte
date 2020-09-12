@@ -1,4 +1,6 @@
 <script lang="ts">
+import { setCheckboxBehaviour } from "@smui/checkbox/src";
+
   //#region Base
   import { DOMEventsForwarder } from "@smui/common/actions/DOMEventsForwarder";
   const forwardDOMEvents = DOMEventsForwarder();
@@ -14,6 +16,7 @@
 
   import { setRowBehaviour } from "./RowContext";
 
+  setCheckboxBehaviour("data-table-row");
   setRowBehaviour(null);
 </script>
 

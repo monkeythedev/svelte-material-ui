@@ -36,6 +36,7 @@
     "@material/elevation": "^7.0.0",
     "@material/feature-targeting": "^7.0.0",
     "@smui/common": "^1.0.0",
+    "@smui/menu": "^1.0.0",
     "@smui/ripple": "^1.0.0"
   },
   "devDependencies": {

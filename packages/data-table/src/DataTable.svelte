@@ -14,16 +14,23 @@
   //#endregion
 
   // DataTable
-  import { MDCDataTable } from "@material/data-table";
+  import {
+    MDCDataTable,
+    MDCDataTableRowSelectionChangedEventDetail,
+  } from "@material/data-table";
   import { onMount, onDestroy, getContext, setContext } from "svelte";
   import { createDataTableContext } from "./DataTableContext";
   import { SelectableList } from "@smui/common/src/hoc";
+  import { setDisableCheckboxMDCIstance } from "@smui/checkbox";
 
   //const forwardEvents = forwardEventsBuilder(get_current_component(), ['MDCDataTable:rowSelectionChanged', 'MDCDataTable:selectedAll', 'MDCDataTable:unselectedAll']);
 
   export let table$class = "";
+  export let value: any = null;
 
   let selectableList: SelectableList;
+
+  setDisableCheckboxMDCIstance(true);
 
   let changeHandlers = [];
   let checkBoxHeaderPromiseResolve;
@@ -47,7 +54,7 @@
     dataTable = new MDCDataTable(dom);
 
     dataTable.listen("MDCDataTable:rowSelectionChanged", handleChange);
-    dataTable.listen("on:MDCDataTable:selectedAll", selectAllRows);
+    dataTable.listen("MDCDataTable:selectedAll", selectAllRows);
     dataTable.listen("MDCDataTable:unselectedAll", unselectAllRows);
   });
 
@@ -56,14 +63,18 @@
   });
 
   function handleChange(
-    e: CustomEvent<MDCDataTableRowSelectionChangedEventDetail>
+    event: CustomEvent<MDCDataTableRowSelectionChangedEventDetail>
   ) {
-    selectableList.setValue();
+    selectableList.setItemSelected(event.detail.rowIndex, event.detail.selected);
   }
 
-  function selectAllRows() {}
+  function selectAllRows() {
+    selectableList.selectAll();
+  }
 
-  function unselectAllRows() {}
+  function unselectAllRows() {
+    selectableList.unselectAll();
+  }
 </script>
 
 <SelectableList bind:this={selectableList} bind:value on:change={handleChange}>

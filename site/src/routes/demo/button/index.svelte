@@ -5,7 +5,7 @@
   import { Group, GroupItem } from "@smui/button/group";
   import { Menu } from "@smui/menu";
   import { List, Item, Text, Separator } from "@smui/list";
-  import { Corner } from "@smui/menu-surface/MenuSurface.svelte";
+  import { Corner } from "@smui/menu-surface";
   import { A } from "@smui/common/dom";
   import { IconButton } from "@smui/icon-button";
   import { Typography } from "@smui/typography";
