@@ -19,6 +19,7 @@
 import RadioList from "./RadioList.svelte";
 import CheckboxList from "./CheckboxList.svelte";
 import ListBox from "./ListBox.svelte";
+import SelectableList from "./_SelectableList.svelte";
 
   let clickedSimple = "nothing yet";
   let clickedDense = "nothing yet";
@@ -152,37 +153,9 @@ import ListBox from "./ListBox.svelte";
     </List>
   </div>
 
-  <div>
-    A two-line single selection list with avatars, disabled item, and meta:
-    <List
-      class="demo-list"
-      twoLine
-      avatarList
-      role="listbox">
-      {#each optionsTwoLine as item}
-        <Item
-          on:selected={() => (selectionTwoLine = item.name)}
-          disabled={item.disabled}
-          selected={selectionTwoLine === item.name}>
-          <Graphic
-            style="background-image:
-            url(https://via.placeholder.com/40x40.png?text={item.name
-              .split(' ')
-              .map((val) => val.substring(0, 1))
-              .join('')});" />
-          <Text>
-            <PrimaryText>{item.name}</PrimaryText>
-            <SecondaryText>{item.description}</SecondaryText>
-          </Text>
-          <Meta class="material-icons">info</Meta>
-        </Item>
-      {/each}
-    </List>
-  </div>
+  <SelectableList></SelectableList>
 
-  <pre class="status">
-    Selected: {selectionTwoLine}, value of selectedIndex: {optionsTwoLine.map(item => item.name).indexOf(selectionTwoLine)}
-  </pre>
+  
 
   <div>
     A three-line list:

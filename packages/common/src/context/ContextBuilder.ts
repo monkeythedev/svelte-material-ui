@@ -20,5 +20,5 @@ export function createContextBuilder<T>() {
   ];
 }
 
-export type CreateContext<T> = (context?: Partial<T>) => Writable<Partial<T>>;
+export type CreateContext<T> = (context?: Partial<T>) => Writable<T>;
 export type GetContext<T> = () => Writable<T>;

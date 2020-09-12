@@ -20,6 +20,7 @@
   import { RadioContext } from "./RadioContext";
   import { getRadioGroupContext } from "./RadioGroupContext";
   import { getFormFieldContext } from "@smui/form-field/src/FormFieldContext";
+  import { getSelectableContext } from "@smui/common/hoc";
 
   export let disabled: boolean = false;
   export let value: any = null;
@@ -30,9 +31,10 @@
   // let formField = getContext('SMUI:form-field');
 
   //#region Init contexts
-  let itemContext$ = getItemContext();
+  //let itemContext$ = getItemContext();
   let radioGroupContext$ = getRadioGroupContext();
   let formFieldContext$ = getFormFieldContext();
+  const selectable$ = getSelectableContext();
 
   const context = {
     setSelected(selected) {
@@ -47,12 +49,12 @@
     checked = $radioGroupContext$.value === value;
   }
 
-  $: if (itemContext$) {
-    $itemContext$.setValue(value);
+  $: if (selectable$) {
+    $selectable$.setValue(value);
   }
 
-  $: if (itemContext$ && $itemContext$.selected !== checked) {
-    checked = $itemContext$.selected;
+  $: if (selectable$ && $selectable$.selected !== checked) {
+    checked = $selectable$.selected;
     if (checked) {
       notifySelectionToParents();
     } else {
@@ -93,14 +95,14 @@
   });
 
   function notifySelectionToParents() {
-    $itemContext$?.setSelected(true);
+    $selectable$?.setSelected(true);
     $radioGroupContext$?.notifySelected(context);
   }
 
   function notifyDeselectionToParents() {
-    $itemContext$?.setSelected(false);
+    $selectable$?.setSelected(false);
 
-    if ($radioGroupContext$.value === value)
+    if (radioGroupContext$ && $radioGroupContext$.value === value)
       $radioGroupContext$?.notifyDeselected(context);
   }
 
@@ -121,7 +123,7 @@
     {...input$props}
     class="mdc-radio__native-control {input$class}"
     use:forwardDOMEvents
-    id={$formFieldContext$.inputId}
+    id={formFieldContext$ && $formFieldContext$.inputId}
     type="radio"
     {disabled}
     {value}

@@ -38,6 +38,7 @@
   import {exclude} from '@smui/common/exclude.js';
   import {prefixFilter} from '@smui/common/prefixFilter.js';
   import {useActions} from '@smui/common/useActions.js';
+import { getSelectListener } from '@smui/common';
 
   const forwardEvents = forwardEventsBuilder(get_current_component());
   let uninitializedValue = () => {};
@@ -57,7 +58,7 @@
   let switchControl;
   let formField = getContext('SMUI:form-field');
   let inputProps = getContext('SMUI:generic:input:props') || {};
-  let setChecked = getContext('SMUI:generic:input:setChecked');
+  let setChecked = getSelectListener();
   let nativeChecked = group === uninitializedValue ? (checked === uninitializedValue ? false : checked) : group.indexOf(value) !== -1;
 
   $: if (setChecked) {

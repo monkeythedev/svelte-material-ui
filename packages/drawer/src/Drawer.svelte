@@ -59,7 +59,6 @@
   
 
   function updateOpen() {
-    console.log("aaa")
     open = drawer.open;
   }
 

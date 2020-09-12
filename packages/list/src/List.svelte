@@ -1,5 +1,5 @@
 <script lang="ts">
-  // Base
+  //#region Base
   import { DOMEventsForwarder } from "@smui/common/events/DOMEventsForwarder";
   const forwardDOMEvents = DOMEventsForwarder();
   let className = "";
@@ -9,8 +9,10 @@
   export let dom: HTMLDivElement | HTMLUListElement = null;
   import { BaseProps } from "@smui/common/dom/Props";
   export let props: BaseProps = {};
+  //#endregion
 
   // List
+  //#region imports
   import { MDCList } from "@material/list";
   import { onMount, onDestroy, createEventDispatcher } from "svelte";
   import Nav from "@smui/common/dom/Nav.svelte";
@@ -24,8 +26,11 @@
   import { getMenuSurfaceContext } from "@smui/menu-surface/src/MenuSurfaceContext";
   import { getDrawerContext } from "@smui/drawer/src/DrawerContext";
   import { arrEquals, memo } from "@smui/common/utils";
+  import { SelectableList, SelectionType, OnSelectableListChange } from "@smui/common/hoc";
   import Item from "./Item.svelte";
+  //#endregion
 
+  //#region exports
   export let role: ListRole = "list";
   export let nonInteractive: boolean = false;
   export let orientation: "vertical" | "horizontal" = "vertical";
@@ -37,55 +42,41 @@
   export let wrapFocus: boolean = false;
   export let value: any = null;
   export let indexHasValues: boolean = null;
+  //#endregion
 
   const dispatch = createEventDispatcher();
 
+  const items = new Set<ItemContext>();
+  let selectableList: SelectableList;
+
+  let selectionType: SelectionType = null;
+  $: if ((!nonInteractive && role === "listbox") || role === "radiogroup") {
+    selectionType = "single";
+  } else if (!nonInteractive && role === "group") {
+    selectionType = "multi";
+  } else {
+    selectionType = null;
+  }
+
+  //#region init contexts
   const menuContext$ = getMenuContext();
   const menuSurfaceContext$ = getMenuSurfaceContext();
   const drawerContext$ = getDrawerContext();
   const context$ = createListContext({
     notifyFocus(itemToFocus: ItemContext) {
       itemToFocus.setTabIndex("0");
-      $context$.listItems.forEach((item) => {
+      items.forEach((item) => {
         if (item !== itemToFocus) {
           item.setTabIndex("-1");
         }
       });
     },
-    notifySelected(itemSelected: ItemContext) {
-      const listItems = getListItems();
-      const index = listItems.indexOf(itemSelected);
-
-      if (isSingleSelectionList()) {
-        setValue(itemSelected.value);
-
-        $context$.listItems.forEach((item) => {
-          if (item !== itemSelected) {
-            item.setSelected(false);
-          }
-        });
-
-        dispatch("change", {
-          value,
-          dom: itemSelected.dom,
-        });
-      } else if (isMultiSelectionList()) {
-        updateMultiSelectionValue();
-      }
+    registerItem(item: ItemContext) {
+      items.add(item);
     },
-    notifyDeselected(itemDeselected: ItemContext) {
-      const listItems = getListItems();
-      const index = listItems.indexOf(itemDeselected);
-      if (isSingleSelectionList() && list.selectedIndex === index) {
-        // The active element has been deselected
-        list.selectedIndex = -1;
-
-        setResetValue();
-      } else if (isMultiSelectionList() && !isValueSynched()) {
-        updateMultiSelectionValue();
-      }
-    },
-    listItems: new Set(),
+    unregisterItem(item: ItemContext) {
+      items.delete(item);
+    }
   });
 
   let component: typeof Nav | typeof Ul;
@@ -102,19 +93,19 @@
   // The first item of the list must have the attribute tabindex="0"
   $: {
     function findNonDisabledItemWithTabIndex0() {
-      return getListItems().find(
+      return Array.from(items).find(
         (item) => item.tabindex === "0" && !item.disabled
       );
     }
 
     function findFirstNonDisabledItem() {
-      return getListItems().find((item) => !item.disabled);
+      return Array.from(items).find((item) => !item.disabled);
     }
 
     function setTabIndex(firstItem: ItemContext) {
       firstItem.setTabIndex("0");
 
-      $context$.listItems.forEach((item) => {
+      items.forEach((item) => {
         if (item !== firstItem) {
           item.setTabIndex("-1");
         }
@@ -131,7 +122,7 @@
         setTabIndex(firstItem);
       }
     } else if (nonInteractive) {
-      $context$.listItems.forEach((item) => {
+      items.forEach((item) => {
         item.setTabIndex("-1");
       });
       findFirstNonDisabledItem()?.setTabIndex("0");
@@ -140,15 +131,16 @@
 
   // Try to use index as values if no items has value or indexHasValues is true
   $: if (list && indexHasValues !== false && hasInteractiveItems()) {
-    const listItems = getListItems();
     if (shouldUseIndexHasValues()) {
-      listItems.forEach((item, index) => item.setValue(index));
+      Array.from(items).forEach((item, index) => item.setValue(index));
       if (value == null) {
         list.selectedIndex = -1;
-        setValue(-1);
+        selectableList.setValue(-1);
       }
     }
   }
+
+  //#endregion
 
   let list: MDCList;
   onMount(async () => {
@@ -166,8 +158,8 @@
   $: $context$ = { ...$context$, role, isNav: !!drawerContext$, list };
 
   $: if (list) {
-    if (list.singleSelection !== isSingleSelectionList()) {
-      list.singleSelection = isSingleSelectionList();
+    if (list.singleSelection !== (selectionType === "single")) {
+      list.singleSelection = selectionType === "single";
     }
 
     if (
@@ -187,56 +179,7 @@
     }
 
     if (role === "list") {
-      setValue(null);
-    }
-  }
-
-  const valueMemo = memo();
-  // React to value changes
-  $: if (list && value !== valueMemo.val) {
-    if (role != "list") {
-      // If multiselection, value must be an array
-      if (isMultiSelectionList()) {
-        if (value == null) {
-          setResetValue();
-        } else if (!Array.isArray(value)) {
-          setValue([value]);
-        }
-      }
-  
-      if (isResetValue()) {
-        deselectAll();
-      } else {
-        if (!isValueSynched()) {
-          if (isSingleSelectionList()) {
-            const itemToSelect = getListItems().find(
-              (item) => item.value === value
-            );
-            
-            if (!itemToSelect && !isResetValue()) {
-              // Invalid value has been setted
-              setValue(valueMemo.val);
-            } else {
-              list.selectedIndex = value;
-              itemToSelect.setSelected(true);
-            }
-          } else if (isMultiSelectionList()) {
-            const itemsToSelect = getListItems().filter((item) =>
-              value.includes(item.value)
-            );
-    
-            if (~itemsToSelect.length && !isResetValue()) {
-              // Invalid value has been setted
-              setValue(valueMemo.val);
-            } else {
-              list.selectedIndex = value;
-              itemsToSelect.forEach((item) => item.setSelected(true));
-            }
-          }
-        }
-      }
-  
-      setValue(value);
+      selectableList.setValue(null);
     }
   }
 
@@ -249,113 +192,23 @@
   }
 
   function someItemsHasValue() {
-    return getListItems().some((item) => item.value != null)
+    return Array.from(items).some((item) => item.value != null)
   }
 
   function setSelectedIndex(value: number | number[]) {
     list.selectedIndex = value;
   }
 
-  function updateMultiSelectionValue() {
-    const selectedItems = getSelectedItems();
-
-    const newValue = selectedItems.map((item) => item.value);
-
-    setValue(newValue);
-
-    dispatch("change", {
-      value,
-      dom: selectedItems.map((item) => item.dom),
-    });
-  }
-
-  function deselectAll() {
-    $context$.listItems.forEach(item => item.setSelected(false));
-    if (isSingleSelectionList()) {
-
-      list.selectedIndex = -1;
-      setResetValue();
-    } else if (isMultiSelectionList()) {
-      setResetValue();
-      list.selectedIndex = value;
-    }
-  }
-
-  function setResetValue() {
-    if (isSingleSelectionList()) {
-      setValue(value == null && !shouldUseIndexHasValues() ? null : -1);
-    } else if (isMultiSelectionList()) {
-      setValue([]);
-    }
-  }
-
-  function isResetValue() {
-    if (isSingleSelectionList()) {
-      return value == null || value === -1;
-    } else if (isMultiSelectionList()) {
-      return value == null || value.length === 0;
-    }
-  }
-
-  function isValueSynched() {
-    if (isSingleSelectionList()) {
-      return value === getSelectedItems()[0]?.value;
-    } else if (isMultiSelectionList()) {
-      const selectedValues = getSelectedItems().map((item) => item.value);
-      return Array.isArray(value) && arrEquals(value, selectedValues);
-    }
-  }
-
-  function isListSelectedIndexSynched() {
-    if (isSingleSelectionList()) {
-      return list.selectedIndex === getSelectedIndex();
-    } else if (isMultiSelectionList()) {
-      const selectedIndexes = getSelectedIndex() as number[];
-      return (
-        Array.isArray(list.selectedIndex) &&
-        arrEquals(list.selectedIndex, selectedIndexes)
-      );
-    }
-  }
-
-  function setValue(newValue: any) {
-    value = newValue;
-    valueMemo.val = newValue;
-  }
-
   function getSelectedItems() {
-    return getListItems().filter((item) => item.selected);
-  }
-
-  function getItemsIndex(items: ItemContext[]) {
-    const listItems = getListItems();
-    return items.map((item) => listItems.indexOf(item));
-  }
-
-  function getSelectedIndex(): number | number[] {
-    if (role === "list") {
-      return null;
-    } else if (role === "group") {
-      return getItemsIndex(getSelectedItems());
-    } else {
-      return getItemsIndex(getSelectedItems())[0] ?? -1;
-    }
-  }
-
-  function isSingleSelectionList() {
-    return (!nonInteractive && role === "listbox") || role === "radiogroup";
-  }
-
-  function isMultiSelectionList() {
-    return !nonInteractive && role === "group";
+    return Array.from(items).filter((item) => item.selected);
   }
 
   function hasInteractiveItems() {
-    return !nonInteractive && !!$context$?.listItems.size;
+    return !nonInteractive && !!items.size;
   }
 
   function handleAction(e) {
-    const item = getListItems()[e.detail.index];
+    const item = Array.from(items)[e.detail.index];
 
     if (!list || !item || item.disabled) return;
 
@@ -366,8 +219,17 @@
     }
   }
 
-  export function getListItems() {
-    return Array.from($context$.listItems);
+  function handleChange(event: CustomEvent<OnSelectableListChange>) {
+    if (selectionType === "single") {
+      list.selectedIndex = event.detail.selectedItemsIndex[0] || -1; 
+    } else if (selectionType === "multi") {
+      list.selectedIndex = event.detail.selectedItemsIndex;
+    }
+    
+    dispatch("change", {
+      value,
+      dom: dom,
+    });
   }
 
   $: props = {
@@ -379,21 +241,23 @@
   };
 </script>
 
-<svelte:component
-  this={component}
-  {props}
-  bind:dom
-  class="mdc-list {className}
-    {nonInteractive ? 'mdc-list--non-interactive' : ''}
-    {dense ? 'mdc-list--dense' : ''}
-    {avatarList ? 'mdc-list--avatar-list' : ''}
-    {twoLine ? 'mdc-list--two-line' : ''}
-    {threeLine && !twoLine ? 'smui-list--three-line' : ''}
-    {orientation === 'horizontal' ? 'smui-list--horizontal' : ''}"
-  {style}
-  on:domEvent={forwardDOMEvents}>
-  <slot />
-</svelte:component>
+<SelectableList bind:this={selectableList} bind:value {selectionType} on:change={handleChange}>
+  <svelte:component
+    this={component}
+    {props}
+    bind:dom
+    class="mdc-list {className}
+      {nonInteractive ? 'mdc-list--non-interactive' : ''}
+      {dense ? 'mdc-list--dense' : ''}
+      {avatarList ? 'mdc-list--avatar-list' : ''}
+      {twoLine ? 'mdc-list--two-line' : ''}
+      {threeLine && !twoLine ? 'smui-list--three-line' : ''}
+      {orientation === 'horizontal' ? 'smui-list--horizontal' : ''}"
+    {style}
+    on:domEvent={forwardDOMEvents}>
+    <slot />
+  </svelte:component>
+</SelectableList>
 
 <!-- {#if nav}
   <nav

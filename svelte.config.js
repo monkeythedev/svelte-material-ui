@@ -7,7 +7,7 @@ module.exports = {
   preprocess: sveltePreprocess({
     typescript: true,
     scss: {
-      includePaths: [path.resolve("src"), path.resolve("node_modules")]
+      includePaths: [path.resolve("node_modules")]
     }
   }),
   preserveWhitespace: true,

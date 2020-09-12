@@ -3,7 +3,7 @@
 </script>
 
 <script lang="ts">
-  // Base
+  //#region Base
   import { DOMEventsForwarder } from "@smui/common/events/DOMEventsForwarder";
   const forwardDOMEvents = DOMEventsForwarder();
   let className = "";
@@ -15,8 +15,10 @@
 
   import { BaseProps } from "@smui/common/dom/Props";
   export let props: BaseProps = {};
+  //#endregion
 
   // Item
+  //#region import
   import {
     onMount,
     onDestroy,
@@ -34,7 +36,9 @@
   import { getListContext } from "./ListContext";
   import { createItemContext, ItemContext } from "./ItemContext";
   import { getMenuSurfaceContext } from "@smui/menu-surface/src/MenuSurfaceContext";
-import { memo } from "@smui/common/utils";
+  import { memo } from "@smui/common/utils";
+  import { Selectable, OnSelectableChange } from "@smui/common/hoc";
+  //#endregion
 
   export let ripple: boolean = true;
   export let color = null;
@@ -48,6 +52,8 @@ import { memo } from "@smui/common/utils";
 
   const dispatch = createEventDispatcher();
 
+  let selectable: Selectable;
+
   const listContext$ = getListContext();
   const menuSurfaceContext$ = getMenuSurfaceContext();
   const context$ = createItemContext({
@@ -57,15 +63,9 @@ import { memo } from "@smui/common/utils";
     setDisabled(_disabled: boolean) {
       disabled = _disabled;
     },
-    setSelected(_selected: boolean) {
-      selected = _selected;
-    },
-    setValue(newValue: any) {
-      value = newValue;
-    },
     sendOnSelected() {
       dispatch("selected", dom);
-    },
+    }
   });
 
   $: if ($listContext$.role === "radiogroup") {
@@ -99,19 +99,10 @@ import { memo } from "@smui/common/utils";
     value
   });
 
-  const selectedMemo = memo(selected);
-
-  $: if (selectedMemo.val !== selected) {
-    if ($listContext$.list) {
-      if (selected) {
-        $listContext$.notifySelected(context);
-        dispatch("selected", dom);
-      } else {
-        $listContext$.notifyDeselected(context);
-      }
+  function handleChange(event: CustomEvent<OnSelectableChange>) {
+    if (event.detail.selected) {
+      dispatch("selected", dom);
     }
-
-    selectedMemo.val = selected;
   }
 
   function onFocus() {
@@ -119,13 +110,17 @@ import { memo } from "@smui/common/utils";
   }
 
   onMount(() => {
-    $listContext$.listItems.add(context);
-    $listContext$ = { ...$listContext$ };
+    $listContext$.registerItem(context);
+
+    $context$ = Object.assign(context, {
+      ...$context$,
+      setSelected: selectable?.setSelected,
+      setValue: selectable?.setValue,
+    });
   });
 
   onDestroy(() => {
-    $listContext$.listItems.delete(context);
-    $listContext$ = { ...$listContext$ };
+    $listContext$.unregisterItem(context);
   });
 
   let rippleProps: RippleProps;
@@ -152,20 +147,22 @@ import { memo } from "@smui/common/utils";
   };
 </script>
 
-<svelte:component
-  this={component}
-  bind:dom
-  props={{ ...props }}
-  class="mdc-list-item {className}
-    {disabled ? 'mdc-list-item--disabled' : ''}
-    {role === 'option' && selected ? 'mdc-list-item--selected' : ''}
-    {role === 'menuitem' && selected ? 'mdc-menu-item--selected' : ''}"
-  {style}
-  on:domEvent={forwardDOMEvents}
-  on:focus={onFocus}
-  {rippleProps}>
-  <slot />
-</svelte:component>
+<Selectable bind:this={selectable} bind:value bind:selected on:change={handleChange}>
+  <svelte:component
+    this={component}
+    bind:dom
+    props={{ ...props }}
+    class="mdc-list-item {className}
+      {disabled ? 'mdc-list-item--disabled' : ''}
+      {role === 'option' && selected ? 'mdc-list-item--selected' : ''}
+      {role === 'menuitem' && selected ? 'mdc-menu-item--selected' : ''}"
+    {style}
+    on:domEvent={forwardDOMEvents}
+    on:focus={onFocus}
+    {rippleProps}>
+    <slot />
+  </svelte:component>
+</Selectable>
 
 <!-- 
 {#if nav && href}

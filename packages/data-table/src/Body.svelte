@@ -2,16 +2,26 @@
   //#region Base
   import { DOMEventsForwarder } from "@smui/common/actions/DOMEventsForwarder";
   const forwardDOMEvents = DOMEventsForwarder();
-  export let dom: HTMLDivElement = null;
   let className = "";
   export { className as class };
   export let style: string = "";
 
-  import { BaseProps } from "./Props";
+  export let dom: HTMLDivElement = null;
+
+  import { BaseProps } from "@smui/common/dom/Props";
   export let props: BaseProps = {};
   //#endregion
+
+  import { setRowBehaviour } from "./RowContext";
+
+  setRowBehaviour(null);
 </script>
 
-<div {...props} bind:this={dom} class={className} {style} use:forwardDOMEvents>
+<tbody
+  bind:this={dom}
+  {...props}
+  class="mdc-data-table__content {className}"
+  {style}
+  use:forwardDOMEvents>
   <slot />
-</div>
+</tbody>
