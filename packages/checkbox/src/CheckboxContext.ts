@@ -9,5 +9,5 @@ export {setCheckboxBehaviour, getCheckboxBehaviour};
 
 export type CheckboxBehaviour = "data-table-header" | "data-table-row";
 
-const [setDisableCheckboxMDCIstance, getDisableCheckboxMDCIstance] = createContextPropBuilder<CheckboxBehaviour>()
+const [setDisableCheckboxMDCIstance, getDisableCheckboxMDCIstance] = createContextPropBuilder<boolean>()
 export {setDisableCheckboxMDCIstance, getDisableCheckboxMDCIstance};

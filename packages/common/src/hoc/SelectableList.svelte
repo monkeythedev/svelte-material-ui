@@ -12,7 +12,6 @@
 
   export let value: any = null;
   export let selectionType: SelectionType = "multi";
-  export let selectedIndex: number = -1;
   export let indexHasValues: boolean = null;
 
   let mounted = false;
@@ -47,11 +46,10 @@
     notifyDeselected(itemDeselected: SelectableContext) {
       const listItems = Array.from(items);
       const index = listItems.indexOf(itemDeselected);
-      if (selectionType === "single" && selectedIndex === index) {
+      if (selectionType === "single") {
         // The active element has been deselected
-        selectedIndex = -1;
-
-        setResetValue();
+        if (itemDeselected.value === value)
+          setResetValue();
       } else if (selectionType === "multi" && !isValueSynched()) {
         updateMultiSelectionValue();
       }
@@ -60,17 +58,63 @@
 
   $: $context$ = { ...$context$, value };
 
+  onMount(() => {
+    mounted = true;
+  });
+
+  $: if (mounted) {
+    updateValueFromChilds();
+  }
+
   const valueMemo = memo(value);
-  //#region React to value changes
+  // React to value changes
   $: if (mounted && value !== valueMemo.val) {
     handleValueChange();
   }
-  //#endregion
 
-  onMount(() => {
-    mounted = true;
-    handleValueChange();
-  });
+  function updateValueFromChilds() {
+    const selectedItems = getSelectedItems();
+
+    if (selectedItems.length) {
+      if (selectionType === "single") {
+        _setValue(selectedItems[0])
+      } else if (selectionType === "multi") {
+        _setValue(selectedItems)
+      }
+    }
+  }
+
+  function syncValue() {
+    if (selectionType === "single") {
+      const itemToSelect = Array.from(items).find(
+        (item) => item.value === value
+      );
+
+      if (!itemToSelect) {
+        // Invalid value has been setted
+        setValue(valueMemo.val);
+      } else {
+        itemToSelect.setSelected(true);
+      }
+    } else if (selectionType === "multi") {
+      const invalidValue = !Array.from(items).some((item) =>
+        value.includes(item.value)
+      );
+
+      if (invalidValue) {
+        // Invalid value has been setted
+        setValue(valueMemo.val);
+      } else {
+        items.forEach((item) => {
+          if (value.includes(item.value)) {
+            item.setSelected(true);
+          } else {
+            item.setSelected(false);
+          }
+        });
+      }
+    }
+  }
 
   function handleValueChange() {
     if (selectionType) {
@@ -87,37 +131,7 @@
         deselectAll();
       } else {
         if (!isValueSynched()) {
-          if (selectionType === "single") {
-            const itemToSelect = Array.from(items).find(
-              (item) => item.value === value
-            );
-
-            if (!itemToSelect) {
-              // Invalid value has been setted
-              setValue(valueMemo.val);
-            } else {
-              selectedIndex = value;
-              itemToSelect.setSelected(true);
-            }
-          } else if (selectionType === "multi") {
-            const invalidValue = !Array.from(items).some((item) =>
-              value.includes(item.value)
-            );
-
-            if (invalidValue) {
-              // Invalid value has been setted
-              setValue(valueMemo.val);
-            } else {
-              selectedIndex = value;
-              items.forEach((item) => {
-                if (value.includes(item.value)) {
-                  item.setSelected(true);
-                } else {
-                  item.setSelected(false);
-                }
-              });
-            }
-          }
+          syncValue();
         }
       }
 
@@ -125,7 +139,13 @@
 
       const selectedItemsIndex = Array.from(items)
         .map((item, index) => ({ item, index }))
-        .filter(({ item, index }) => item.selected)
+        .filter(({ item, index }) => {
+          if(selectionType === "single") {
+            return item.value === value
+          } else if (selectionType === "multi") {
+            return value.includes(item.value)
+          }
+        })
         .map(({ item, index }) => index);
 
       dispatch("change", {
@@ -185,11 +205,9 @@
   function deselectAll() {
     items.forEach((item) => item.setSelected(false));
     if (selectionType === "single") {
-      selectedIndex = -1;
       setResetValue();
     } else if (selectionType === "multi") {
       setResetValue();
-      selectedIndex = value;
     }
   }
 
@@ -209,11 +227,11 @@
   }
 
   export function selectAll() {
-    items.forEach(item => item.setSelected(true));
+    items.forEach((item) => item.setSelected(true));
   }
 
   export function unselectAll() {
-    items.forEach(item => item.setSelected(false));
+    items.forEach((item) => item.setSelected(false));
   }
 </script>
 

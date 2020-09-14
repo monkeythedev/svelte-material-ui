@@ -12,6 +12,6 @@
   //#endregion
 </script>
 
-<div {...props} bind:this={dom} class={className} {style} use:forwardDOMEvents>
+<div bind:this={dom} {...props} class={className} {style} use:forwardDOMEvents>
   <slot />
 </div>

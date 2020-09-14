@@ -2,23 +2,21 @@
   //#region Base
   import { DOMEventsForwarder } from "@smui/common/actions/DOMEventsForwarder";
   const forwardDOMEvents = DOMEventsForwarder();
+  export let dom: HTMLDivElement = null;
   let className = "";
   export { className as class };
   export let style: string = "";
-  export let id: string = "";
 
-  export let dom: HTMLHeadingElement = null;
-
-  import { BaseProps } from "@smui/common/dom/Props";
+  import { BaseProps } from "./Props";
   export let props: BaseProps = {};
+  //#endregion
 </script>
 
-<h2
+<footer
   bind:this={dom}
   {...props}
-  {id}
   class={className}
   {style}
   use:forwardDOMEvents>
   <slot />
-</h2>
+</footer>

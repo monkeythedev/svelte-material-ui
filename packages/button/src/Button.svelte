@@ -37,26 +37,27 @@
   export let variant: "raised" | "unelevated" | "outlined" = null;
   export let dense: boolean = false;
   export let href: string = null;
-  export let action = "close";
+  export let action: string = "close";
   let defaultAction: boolean = false;
-  export { defaultAction as default };
+  export {defaultAction as default}
   export let disabled: boolean = false;
   export let target: string = null;
 
   let behaviour = getButtonBehaviour();
   let rippleClasses = [];
 
-  $: dialogExcludes =
-    behaviour === "dialog:action" ? ["action", "default"] : [];
+  let actionProps: any = {};
+  $: if ( behaviour === "dialog:action") {
+    if (defaultAction) {
+      actionProps["data-mdc-dialog-button-default"] = ""
+    }
 
-  $: actionProp =
-    behaviour === "dialog:action" && action !== null
-      ? { "data-mdc-dialog-action": action }
-      : {};
-  $: defaultProp =
-    behaviour === "dialog:action" && defaultAction
-      ? { "data-mdc-dialog-button-default": "" }
-      : {};
+    if (action !== null) {
+      actionProps["data-mdc-dialog-action"] = action
+    }
+
+    console.log(actionProps)
+  }
 
   setContext("SMUI:label:context", "button");
   setContext("SMUI:icon:context", "button");
@@ -80,7 +81,7 @@
 <svelte:component
   this={component}
   bind:dom
-  props={{ ...props, disabled, target, href }}
+  props={{ ...props, ...actionProps, disabled, target, href }}
   class="mdc-button {className}
     {variant ? `mdc-button--${variant}` : ''}
     {dense ? 'mdc-button--dense' : ''}
@@ -93,8 +94,6 @@
     {behaviour === 'snackbar' ? 'mdc-snackbar__action' : ''}"
   {style}
   on:domEvent={forwardDOMEvents}
-  {...actionProp}
-  {...defaultProp}
   {rippleProps}>
   <slot />
 </svelte:component>

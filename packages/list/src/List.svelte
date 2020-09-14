@@ -5,6 +5,7 @@
   let className = "";
   export { className as class };
   export let style: string = "";
+  export let id: string = "";
 
   export let dom: HTMLDivElement | HTMLUListElement = null;
   import { BaseProps } from "@smui/common/dom/Props";
@@ -26,7 +27,12 @@
   import { getMenuSurfaceContext } from "@smui/menu-surface/src/MenuSurfaceContext";
   import { getDrawerContext } from "@smui/drawer/src/DrawerContext";
   import { arrEquals, memo } from "@smui/common/utils";
-  import { SelectableList, SelectionType, OnSelectableListChange } from "@smui/common/hoc";
+  import {
+    SelectableList,
+    SelectionType,
+    OnSelectableListChange,
+  } from "@smui/common/hoc";
+  import { getDialogContext } from "@smui/dialog";
   import Item from "./Item.svelte";
   //#endregion
 
@@ -46,6 +52,7 @@
 
   const dispatch = createEventDispatcher();
 
+  //#region local varaibles
   const items = new Set<ItemContext>();
   let selectableList: SelectableList;
 
@@ -57,11 +64,14 @@
   } else {
     selectionType = null;
   }
+  //#endregion
 
   //#region init contexts
   const menuContext$ = getMenuContext();
   const menuSurfaceContext$ = getMenuSurfaceContext();
   const drawerContext$ = getDrawerContext();
+  const dialogContext$ = getDialogContext();
+
   const context$ = createListContext({
     notifyFocus(itemToFocus: ItemContext) {
       itemToFocus.setTabIndex("0");
@@ -76,7 +86,7 @@
     },
     unregisterItem(item: ItemContext) {
       items.delete(item);
-    }
+    },
   });
 
   let component: typeof Nav | typeof Ul;
@@ -90,8 +100,33 @@
     wrapFocus = true;
   }
 
-  // The first item of the list must have the attribute tabindex="0"
-  $: {
+  // Try to use index as values if no items has value or indexHasValues is true
+  $: if (list && indexHasValues !== false && hasInteractiveItems()) {
+    if (shouldUseIndexHasValues()) {
+      Array.from(items).forEach((item, index) => item.setValue(index));
+      if (value == null) {
+        list.selectedIndex = -1;
+        selectableList.setValue(-1);
+      }
+    }
+  }
+
+  //#endregion
+
+  let list: MDCList;
+  onMount(async () => {
+    if (
+      !menuContext$ &&
+      $drawerContext$?.variant !== "dismissible" &&
+      $drawerContext$?.variant !== "modal"
+    ) {
+      list = new MDCList(dom);
+      list.listen("MDCList:action", handleAction);
+    }
+  });
+
+  //#region The first item of the list must have the attribute tabindex="0"
+  $: if (list) {
     function findNonDisabledItemWithTabIndex0() {
       return Array.from(items).find(
         (item) => item.tabindex === "0" && !item.disabled
@@ -128,35 +163,14 @@
       findFirstNonDisabledItem()?.setTabIndex("0");
     }
   }
-
-  // Try to use index as values if no items has value or indexHasValues is true
-  $: if (list && indexHasValues !== false && hasInteractiveItems()) {
-    if (shouldUseIndexHasValues()) {
-      Array.from(items).forEach((item, index) => item.setValue(index));
-      if (value == null) {
-        list.selectedIndex = -1;
-        selectableList.setValue(-1);
-      }
-    }
-  }
-
   //#endregion
 
-  let list: MDCList;
-  onMount(async () => {
-    if (
-      !menuContext$ &&
-      $drawerContext$?.variant !== "dismissible" &&
-      $drawerContext$?.variant !== "modal"
-    ) {
-      list = new MDCList(dom);
-      list.listen("MDCList:action", handleAction);
-    }
-  });
+  $: if (list && $dialogContext$?.isOpen) list.layout();
 
   // Keep context updated
   $: $context$ = { ...$context$, role, isNav: !!drawerContext$, list };
 
+  // Keep MDCList properties updated
   $: if (list) {
     if (list.singleSelection !== (selectionType === "single")) {
       list.singleSelection = selectionType === "single";
@@ -192,7 +206,7 @@
   }
 
   function someItemsHasValue() {
-    return Array.from(items).some((item) => item.value != null)
+    return Array.from(items).some((item) => item.value != null);
   }
 
   function setSelectedIndex(value: number | number[]) {
@@ -221,11 +235,16 @@
 
   function handleChange(event: CustomEvent<OnSelectableListChange>) {
     if (selectionType === "single") {
-      list.selectedIndex = event.detail.selectedItemsIndex[0] || -1; 
+      list.selectedIndex = event.detail.selectedItemsIndex[0] ?? -1;
     } else if (selectionType === "multi") {
       list.selectedIndex = event.detail.selectedItemsIndex;
     }
-    
+
+    items.forEach((item) => item.setTabIndex("-1"));
+    Array.from(items)
+      .find((item, index) => event.detail.selectedItemsIndex.includes(index))
+      ?.setTabIndex("0");
+
     dispatch("change", {
       value,
       dom: dom,
@@ -241,11 +260,16 @@
   };
 </script>
 
-<SelectableList bind:this={selectableList} bind:value {selectionType} on:change={handleChange}>
+<SelectableList
+  bind:this={selectableList}
+  bind:value
+  {selectionType}
+  on:change={handleChange}>
   <svelte:component
     this={component}
-    {props}
     bind:dom
+    {props}
+    {id}
     class="mdc-list {className}
       {nonInteractive ? 'mdc-list--non-interactive' : ''}
       {dense ? 'mdc-list--dense' : ''}

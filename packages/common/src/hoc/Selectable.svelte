@@ -55,7 +55,9 @@
   }
 
   export function setSelected(_selected: boolean) {
-    if (selected !== _selected) selected = _selected;
+    if (selected !== _selected) {
+      selected = _selected;
+    }
   }
 
   export function setValue(_value: any) {

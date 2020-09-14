@@ -110,17 +110,14 @@
   export let rippleElement: RippleProps["rippleElement"] = null;
   export let component: RippleProps["component"];
 
-  export let instance: SMUIRipple = null;
-
-  let rippleTarget: HTMLDivElement;
-
+  let ripple: SMUIRipple;
   onMount(() => {
-    instance = new SMUIRipple(dom, {
+    ripple = new SMUIRipple(dom, {
       classForward: classForward,
       keyboardEvents: keyboardEvents,
     });
 
-    instance.unbounded = unbounded;
+    ripple.unbounded = unbounded;
   });
 
   // Fix ripple on selectable items
@@ -145,7 +142,7 @@
   {style}
   on:domEvent={forwardDOMEvents}>
   {#if rippleElement}
-    <span class={rippleElement} bind:this={rippleTarget} />
+    <span class={rippleElement} />
   {/if}
   <slot />
 </svelte:component>

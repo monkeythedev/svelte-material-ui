@@ -16,10 +16,10 @@
   import { Checkbox } from "@smui/checkbox";
   import { Typography } from "@smui/typography";
   import { Icon } from "@smui/common/dom";
-import RadioList from "./RadioList.svelte";
-import CheckboxList from "./CheckboxList.svelte";
-import ListBox from "./ListBox.svelte";
-import SelectableList from "./_SelectableList.svelte";
+  import RadioList from "./_RadioList.svelte";
+  import CheckboxList from "./CheckboxList.svelte";
+  import ListBox from "./ListBox.svelte";
+  import SelectableList from "./_SelectableList.svelte";
 
   let clickedSimple = "nothing yet";
   let clickedDense = "nothing yet";
@@ -91,7 +91,7 @@ import SelectableList from "./_SelectableList.svelte";
 
   <div>
     A simple horizontal list:
-    <List class="demo-list" orientation={"horizontal"}>
+    <List class="demo-list" orientation={'horizontal'}>
       <Item>
         <Text>Cut</Text>
       </Item>
@@ -132,7 +132,7 @@ import SelectableList from "./_SelectableList.svelte";
   </div>
 
   <pre class="status">Clicked: {clickedDense}</pre>
-  
+
   <div>
     A non-interactive list with activated item:
     <List class="demo-list" nonInteractive>
@@ -153,9 +153,7 @@ import SelectableList from "./_SelectableList.svelte";
     </List>
   </div>
 
-  <SelectableList></SelectableList>
-
-  
+  <SelectableList />
 
   <div>
     A three-line list:
@@ -224,8 +222,7 @@ import SelectableList from "./_SelectableList.svelte";
 
   <pre class="status">Clicked: {clickedGroup}</pre>
 
-  
-  <ListBox></ListBox>
-  <RadioList></RadioList>
-  <CheckboxList></CheckboxList>
+  <ListBox />
+  <RadioList />
+  <CheckboxList />
 </section>

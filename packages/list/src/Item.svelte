@@ -8,7 +8,8 @@
   const forwardDOMEvents = DOMEventsForwarder();
   let className = "";
   export { className as class };
-  export let style: string = null;
+  export let style: string = "";
+  export let id: string = ""
 
   import { ItemRole, ListItemDOMElement } from "./types";
   export let dom: ListItemDOMElement = null;
@@ -152,6 +153,7 @@
     this={component}
     bind:dom
     props={{ ...props }}
+    {id}
     class="mdc-list-item {className}
       {disabled ? 'mdc-list-item--disabled' : ''}
       {role === 'option' && selected ? 'mdc-list-item--selected' : ''}

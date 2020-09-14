@@ -22,8 +22,9 @@
   import { createDataTableContext } from "./DataTableContext";
   import { SelectableList } from "@smui/common/src/hoc";
   import { setDisableCheckboxMDCIstance } from "@smui/checkbox";
+  import { getDialogContext } from "@smui/dialog";
 
-  //const forwardEvents = forwardEventsBuilder(get_current_component(), ['MDCDataTable:rowSelectionChanged', 'MDCDataTable:selectedAll', 'MDCDataTable:unselectedAll']);
+  // TODO: create table from input data, sortable table, radio single selection table.
 
   export let table$class = "";
   export let value: any = null;
@@ -31,23 +32,7 @@
   let selectableList: SelectableList;
 
   setDisableCheckboxMDCIstance(true);
-
-  let changeHandlers = [];
-  let checkBoxHeaderPromiseResolve;
-  let checkBoxHeaderPromise = new Promise(
-    (resolve) => (checkBoxHeaderPromiseResolve = resolve)
-  );
-  let checkBoxListPromiseResolve;
-  let checkBoxListPromise = new Promise(
-    (resolve) => (checkBoxListPromiseResolve = resolve)
-  );
-  //let addLayoutListener = getContext('SMUI:addLayoutListener');
-  let removeLayoutListener;
-
-  // setContext('SMUI:generic:input:addChangeHandler', addChangeHandler);
-  // setContext('SMUI:checkbox:context', 'data-table');
-  // setContext('SMUI:checkbox:instantiate', false);
-  // setContext('SMUI:checkbox:getInstance', getCheckboxInstancePromise);
+  const dialogContext$ = getDialogContext();
 
   let dataTable: MDCDataTable;
   onMount(async () => {
@@ -58,6 +43,9 @@
     dataTable.listen("MDCDataTable:unselectedAll", unselectAllRows);
   });
 
+  // Redraw on dialog opened
+  $: if (dataTable && $dialogContext$?.isOpen) dataTable.layout();
+
   onDestroy(() => {
     dataTable && dataTable.destroy();
   });
@@ -65,7 +53,10 @@
   function handleChange(
     event: CustomEvent<MDCDataTableRowSelectionChangedEventDetail>
   ) {
-    selectableList.setItemSelected(event.detail.rowIndex, event.detail.selected);
+    selectableList.setItemSelected(
+      event.detail.rowIndex,
+      event.detail.selected
+    );
   }
 
   function selectAllRows() {

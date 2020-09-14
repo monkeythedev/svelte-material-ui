@@ -40,25 +40,26 @@
   //#endregion
 
   const behaviour = getCheckboxBehaviour();
-  const disableMDC = getDisableCheckboxMDCIstance();
 
   //#region Init contexts
   //const itemContext$ = getItemContext();
   const listContext$ = getListContext();
   const formFieldContext$ = getFormFieldContext();
   const dataTableContext$ = getDataTableContext();
-  const selectable$ = getSelectableContext();
+  const selectableContext$ = getSelectableContext();
+
+  const disableMDC = listContext$ || dataTableContext$;
 
   const context = {} as CheckboxContext;
   $: Object.assign(context, {
     value,
   });
 
-  $: if (selectable$) {
-    $selectable$.setValue(value);
+  $: if (selectableContext$) {
+    $selectableContext$.setValue(value);
 
-    if ($selectable$.selected !== checked) {
-      checked = $selectable$.selected;
+    if ($selectableContext$.selected !== checked) {
+      checked = $selectableContext$.selected;
     }
   }
   //#endregion
@@ -106,8 +107,8 @@
     if (checkbox) {
       checked = checkbox?.checked;
 
-      if (selectable$) {
-        $selectable$.setSelected(checked);
+      if (selectableContext$) {
+        $selectableContext$.setSelected(checked);
       }
     }
   }
@@ -143,6 +144,7 @@
     </svg>
     <div class="mdc-checkbox__mixedmark" />
   </div>
+  <div class="mdc-checkbox__ripple"></div>
 </div>
 
 <!-- <div
