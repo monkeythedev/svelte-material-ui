@@ -24,7 +24,12 @@
   export let inputId = `SMUI-form-field-${counter}`;
   counter++;
 
-  const context$ = createFormFieldContext({ inputId });
+  const context$ = createFormFieldContext({
+    inputId,
+    setInput(input) {
+      formField.input = input;
+    },
+  });
   //setContext('SMUI:generic:input:props', {id: inputId});
 
   let formField: MDCFormField;

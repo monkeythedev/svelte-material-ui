@@ -16,28 +16,26 @@
   import { MDCSlider } from "@material/slider";
   import { onMount, onDestroy, getContext } from "svelte";
   import { getDialogContext } from "@smui/dialog";
-import { getFormFieldContext } from "@smui/form-field/src/FormFieldContext";
+  import { getFormFieldContext } from "@smui/form-field/src/FormFieldContext";
 
-  export let disabled = false;
-  export let discrete = false;
-  export let displayMarkers = false;
-  export let min = 0;
-  export let max = 100;
-  export let step = 0;
-  export let value = null;
-  export let tabindex = 0;
-
-  let formField = getContext("SMUI:form-field");
-  let inputProps = getContext("SMUI:generic:input:props") || {};
+  export let disabled: boolean = false;
+  export let discrete: boolean = false;
+  export let displayMarkers: boolean = false;
+  export let min: number = 0;
+  export let max: number = 100;
+  export let step: number = 0.1;
+  export let value: number = null;
 
   const formFieldContext$ = getFormFieldContext();
   const dialogContext$ = getDialogContext();
 
   let slider: MDCSlider;
   onMount(() => {
-    if (!formFieldContext$) {
-      slider = new MDCSlider(dom);
-      slider.listen("MDCSlider:input", handleChange);
+    slider = new MDCSlider(dom);
+    slider.listen("MDCSlider:input", handleChange);
+
+    if (formFieldContext$) {
+      $formFieldContext$.setInput(slider);
     }
   });
 
@@ -82,6 +80,8 @@ import { getFormFieldContext } from "@smui/form-field/src/FormFieldContext";
   export function stepDown(amount = 1) {
     return slider.stepDown(amount);
   }
+
+  $: props.tabindex = props.tabindex || 0;
 </script>
 
 <div
@@ -98,8 +98,7 @@ import { getFormFieldContext } from "@smui/form-field/src/FormFieldContext";
   aria-valuemin={min}
   aria-valuemax={max}
   aria-valuenow={value}
-  {...step === 0 ? {} : { 'data-step': step }}
-  {tabindex}>
+  {...step === 0 ? {} : { 'data-step': step }}>
   <div class="mdc-slider__track-container">
     <div class="mdc-slider__track" />
     {#if discrete && displayMarkers}

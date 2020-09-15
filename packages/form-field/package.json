@@ -30,6 +30,7 @@
     "@material/feature-targeting": "^7.0.0",
     "@material/form-field": "^7.0.0",
     "@material/rtl": "^7.0.0",
+    "@material/base": "^7.0.0",
     "@smui/common": "^1.0.0"
   },
   "devDependencies": {

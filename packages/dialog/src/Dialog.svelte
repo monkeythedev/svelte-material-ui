@@ -107,6 +107,7 @@
 
     setInitialFocusElement();
     
+    // I have to reinit dialog at every open because MDC doesn't listen for initialFocus element change
     dialog = new MDCDialog(dom);
 
     dialog.listen("MDCDialog:opened", handleDialogOpened);
