@@ -24,7 +24,7 @@
         }
       })
     },
-    notifyDeselected(deselectedItem) {
+    notifyUnselected(deselectedItem) {
       if (value === deselectedItem.value) {
         value = null;
       }

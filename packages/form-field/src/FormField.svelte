@@ -1,5 +1,7 @@
 <script lang="ts" context="module">
   let counter: number = 0;
+
+  export type FormFieldLabelAlign = "start" | "end";
 </script>
 
 <script lang="ts">
@@ -20,7 +22,7 @@
   import { onMount, onDestroy, setContext } from "svelte";
   import { createFormFieldContext } from "./FormFieldContext";
 
-  export let align: "start" | "end" = "start";
+  export let align: FormFieldLabelAlign = "start";
   export let inputId = `SMUI-form-field-${counter}`;
   counter++;
 

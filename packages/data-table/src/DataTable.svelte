@@ -68,7 +68,7 @@
   }
 </script>
 
-<SelectableList bind:this={selectableList} bind:value on:change={handleChange}>
+<SelectableList bind:this={selectableList} bind:value>
   <div
     bind:this={dom}
     {...props}

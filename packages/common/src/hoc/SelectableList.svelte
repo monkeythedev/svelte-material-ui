@@ -1,8 +1,7 @@
 <script lang="ts">
   import { createEventDispatcher, onMount } from "svelte";
-
+  import { Use } from "../hooks";
   import { arrEquals, memo } from "../utils";
-
   import {
     SelectableContext,
     setSelectableListContext,
@@ -39,18 +38,15 @@
         });
 
         setValue(itemSelected.value);
-      } else if (selectionType === "multi") {
+      } else if (selectionType === "multi" && !value.includes(itemSelected.value)) {
         updateMultiSelectionValue();
       }
     },
-    notifyDeselected(itemDeselected: SelectableContext) {
-      const listItems = Array.from(items);
-      const index = listItems.indexOf(itemDeselected);
+    notifyUnselected(itemDeselected: SelectableContext) {
       if (selectionType === "single") {
         // The active element has been deselected
-        if (itemDeselected.value === value)
-          setResetValue();
-      } else if (selectionType === "multi" && !isValueSynched()) {
+        if (itemDeselected.value === value) setResetValue();
+      } else if (selectionType === "multi" && value.includes(itemDeselected.value)) {
         updateMultiSelectionValue();
       }
     },
@@ -62,29 +58,33 @@
     mounted = true;
   });
 
-  $: if (mounted) {
-    updateValueFromChilds();
-  }
-
   const valueMemo = memo(value);
   // React to value changes
   $: if (mounted && value !== valueMemo.val) {
     handleValueChange();
   }
 
-  function updateValueFromChilds() {
+  function useSyncValueAndChildren() {
+    if (value == null) {
+      updateValueFromChildren();
+    } else {
+      updateChildrenWithValue();
+    }
+  }
+
+  function updateValueFromChildren() {
     const selectedItems = getSelectedItems();
 
     if (selectedItems.length) {
       if (selectionType === "single") {
-        _setValue(selectedItems[0])
+        _setValue(selectedItems[0]);
       } else if (selectionType === "multi") {
-        _setValue(selectedItems)
+        _setValue(selectedItems);
       }
     }
   }
 
-  function syncValue() {
+  function updateChildrenWithValue() {
     if (selectionType === "single") {
       const itemToSelect = Array.from(items).find(
         (item) => item.value === value
@@ -97,13 +97,14 @@
         itemToSelect.setSelected(true);
       }
     } else if (selectionType === "multi") {
-      const invalidValue = !Array.from(items).some((item) =>
-        value.includes(item.value)
+      const itemsList = Array.from(items);
+      const validValues = value.filter((value) =>
+        itemsList.some((item) => item.value === value)
       );
 
-      if (invalidValue) {
+      if (validValues.length !== value.length) {
         // Invalid value has been setted
-        setValue(valueMemo.val);
+        setValue(validValues);
       } else {
         items.forEach((item) => {
           if (value.includes(item.value)) {
@@ -131,7 +132,7 @@
         deselectAll();
       } else {
         if (!isValueSynched()) {
-          syncValue();
+          updateChildrenWithValue();
         }
       }
 
@@ -140,10 +141,10 @@
       const selectedItemsIndex = Array.from(items)
         .map((item, index) => ({ item, index }))
         .filter(({ item, index }) => {
-          if(selectionType === "single") {
-            return item.value === value
+          if (selectionType === "single") {
+            return item.value === value;
           } else if (selectionType === "multi") {
-            return value.includes(item.value)
+            return value.includes(item.value);
           }
         })
         .map(({ item, index }) => index);
@@ -159,10 +160,8 @@
 
   function updateMultiSelectionValue() {
     const selectedItems = getSelectedItems();
-
     const newValue = selectedItems.map((item) => item.value);
-
-    setValue(newValue);
+    if (!arrEquals(value, newValue)) setValue(newValue);
   }
 
   function getSelectedItems() {
@@ -234,5 +233,8 @@
     items.forEach((item) => item.setSelected(false));
   }
 </script>
+
+
+<Use effect hook={useSyncValueAndChildren} />
 
 <slot />

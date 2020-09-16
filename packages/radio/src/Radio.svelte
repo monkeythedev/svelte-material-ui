@@ -103,7 +103,7 @@
     $selectable$?.setSelected(false);
 
     if (radioGroupContext$ && $radioGroupContext$.value === value)
-      $radioGroupContext$?.notifyDeselected(context);
+      $radioGroupContext$?.notifyUnselected(context);
   }
 
   function handleChange() {

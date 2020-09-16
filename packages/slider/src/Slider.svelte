@@ -16,7 +16,7 @@
   import { MDCSlider } from "@material/slider";
   import { onMount, onDestroy, getContext } from "svelte";
   import { getDialogContext } from "@smui/dialog";
-  import { getFormFieldContext } from "@smui/form-field/src/FormFieldContext";
+  import { getFormFieldContext } from "@smui/form-field/src";
 
   export let disabled: boolean = false;
   export let discrete: boolean = false;
@@ -35,7 +35,7 @@
     slider.listen("MDCSlider:input", handleChange);
 
     if (formFieldContext$) {
-      $formFieldContext$.setInput(slider);
+      $formFieldContext$.setInput(slider as any);
     }
   });
 

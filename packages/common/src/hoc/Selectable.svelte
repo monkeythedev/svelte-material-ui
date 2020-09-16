@@ -29,7 +29,7 @@
       if (selected) {
         $selectableListContext$.notifySelected(context);
       } else {
-        $selectableListContext$.notifyDeselected(context);
+        $selectableListContext$.notifyUnselected(context);
       }
     }
 

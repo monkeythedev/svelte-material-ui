@@ -9,5 +9,5 @@ export interface RadioGroupContext {
   registerItem(item: RadioContext);
   unregisterItem(item: RadioContext);
   notifySelected(item: RadioContext);
-  notifyDeselected(item: RadioContext);
+  notifyUnselected(item: RadioContext);
 }

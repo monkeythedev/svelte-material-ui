@@ -7,7 +7,7 @@ export {setSelectableListContext, getSelectableListContext};
 export interface SelectableListContext {
   readonly value: any;
   notifySelected(itemDeselected: SelectableContext): void;
-  notifyDeselected(itemDeselected: SelectableContext): void;
+  notifyUnselected(itemDeselected: SelectableContext): void;
   registerItem(itemDeselected: SelectableContext): void;
   unregisterItem(itemDeselected: SelectableContext): void;
 }
