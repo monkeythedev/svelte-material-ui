@@ -7,8 +7,7 @@
 
 // We need the theming variables for the following styles.
 @use "smui-theme";
-// This adds classes like "mdc-theme--primary-bg".
-@use "@material/theme/mdc-theme";
+@use "@material/typography/mdc-typography";
 
 html {
   height: 100vh;

@@ -1,0 +1,9 @@
+@use "@material/feature-targeting";
+@use "@material/fab";
+@use "@material/theme";
+
+@mixin smui-fab-core-styles($query: feature-targeting.all()) {
+  .smui-fab--color-primary {
+    @include fab.accessible(theme.$primary, $query: $query);
+  } 
+} 

@@ -4,22 +4,31 @@
 
   export let hook: Hook = null;
   export let effect: boolean = false;
+  export let once: boolean = false;
+  export let when: boolean = false;
 
   let runDone = false;
 
   let runDestroyer: DestroyerFunc;
-  $: if(hook && !effect) runDestroyer = hook() as DestroyerFunc;
+  $: if(when && hook && !effect) runDestroyer = runHook();
 
   let mounted = false;
   onMount(() => {
     mounted = true;
   })
 
-  $: if(hook && effect && mounted) {
-    runDestroyer = hook() as DestroyerFunc;
+  $: if(when && hook && effect && mounted) {
+    runDestroyer = runHook();
   }
 
   onDestroy(() => {
     if (runDestroyer) runDestroyer();
   })
+
+  function runHook() {
+    if (once && !runDone || !once) {
+      runDone = true;
+      return hook() as DestroyerFunc;
+    }
+  }
 </script>

@@ -1,5 +1,6 @@
 <script lang="ts">
   import "./app.scss";
+  import "./test.scss";
   import * as appClasses from "./app.module.scss";
   import { TopAppBar, Row, Section, Title } from "@smui/top-app-bar";
   import { List, Item, Text, Separator } from "@smui/list";

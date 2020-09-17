@@ -28,8 +28,6 @@
   export let input$class: string = "";
   export let input$props: BaseProps = {};
 
-  // let formField = getContext('SMUI:form-field');
-
   //#region Init contexts
   //let itemContext$ = getItemContext();
   let radioGroupContext$ = getRadioGroupContext();

@@ -1,0 +1,6 @@
+@use "smui-theme";
+@use "@material/fab";
+@use "./mixins";
+
+@include fab.core-styles;
+@include mixins.smui-fab-core-styles;
