@@ -16,13 +16,15 @@
   export let style: string = "";
 
   export let props: ButtonProps = {};
+  export let id: string = "";
 
   // Button
 </script>
 
 <button
-  {...props}
   bind:this={dom}
+  {...props}
+  {id}
   class={className}
   {style}
   use:forwardDOMEvents>
