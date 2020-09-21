@@ -8,6 +8,7 @@
     SelectionType,
   } from "./";
   import { OnSelectableListChange } from "./types";
+  import { initTabIndex } from "./initTabIndex";
 
   export let value: any = null;
   export let selectionType: SelectionType = "multi";
@@ -20,6 +21,14 @@
   const items = new Set<SelectableContext>();
 
   const context$ = setSelectableListContext({
+    notifyFocus(itemFocused: SelectableContext) {
+      itemFocused.setTabIndex(0);
+      items.forEach((item) => {
+        if (item !== itemFocused) {
+          item.setTabIndex(-1);
+        }
+      });
+    },
     registerItem(item: SelectableContext) {
       items.add(item);
     },
@@ -38,7 +47,10 @@
         });
 
         setValue(itemSelected.value);
-      } else if (selectionType === "multi" && !value.includes(itemSelected.value)) {
+      } else if (
+        selectionType === "multi" &&
+        !value.includes(itemSelected.value)
+      ) {
         updateMultiSelectionValue();
       }
     },
@@ -46,7 +58,10 @@
       if (selectionType === "single") {
         // The active element has been deselected
         if (itemDeselected.value === value) setResetValue();
-      } else if (selectionType === "multi" && value.includes(itemDeselected.value)) {
+      } else if (
+        selectionType === "multi" &&
+        value.includes(itemDeselected.value)
+      ) {
         updateMultiSelectionValue();
       }
     },
@@ -148,6 +163,15 @@
           }
         })
         .map(({ item, index }) => index);
+      
+      let tabindexSetted = false;
+      Array.from(items).forEach((item, index) => {
+        if (!tabindexSetted && selectedItemsIndex.includes(index)) {
+          item.setTabIndex(0)
+        } else {
+          item.setTabIndex(-1)
+        }
+      });
 
       dispatch("change", {
         value,
@@ -234,7 +258,7 @@
   }
 </script>
 
-
 <Use effect hook={useSyncValueAndChildren} />
+<Use effect hook={() => initTabIndex(selectionType, items)} />
 
 <slot />

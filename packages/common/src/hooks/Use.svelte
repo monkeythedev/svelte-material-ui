@@ -5,7 +5,7 @@
   export let hook: Hook = null;
   export let effect: boolean = false;
   export let once: boolean = false;
-  export let when: boolean = false;
+  export let when: boolean = true;
 
   let runDone = false;
 

@@ -34,7 +34,7 @@
     {iconStyle === 'chip' ? 'mdc-chip__icon' : ''}
     {iconStyle === 'chip' && leading ? 'mdc-chip__icon--leading' : ''}
     {iconStyle === 'chip' && leadingHidden ? 'mdc-chip__icon--leading-hidden' : ''}
-    {iconStyle === 'chip' && trailing ? 'mdc-chip__icon--trailing' : ''}
+    {iconStyle === 'chip' && trailing ? 'mdc-chip__icon--trailing mdc-chip-trailing-action' : ''}
     {iconStyle === 'tab' ? 'mdc-tab__icon' : ''}"
   {style}
   use:forwardDOMEvents

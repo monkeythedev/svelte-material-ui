@@ -1,7 +1,6 @@
 <script lang="ts">
   import { Chip, ChipSet, Icon, Checkmark, Text } from "@smui/chips";
-  import Button from "@smui/common/dom/Button.svelte";
-  import Label from "@smui/common/dom/Label.svelte";
+  import { Button, Label } from "@smui/button";
 
   let choice: typeof chips[number] = "Morning";
 
@@ -15,7 +14,7 @@
 
 <div>
   Choice Chips
-  <ChipSet bind:value={choice}>
+  <ChipSet bind:value={choice} choice>
     {#each chips as chip}
       <Chip value={chip}>
         <Text>{chip}</Text>
@@ -28,7 +27,7 @@
   Programmatically select:
   {#each chips as chip}
     <Button on:click={() => (choice = chip)}>
-      <Label>chip</Label>
+      <Label>{chip}</Label>
     </Button>
   {/each}
 </div>

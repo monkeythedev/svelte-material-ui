@@ -47,7 +47,7 @@
   export let role: ItemRole = null; //TODO: forse si può togliere dagli export
   export let selected: boolean = false;
   export let disabled: boolean = false;
-  export let tabindex: "0" | "-1" = "-1";
+  export let tabindex: number = -1;
   export let href: string = null;
   export let value: any = null;
 
@@ -58,12 +58,6 @@
   const listContext$ = getListContext();
   const menuSurfaceContext$ = getMenuSurfaceContext();
   const context$ = createItemContext({
-    setTabIndex(newTabindex: "0" | "-1") {
-      tabindex = newTabindex;
-    },
-    setDisabled(_disabled: boolean) {
-      disabled = _disabled;
-    },
     sendOnSelected() {
       dispatch("selected", dom);
     }
@@ -79,7 +73,6 @@
     role = "checkbox"
   }
 
-  $: if (disabled && tabindex === "0") tabindex = "-1";
   $: if (disabled && selected) selected = false;
 
   let component: typeof Li | typeof A | typeof Span;
@@ -107,7 +100,7 @@
   }
 
   function onFocus() {
-    $listContext$.notifyFocus(context);
+    selectable.notifyFocus();
   }
 
   onMount(() => {
@@ -148,7 +141,7 @@
   };
 </script>
 
-<Selectable bind:this={selectable} bind:value bind:selected on:change={handleChange}>
+<Selectable bind:this={selectable} bind:value bind:selected on:change={handleChange} bind:tabindex>
   <svelte:component
     this={component}
     bind:dom

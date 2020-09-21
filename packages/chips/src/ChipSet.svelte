@@ -17,26 +17,33 @@
   import { MDCChipSet } from "@material/chips";
   import { onMount, onDestroy, afterUpdate } from "svelte";
   import { SelectableList } from "@smui/common/hoc";
-  import { ChipContext, createChipSetContext } from "./ChipSetContext";
+  import { createChipSetContext } from "./ChipSetContext";
+  import { ChipContext } from "./ChipContext";
+  import { arrRemove, arrAdd, arrHas } from "@smui/common/src/utils";
+import Use from "@smui/common/src/hooks/Use.svelte";
 
   export let value: any = null;
   export let choice: boolean = false;
   export let filter: boolean = false;
   export let input: boolean = false;
 
-  let items = new Set<ChipContext>();
+  let items: ChipContext[] = [];
   let selectableList: SelectableList;
   const context$ = createChipSetContext({
     registerItem(chip: ChipContext) {
-      items.add(chip);
+      if (chipSet && !arrHas(items, chip)) {
+        chipSet.addChip(chip.dom);
+      }
+
+      items = arrAdd(items, chip);
     },
     unregisterItem(chip: ChipContext) {
-      items.delete(chip);
+      items = arrRemove(items, chip);
     },
   });
 
   // Update chips instances
-  $: if (chipSet && items.size) {
+  $: if (chipSet && items.length) {
     Array.from(items).forEach((item, index) => {
       if (!item.chip) {
         item.setChip(chipSet.chips[index]);
@@ -45,13 +52,10 @@
   }
 
   let chipSet: MDCChipSet;
-  onMount(() => {
+  /** Must be an hook because chip uses hooks to initialize */
+  function initChipSet() {
     chipSet = new MDCChipSet(dom);
-  });
-
-  // Update the MDCChip when the selection changes.
-  $: if (chipSet) {
-  }
+  };
 
   onDestroy(() => {
     chipSet && chipSet.destroy();
@@ -64,8 +68,9 @@
   bind:value>
   <div
     bind:this={dom}
-    {id}
     {...props}
+    role="grid"
+    {id}
     class="mdc-chip-set {className}
       {choice ? 'mdc-chip-set--choice' : ''}
       {filter ? 'mdc-chip-set--filter' : ''}
@@ -75,3 +80,5 @@
     <slot />
   </div>
 </SelectableList>
+
+<Use effect hook={initChipSet}></Use>

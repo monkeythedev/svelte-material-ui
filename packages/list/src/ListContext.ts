@@ -10,7 +10,6 @@ export interface ListContext extends SelectableListContext {
   role: ListRole;
   isNav: boolean;
   list: MDCList;
-  notifyFocus(item: ItemContext): void;
   registerItem(item: ItemContext): void;
   unregisterItem(item: ItemContext): void;
 }

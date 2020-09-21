@@ -19,21 +19,16 @@
   import Nav from "@smui/common/dom/Nav.svelte";
   import Ul from "@smui/common/dom/Ul.svelte";
   import { createListContext, getListContext, ListRole } from "./ListContext";
-  import A from "@smui/common/dom/A.svelte";
   import { ItemContext } from "./ItemContext";
-  import { createItemsStore } from "./ListStores";
-  import { writable, Writable } from "svelte/store";
   import { getMenuContext } from "@smui/menu/src/MenuContext";
   import { getMenuSurfaceContext } from "@smui/menu-surface/src/MenuSurfaceContext";
   import { getDrawerContext } from "@smui/drawer/src/DrawerContext";
-  import { arrEquals, memo } from "@smui/common/utils";
   import {
     SelectableList,
     SelectionType,
     OnSelectableListChange,
   } from "@smui/common/hoc";
   import { getDialogContext } from "@smui/dialog";
-  import Item from "./Item.svelte";
   //#endregion
 
   //#region exports
@@ -73,14 +68,6 @@
   const dialogContext$ = getDialogContext();
 
   const context$ = createListContext({
-    notifyFocus(itemToFocus: ItemContext) {
-      itemToFocus.setTabIndex("0");
-      items.forEach((item) => {
-        if (item !== itemToFocus) {
-          item.setTabIndex("-1");
-        }
-      });
-    },
     registerItem(item: ItemContext) {
       items.add(item);
     },
@@ -124,46 +111,6 @@
       list.listen("MDCList:action", handleAction);
     }
   });
-
-  //#region The first item of the list must have the attribute tabindex="0"
-  $: if (list) {
-    function findNonDisabledItemWithTabIndex0() {
-      return Array.from(items).find(
-        (item) => item.tabindex === "0" && !item.disabled
-      );
-    }
-
-    function findFirstNonDisabledItem() {
-      return Array.from(items).find((item) => !item.disabled);
-    }
-
-    function setTabIndex(firstItem: ItemContext) {
-      firstItem.setTabIndex("0");
-
-      items.forEach((item) => {
-        if (item !== firstItem) {
-          item.setTabIndex("-1");
-        }
-      });
-    }
-
-    if (hasInteractiveItems()) {
-      let firstItem = getSelectedItems()[0];
-
-      if (firstItem) {
-        setTabIndex(firstItem);
-      } else if (!firstItem && !findNonDisabledItemWithTabIndex0()) {
-        firstItem = findFirstNonDisabledItem();
-        setTabIndex(firstItem);
-      }
-    } else if (nonInteractive) {
-      items.forEach((item) => {
-        item.setTabIndex("-1");
-      });
-      findFirstNonDisabledItem()?.setTabIndex("0");
-    }
-  }
-  //#endregion
 
   $: if (list && $dialogContext$?.isOpen) list.layout();
 
@@ -209,14 +156,6 @@
     return Array.from(items).some((item) => item.value != null);
   }
 
-  function setSelectedIndex(value: number | number[]) {
-    list.selectedIndex = value;
-  }
-
-  function getSelectedItems() {
-    return Array.from(items).filter((item) => item.selected);
-  }
-
   function hasInteractiveItems() {
     return !nonInteractive && !!items.size;
   }
@@ -226,9 +165,18 @@
 
     if (!list || !item || item.disabled) return;
 
-    if (list.selectedIndex === event.detail.index) {
-      selectableList.setItemSelected(event.detail.index, true);
-    } else if (role === "list") {
+    if (selectionType) {
+      if (
+        (selectionType === "single" &&
+          list.selectedIndex === event.detail.index) ||
+        (selectionType === "multi" &&
+          (list.selectedIndex as number[]).includes(event.detail.index))
+      ) {
+        selectableList.setItemSelected(event.detail.index, true);
+      } else {
+        selectableList.setItemSelected(event.detail.index, false);
+      }
+    } else {
       item.sendOnSelected();
     }
   }
@@ -239,11 +187,6 @@
     } else if (selectionType === "multi") {
       list.selectedIndex = event.detail.selectedItemsIndex;
     }
-
-    items.forEach((item) => item.setTabIndex("-1"));
-    Array.from(items)
-      .find((item, index) => event.detail.selectedItemsIndex.includes(index))
-      ?.setTabIndex("0");
 
     dispatch("change", {
       value,
