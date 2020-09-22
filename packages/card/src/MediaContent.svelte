@@ -1,0 +1,1 @@
+<div class="mdc-card__media-content"><slot></slot></div>

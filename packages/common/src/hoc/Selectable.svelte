@@ -76,5 +76,4 @@
   }
 </script>
 
-{selected}
 <slot />

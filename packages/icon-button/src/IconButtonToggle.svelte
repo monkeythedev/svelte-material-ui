@@ -13,11 +13,7 @@
 
   // IconButton
   import { MDCIconButtonToggle } from "@material/icon-button";
-  import { onDestroy, getContext, setContext, onMount } from "svelte";
-  import { Ripple, RippleProps } from "@smui/ripple";
-  import { Button, A, setIconStyle } from "@smui/common/dom";
-  import { RippleButton, RippleA } from "@smui/ripple/dom";
-  import { getIconButtonBehaviour } from "./IconButtonContextProps";
+  import { onDestroy, onMount } from "svelte";
   import IconButton from "./IconButton.svelte";
 
   export let color: "primary" | "secondary" = null;
@@ -50,20 +46,6 @@
   onDestroy(() => {
     toggleButton && toggleButton.destroy();
   });
-
-  function handleChange(e) {
-    pressed = e.detail.isOn;
-  }
-
-  function getComponent(
-    ripple?: boolean
-  ): typeof RippleA | typeof RippleButton | typeof A | typeof Button {
-    if (ripple) {
-      return href ? RippleA : RippleButton;
-    } else {
-      return href ? A : Button;
-    }
-  }
 </script>
 
 <IconButton

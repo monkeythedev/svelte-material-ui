@@ -1,3 +1,32 @@
+<script lang="ts">
+  import "./elevation.scss";
+  import classes from "./elevation.module.scss";
+  import { Checkbox } from "@smui/checkbox";
+  import { FormField } from "@smui/form-field";
+
+  let liftMeUp = false;
+</script>
+
+<style>
+  .flexy-dad {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .flexy-boy {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 120px;
+    height: 120px;
+    margin: 0 36px 36px 0;
+  }
+
+  .rounded {
+    border-radius: 4px;
+  }
+</style>
+
 <svelte:head>
   <title>Elevation - SMUI</title>
 </svelte:head>
@@ -28,52 +57,20 @@
 
     <div class="flexy-dad">
       <div
-        use
         class="mdc-elevation-transition rounded flexy-boy"
-        class:mdc-elevation--z4={liftMeUp}
-      >
+        class:mdc-elevation--z4={liftMeUp}>
         Standard
       </div>
       <div
-        class="my-primary mdc-elevation-transition rounded flexy-boy"
-        class:elevated={liftMeUp}
-      >
+        class="{classes.myPrimary}
+          {liftMeUp ? classes.elevated : ''} mdc-elevation-transition rounded flexy-boy">
         Primary
       </div>
       <div
-        class="my-secondary mdc-elevation-transition rounded flexy-boy"
-        class:elevated={liftMeUp}
-      >
+        class="{classes.mySecondary}
+          {liftMeUp ? classes.elevated : ''} mdc-elevation-transition rounded flexy-boy">
         Secondary
       </div>
     </div>
   </div>
 </section>
-
-<script>
-  import './elevation.scss';
-  import Checkbox from '@smui/checkbox';
-  import FormField from '@smui/form-field';
-
-  let liftMeUp = false;
-</script>
-
-<style>
-  .flexy-dad {
-    display: flex;
-    flex-wrap: wrap;
-  }
-
-  .flexy-boy {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 120px;
-    height: 120px;
-    margin: 0 36px 36px 0;
-  }
-
-  .rounded {
-    border-radius: 4px;
-  }
-</style>

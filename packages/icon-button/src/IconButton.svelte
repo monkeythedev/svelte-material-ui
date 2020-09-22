@@ -12,9 +12,7 @@
   //#endregion
 
   // IconButton
-  import { MDCIconButtonToggle } from "@material/icon-button";
-  import { onDestroy, getContext, setContext } from "svelte";
-  import { Ripple, RippleProps } from "@smui/ripple";
+  import { RippleProps } from "@smui/ripple";
   import { Button, A, setIconStyle } from "@smui/common/dom";
   import { RippleButton, RippleA } from "@smui/ripple/dom";
   import { getIconButtonBehaviour } from "./IconButtonContextProps";
@@ -29,11 +27,10 @@
 
   const behaviour = getIconButtonBehaviour();
 
-  let toggleButton;
-  
   let component = getComponent(ripple);
   
   //let context = getContext("SMUI:icon-button:context");
+
   setIconStyle("icon-button");
 
   let rippleProps: RippleProps;
@@ -64,6 +61,7 @@
     title,
     "aria-pressed": pressed,
     "aria-hidden": true,
+    "aria-label": props["aria-label"] || title
   };
 </script>
 
