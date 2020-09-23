@@ -1,0 +1,39 @@
+@use "@material/image-list";
+
+.simple-image-list {
+  @include image-list.standard-columns(5);
+  max-width: 680px;
+
+  @media (max-width: 599px) {
+    @include image-list.standard-columns(3);
+  }
+}
+
+.text-protection-image-list {
+  @include image-list.standard-columns(5);
+  @include image-list.aspect(4/5);
+  max-width: 680px;
+
+  @media (max-width: 599px) {
+    @include image-list.standard-columns(3);
+  }
+}
+
+.masonry-image-list {
+  @include image-list.masonry-columns(5);
+  @include image-list.shape-radius(10px);
+  max-width: 680px;
+
+  @media (max-width: 599px) {
+    @include image-list.masonry-columns(3);
+  }
+}
+
+.image-background-image-list {
+  @include image-list.standard-columns(5);
+  max-width: 680px;
+
+  @media (max-width: 599px) {
+    @include image-list.standard-columns(3);
+  }
+}

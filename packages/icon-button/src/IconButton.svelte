@@ -5,8 +5,10 @@
   let className = "";
   export { className as class };
   export let style: string = "";
+  export let id: string = null;
 
   export let dom: HTMLAnchorElement | HTMLButtonElement = null;
+  
   import { BaseProps } from "@smui/common/dom/Props";
   export let props: BaseProps = {};
   //#endregion
@@ -69,6 +71,7 @@
   this={component}
   bind:dom
   {props}
+  {id}
   class="mdc-icon-button {className}
     {pressed ? 'mdc-icon-button--on' : ''}
     {behaviour === 'card:action' ? 'mdc-card__action' : ''}
