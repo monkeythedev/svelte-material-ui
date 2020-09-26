@@ -1,12 +1,10 @@
 <script lang="ts">
-  import { onMount, onDestroy } from "svelte";
+  import { onDestroy } from "svelte";
   import { Use } from "@smui/common/hooks";
 
   export let target: HTMLElement;
 
   let dom: HTMLDivElement;
-
-  let portal: HTMLDivElement;
 
   onDestroy(() => {
     target?.removeChild(dom);
@@ -18,7 +16,7 @@
 </script>
 
 <style>
-  .portal-clone {
+  .portal {
     display: none;
   }
 
@@ -30,7 +28,7 @@
 <Use once effect hook={init} when={!!target}></Use>
 
 {#if target}
-  <div class="portal-clone">
+  <div class="portal">
     <div class="portal-wrapper" bind:this={dom}>
       <slot />
     </div>

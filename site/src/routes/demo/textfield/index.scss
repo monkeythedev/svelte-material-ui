@@ -1,0 +1,44 @@
+@use "@material/textfield";
+
+.shaped {
+  border-radius: 16px 16px 0 0;
+}
+
+.shaped-outline {
+  .mdc-text-field__input {
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+
+  .mdc-notched-outline {
+    .mdc-notched-outline__leading {
+      border-radius: 28px 0 0 28px;
+      width: 28px;
+    }
+
+    .mdc-notched-outline__trailing {
+      border-radius: 0 28px 28px 0;
+    }
+
+    .mdc-notched-outline__notch {
+      max-width: calc(100% - 28px * 2);
+    }
+
+    + .mdc-text-field-helper-line {
+      padding-left: 32px;
+      padding-right: 28px;
+    }
+  }
+}
+
+.dense-text-field--filled {
+  @include textfield.density(-4);
+}
+
+.dense-text-field--outlined {
+  @include textfield.outlined-density(-4);
+}
+
+.dense-text-field--outlined--with-leading-icon {
+  @include textfield.outlined-with-leading-icon-density(-4);
+}

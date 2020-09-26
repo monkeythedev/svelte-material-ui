@@ -26,6 +26,7 @@
     "@material/theme": "^7.0.0",
     "@material/top-app-bar": "^7.0.0",
     "@material/typography": "^7.0.0",
+    "@material/textfield": "^7.0.0",
     "@mdi/js": "^5.1.45",
     "@smui/button": "file:../packages/button",
     "@smui/card": "file:../packages/card",

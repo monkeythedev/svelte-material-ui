@@ -1,33 +1,38 @@
-<div
-  bind:this={element}
-  use:useActions={use}
-  use:forwardEvents
-  class="mdc-text-field-character-counter {className}"
-  {...exclude($$props, ['use', 'class'])}
-><slot></slot></div>
+<script lang="ts">
+  //#region Base
+  import { DOMEventsForwarder } from "@smui/common/actions/DOMEventsForwarder";
+  const forwardDOMEvents = DOMEventsForwarder();
+  let className = "";
+  export { className as class };
+  export let style: string = null;
+  export let id: string = null;
 
-<script>
-  import {MDCTextFieldCharacterCounter} from '@material/textfield/character-counter';
-  import {onMount, onDestroy} from 'svelte';
-  import {get_current_component} from 'svelte/internal';
-  import {forwardEventsBuilder} from '@smui/common/forwardEvents';
-  import {exclude} from '@smui/common/exclude.js';
-  import {useActions} from '@smui/common/useActions.js';
+  export let dom: HTMLInputElement = null;
 
-  const forwardEvents = forwardEventsBuilder(get_current_component());
+  import { BaseProps } from "@smui/common/dom/Props";
+  export let props: BaseProps = {};
+  //#endregion
 
-  export let use = [];
-  let className = '';
-  export {className as class};
+  // CharacterCounter
+  import { MDCTextFieldCharacterCounter } from "@material/textfield/character-counter";
+  import { onMount, onDestroy } from "svelte";
 
-  let element;
-  let characterCounter;
-
+  let characterCounter: MDCTextFieldCharacterCounter;
   onMount(() => {
-    characterCounter = new MDCTextFieldCharacterCounter(element);
+    characterCounter = new MDCTextFieldCharacterCounter(dom);
   });
 
   onDestroy(() => {
     characterCounter && characterCounter.destroy();
   });
 </script>
+
+<div
+  bind:this={dom}
+  {...props}
+  {id}
+  class="mdc-text-field-character-counter {className}"
+  {style}
+  use:forwardDOMEvents>
+  <slot />
+</div>

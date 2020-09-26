@@ -1,52 +1,46 @@
-<input
-  bind:this={element}
-  use:useActions={use}
-  use:forwardEvents
-  class="mdc-text-field__input {className}"
-  {type}
-  {...valueProp}
-  on:change={e => (type === 'file' || type === 'range') && valueUpdater(e)}
-  on:input={e => type !== 'file' && valueUpdater(e)}
-  on:change={changeHandler}
-  {...exclude($$props, ['use', 'class', 'type', 'value', 'files', 'dirty', 'invalid', 'updateInvalid'])}
-/>
+<script lang="ts">
+  //#region Base
+  import { DOMEventsForwarder } from "@smui/common/actions/DOMEventsForwarder";
+  const forwardDOMEvents = DOMEventsForwarder();
+  let className = "";
+  export { className as class };
+  export let style: string = null;
+  export let id: string = null;
 
-<script>
-  import {onMount} from 'svelte';
-  import {get_current_component} from 'svelte/internal';
-  import {forwardEventsBuilder} from '@smui/common/forwardEvents';
-  import {exclude} from '@smui/common/exclude.js';
-  import {useActions} from '@smui/common/useActions.js';
+  export let dom: HTMLInputElement = null;
 
-  const forwardEvents = forwardEventsBuilder(get_current_component(), ['change', 'input']);
+  import { BaseProps } from "@smui/common/dom/Props";
+  export let props: BaseProps = {};
+  //#endregion
 
-  export let use = [];
-  let className = '';
-  export {className as class};
-  export let type = 'text';
-  export let value = '';
+  // Input
+  import { onMount } from "svelte";
+  import { getTextFieldContext } from "./TextFieldContext";
+
+  export let type: "text" | "file" | "range" | "number" = "text";
+  export let value: any = undefined;
   export let files = undefined;
-  export let dirty = false;
-  export let invalid = false;
-  export let updateInvalid = true;
+  export let dirty: boolean = false;
+  export let invalid: boolean = false;
+  export let autocomplete: string = undefined;
+  export let maxLength: number = undefined;
 
-  let element;
+  const textFieldContext$ = getTextFieldContext();
+
   let valueProp = {};
 
-  $: if (type === 'file') {
+  $: if (type === "file") {
     delete valueProp.value;
   } else {
-    valueProp.value = value === undefined ? '' : value;
+    valueProp.value = value === undefined ? "" : value;
   }
 
   onMount(() => {
-    if (updateInvalid) {
-      invalid = element.matches(':invalid');
-    }
+    invalid = dom.matches(":invalid");
   });
 
   function toNumber(value) {
-    if (value === '') {
+    if (value === "") {
       const nan = new Number(Number.NaN);
       nan.length = 0;
       return nan;
@@ -56,13 +50,13 @@
 
   function valueUpdater(e) {
     switch (type) {
-      case 'number':
-      case 'range':
+      case "number":
+      case "range":
         value = toNumber(e.target.value);
         break;
-      case 'file':
+      case "file":
         files = e.target.files;
-        // Fall through.
+      // Fall through.
       default:
         value = e.target.value;
         break;
@@ -71,8 +65,22 @@
 
   function changeHandler(e) {
     dirty = true;
-    if (updateInvalid) {
-      invalid = element.matches(':invalid');
-    }
+    invalid = dom.matches(":invalid");
+    console.log(invalid)
   }
 </script>
+
+<input
+  bind:this={dom}
+  {...props}
+  class="mdc-text-field__input {className}"
+  {type}
+  {...valueProp}
+  maxlength={maxLength}
+  {autocomplete}
+  on:change={(e) => (type === 'file' || type === 'range') && valueUpdater(e)}
+  on:input={(e) => type !== 'file' && valueUpdater(e)}
+  on:change={changeHandler}
+  aria-controls={$textFieldContext$.helperTextId}
+  aria-describedby={$textFieldContext$.helperTextId}
+  use:forwardDOMEvents />

@@ -1,6 +1,7 @@
-@import "@material/textfield/mdc-text-field";
-@import "@smui/floating-label/style";
-@import "@smui/line-ripple/style";
-@import "@smui/notched-outline/style";
-@import "./mixins";
-@include smui-text-field-core-styles;
+@use "smui-theme";
+@use "@material/textfield/mdc-text-field";
+@use "@smui/floating-label";
+@use "@smui/notched-outline";
+@use "./mixins";
+
+@include mixins.smui-text-field-core-styles;

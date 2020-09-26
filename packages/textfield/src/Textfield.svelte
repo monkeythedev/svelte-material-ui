@@ -7,8 +7,8 @@
   import { prefixFilter } from "@smui/common/prefixFilter.js";
   import { useActions } from "@smui/common/useActions.js";
   import FloatingLabel from "@smui/floating-label/FloatingLabel.svelte";
-  import LineRipple from "@smui/line-ripple/LineRipple.svelte";
-  import NotchedOutline from "@smui/notched-outline/NotchedOutline.svelte";
+  import LineRipple from "@smui/line-ripple/src/LineRipple.svelte";
+  import NotchedOutline from "@smui/notched-outline/src/NotchedOutline.svelte";
   import Input from "./Input.svelte";
   import Textarea from "./Textarea.svelte";
 
@@ -22,7 +22,7 @@
   export let disabled = false;
   export let fullwidth = false;
   export let textarea = false;
-  export let variant = "standard";
+  export let variant: "filled" | "outline" = "filled";
   export let dense = false;
   export let withLeadingIcon = false;
   export let withTrailingIcon = false;
@@ -122,6 +122,7 @@
 </script>
 
 <label
+  for=""
   bind:this={element}
   use:useActions={use}
   use:forwardEvents

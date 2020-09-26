@@ -102,8 +102,8 @@
   import Menu from '@smui/menu/Menu.svelte';
   import List from '@smui/list/List.svelte';
   import FloatingLabel from '@smui/floating-label/FloatingLabel.svelte';
-  import LineRipple from '@smui/line-ripple/LineRipple.svelte';
-  import NotchedOutline from '@smui/notched-outline/NotchedOutline.svelte';
+  import LineRipple from '@smui/line-ripple/src/LineRipple.svelte';
+  import NotchedOutline from '@smui/notched-outline/src/NotchedOutline.svelte';
 
   const forwardEvents = forwardEventsBuilder(get_current_component(), 'MDCSelect:change');
   const uninitializedValue = () => {};

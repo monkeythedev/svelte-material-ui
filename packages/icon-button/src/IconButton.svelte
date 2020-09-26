@@ -4,7 +4,7 @@
   const forwardDOMEvents = DOMEventsForwarder();
   let className = "";
   export { className as class };
-  export let style: string = "";
+  export let style: string = null;
   export let id: string = null;
 
   export let dom: HTMLAnchorElement | HTMLButtonElement = null;

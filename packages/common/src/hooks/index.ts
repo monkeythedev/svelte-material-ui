@@ -1,4 +1,5 @@
 import Use from "./Use.svelte";
+import UseState from "./UseState.svelte";
 
-export { Use };
+export { Use, UseState };
 export * from "./types";
