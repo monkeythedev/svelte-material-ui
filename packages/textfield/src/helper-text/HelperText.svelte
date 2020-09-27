@@ -20,15 +20,17 @@
   // HelperText
   import { MDCTextFieldHelperText } from "@material/textfield/helper-text";
   import { onMount, onDestroy } from "svelte";
-  import { getTextFieldContext } from "../TextFieldContext";
+  import { getInputFieldContext, getTextAreaContext } from "../TextFieldContext";
 
   export let persistent = false;
   export let validationMsg = false;
   export let line$use = [];
   export let line$class = "";
 
-  const textFieldContext$ = getTextFieldContext();
-  $: $textFieldContext$?.setHelperTextId(id);
+  const inputFieldContext$ = getInputFieldContext();
+  const textAreaContext$ = getTextAreaContext();
+  $: $inputFieldContext$?.setHelperTextId(id);
+  $: $textAreaContext$?.setHelperTextId(id);
 
   let helperText: MDCTextFieldHelperText;
   onMount(() => {

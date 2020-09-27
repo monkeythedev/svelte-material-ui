@@ -16,14 +16,14 @@
   // Icon
   import { MDCTextFieldIcon } from "@material/textfield/icon";
   import { onMount, onDestroy } from "svelte";
-  import { getTextFieldContext } from "../TextFieldContext";
+  import { getInputFieldContext } from "../TextFieldContext";
   import UseState from "@smui/common/src/hooks/UseState.svelte";
 
   export let role: "button" = undefined;
   export let tabindex = role === "button" ? "0" : "-1";
   export let position: "trailing" | "leading";
 
-  const textFieldContext$ = getTextFieldContext();
+  const inputFieldContext$ = getInputFieldContext();
 
   onPositionUpdate();
 
@@ -36,20 +36,20 @@
     icon && icon.destroy();
 
     switch (position) {
-      case "trailing": $textFieldContext$.setTrailingIcon(false); break;
-      case "leading": $textFieldContext$.setLeadingIcon(false); break;
+      case "trailing": $inputFieldContext$.setTrailingIcon(false); break;
+      case "leading": $inputFieldContext$.setLeadingIcon(false); break;
     }
   });
 
   function onPositionUpdate(oldPosition?: typeof position) {
     switch (position) {
-      case "trailing": $textFieldContext$.setTrailingIcon(true); break;
-      case "leading": $textFieldContext$.setLeadingIcon(true); break;
+      case "trailing": $inputFieldContext$.setTrailingIcon(true); break;
+      case "leading": $inputFieldContext$.setLeadingIcon(true); break;
     }
 
     switch (oldPosition) {
-      case "trailing": $textFieldContext$.setTrailingIcon(false); break;
-      case "leading": $textFieldContext$.setLeadingIcon(false); break;
+      case "trailing": $inputFieldContext$.setTrailingIcon(false); break;
+      case "leading": $inputFieldContext$.setLeadingIcon(false); break;
     }
   }
 </script>

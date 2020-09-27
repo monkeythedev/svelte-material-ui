@@ -6,51 +6,84 @@
 @use "@material/feature-targeting";
 
 @mixin smui-text-field-core-styles($query: feature-targeting.all()) {
-  .mdc-text-field {
-    &.mdc-text-field--with-leading-icon {
-      $padding: icon.$icon-size + icon.$trailing-icon-padding-left + icon.$trailing-icon-padding-right;
-      @include rtl.reflexive-property(padding, $padding, textfield.$padding-horizontal);
+  .smui-text-field__wrapper {
+    display: inline-flex;
+    flex-direction: column;
 
-      .mdc-text-field__icon--leading {
-        @include rtl.reflexive-position(left, 0);
-      }
+    &.smui-text-field__wrapper--fullwidth {
+      display: flex;
     }
 
-    &.mdc-text-field--with-trailing-icon {
-      $padding: icon.$icon-size + icon.$trailing-icon-padding-left + icon.$trailing-icon-padding-right;
-      @include rtl.reflexive-property(padding, textfield.$padding-horizontal, $padding);
+    .mdc-text-field {
+      &.mdc-text-field--with-leading-icon {
+        $padding: icon.$icon-size + icon.$trailing-icon-padding-left +
+          icon.$trailing-icon-padding-right;
+        @include rtl.reflexive-property(
+          padding,
+          $padding,
+          textfield.$padding-horizontal
+        );
 
-      .mdc-text-field__icon--trailing {
-        @include rtl.reflexive-position(right, 0);
+        .mdc-text-field__icon--leading {
+          @include rtl.reflexive-position(left, 0);
+        }
       }
-    }
 
-    &.mdc-text-field--with-leading-icon.mdc-text-field--with-trailing-icon {
-      $padding-left: icon.$icon-size + icon.$trailing-icon-padding-left + icon.$trailing-icon-padding-right;
-      $padding-right: icon.$icon-size + icon.$trailing-icon-padding-left + icon.$trailing-icon-padding-right;
-      @include rtl.reflexive-property(padding, $padding-left, $padding-right);
+      &.mdc-text-field--with-trailing-icon {
+        $padding: icon.$icon-size + icon.$trailing-icon-padding-left +
+          icon.$trailing-icon-padding-right;
+        @include rtl.reflexive-property(
+          padding,
+          textfield.$padding-horizontal,
+          $padding
+        );
 
-      .mdc-text-field__icon--leading {
-        @include rtl.reflexive-position(left, 0);
+        .mdc-text-field__icon--trailing {
+          @include rtl.reflexive-position(right, 0);
+        }
       }
-    }
 
-    &.mdc-text-field--with-trailing-icon {
-      $padding: icon.$icon-size + icon.$trailing-icon-padding-left + icon.$trailing-icon-padding-right;
-      @include rtl.reflexive-property(padding, textfield.$padding-horizontal, $padding);
+      &.mdc-text-field--with-leading-icon.mdc-text-field--with-trailing-icon {
+        $padding-left: icon.$icon-size + icon.$trailing-icon-padding-left +
+          icon.$trailing-icon-padding-right;
+        $padding-right: icon.$icon-size + icon.$trailing-icon-padding-left +
+          icon.$trailing-icon-padding-right;
+        @include rtl.reflexive-property(padding, $padding-left, $padding-right);
 
-      .mdc-text-field__icon--trailing {
-        @include rtl.reflexive-position(right, 0);
+        .mdc-text-field__icon--leading {
+          @include rtl.reflexive-position(left, 0);
+        }
       }
-    }
 
-    .mdc-text-field__input {
-      padding-left: 0;
-      padding-right: 0;
-      height: 100%;
+      &.mdc-text-field--with-trailing-icon {
+        $padding: icon.$icon-size + icon.$trailing-icon-padding-left +
+          icon.$trailing-icon-padding-right;
+        @include rtl.reflexive-property(
+          padding,
+          textfield.$padding-horizontal,
+          $padding
+        );
 
-      &:-webkit-autofill + .mdc-floating-label {
-        transform: translateY(- textfield.$label-position-y) scale(floating-label.$float-scale);
+        .mdc-text-field__icon--trailing {
+          @include rtl.reflexive-position(right, 0);
+        }
+      }
+
+      &.mdc-text-field--textarea {
+        .mdc-text-field__input {
+          padding: 0 textfield.$padding-horizontal;
+        }
+      }
+
+      .mdc-text-field__input {
+        padding-left: 0;
+        padding-right: 0;
+        height: 100%;
+
+        &:-webkit-autofill + .mdc-floating-label {
+          transform: translateY(-(textfield.$label-position-y))
+            scale(floating-label.$float-scale);
+        }
       }
     }
   }

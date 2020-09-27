@@ -27,23 +27,13 @@
 
   const textFieldContext$ = getTextFieldContext();
 
-  let valueProp = {};
-
-  $: if (type === "file") {
-    delete valueProp.value;
-  } else {
-    valueProp.value = value === undefined ? "" : value;
-  }
-
   onMount(() => {
     invalid = dom.matches(":invalid");
   });
 
   function toNumber(value) {
     if (value === "") {
-      const nan = new Number(Number.NaN);
-      nan.length = 0;
-      return nan;
+      return Number.NaN;
     }
     return +value;
   }
@@ -66,16 +56,16 @@
   function changeHandler(e) {
     dirty = true;
     invalid = dom.matches(":invalid");
-    console.log(invalid)
   }
 </script>
 
 <input
   bind:this={dom}
   {...props}
+  {id}
   class="mdc-text-field__input {className}"
+  {style}
   {type}
-  {...valueProp}
   maxlength={maxLength}
   {autocomplete}
   on:change={(e) => (type === 'file' || type === 'range') && valueUpdater(e)}

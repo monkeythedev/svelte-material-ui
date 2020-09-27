@@ -1,17 +1,25 @@
 <script lang="ts">
-  import { onDestroy } from "svelte";
+  // import { onDestroy } from "svelte";
   import { Use } from "@smui/common/hooks";
 
   export let target: HTMLElement;
 
+  // let dom: HTMLDivElement;
+
+  // onDestroy(() => {
+  //   target?.removeChild(dom);
+  // });
+
+  // function init() {
+  //   target?.appendChild(dom);
+  // }
+  
   let dom: HTMLDivElement;
 
-  onDestroy(() => {
-    target?.removeChild(dom);
-  });
-
   function init() {
-    target?.appendChild(dom);
+    while(dom.firstChild) {
+      target.appendChild(dom.firstChild);
+    }
   }
 </script>
 
@@ -20,17 +28,21 @@
     display: none;
   }
 
-  .portal-wrapper {
+  /* .portal-wrapper {
     display: contents;
-  }
+  } */
 </style>
 
 <Use once effect hook={init} when={!!target}></Use>
 
-{#if target}
+<!-- {#if target}
   <div class="portal">
     <div class="portal-wrapper" bind:this={dom}>
       <slot />
     </div>
   </div>
-{/if}
+{/if} -->
+
+<div class="portal" bind:this={dom}>
+  <slot />
+</div>

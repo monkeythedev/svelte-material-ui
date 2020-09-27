@@ -10,7 +10,7 @@
   import LineRipple from "@smui/line-ripple/src/LineRipple.svelte";
   import NotchedOutline from "@smui/notched-outline/src/NotchedOutline.svelte";
   import Input from "./Input.svelte";
-  import Textarea from "./Textarea.svelte";
+  import TextArea from "./TextArea.svelte";
 
   const forwardEvents = forwardEventsBuilder(get_current_component());
   let uninitializedValue = () => {};
@@ -140,7 +140,7 @@
   {...props}>
   <slot />
   {#if textarea}
-    <Textarea
+    <TextArea
       {disabled}
       bind:value
       bind:dirty

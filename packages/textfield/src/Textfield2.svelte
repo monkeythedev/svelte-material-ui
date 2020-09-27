@@ -1,11 +1,15 @@
+<script context="module" lang="ts">
+  let count = 0;
+</script>
+
 <script lang="ts">
   //#region Base
-  import { DOMEventsForwarder } from "@smui/common/events/DOMEventsForwarder";
+  import { DOMEventsForwarder } from "@smui/common/actions/DOMEventsForwarder";
   const forwardDOMEvents = DOMEventsForwarder();
   let className = "";
   export { className as class };
   export let style: string = null;
-  export let id: string = null;
+  export let id: string = `SMUI-TextField-${count++}`;
 
   export let dom: HTMLLabelElement = null;
 
@@ -14,40 +18,46 @@
   //#endregion
 
   // TextField
-  import { MDCTextField } from "@material/textfield";
-  import { onMount, onDestroy, getContext } from "svelte";
   import { TextFieldVariant } from "./types";
   import FloatingLabel from "@smui/floating-label/FloatingLabel.svelte";
   import LineRipple from "@smui/line-ripple/src/LineRipple.svelte";
-  import Input from "./Input.svelte";
-  import { createTextFieldContext } from "./TextFieldContext";
+  import { createInputFieldContext } from "./TextFieldContext";
   import { NotchedOutline } from "@smui/notched-outline";
-  import Use from "@smui/common/src/hooks/Use.svelte";
+  import UseTextField from "./hooks/UseTextField.svelte";
+  import { onMount } from "svelte";
+  import { RippleProps, Ripple3 } from "@smui/ripple";
 
+  //#region UseTextField params
   export let ripple: boolean = true;
-  export let disabled: boolean = false;
-  export let fullwidth: boolean = false;
-  export let variant: TextFieldVariant = "filled";
-  export let label: string = undefined;
-  export let type: "text" = "text";
   export let value: any = undefined;
-  export let files = null;
-  export let dirty: boolean = false;
-  export let invalid = null;
-  export let autocomplete: string = null;
-  export let maxLength: number = null;
+  export let invalid: boolean = false;
+  export let disabled: boolean = false;
+  export let label: string = undefined;
+  export let fullWidth: boolean = false;
+  export let color: RippleProps["color"] = undefined;
+  export let variant: TextFieldVariant = "filled";
+
+  let nativeInputInvalid: boolean = false;
   export let customValidation: (
     value: any,
     nativeInputInvalid: boolean
   ) => boolean = undefined;
-  export let input$props: BaseProps = {};
+
+  let textFieldClassList: string = "";
+  //#endregion
+
+  export let type: "text" | "file" | "range" | "number" = "text";
+  export let files = null;
+  export let dirty: boolean = false;
+  export let autocomplete: string = null;
+  export let maxLength: number = null;
 
   let withLeadingIcon = false;
   let withTrailingIcon = false;
-  let nativeInputInvalid = false;
   let helperTextId: string;
+  let inputElement: HTMLInputElement;
 
-  const context$ = createTextFieldContext({
+  createInputFieldContext({
     setLeadingIcon(value) {
       withLeadingIcon = value;
     },
@@ -59,89 +69,104 @@
     },
   });
 
-  $: $context$ = { ...$context$, helperTextId };
-
-  $: invalid = customValidation
-    ? !customValidation(value, nativeInputInvalid)
-    : nativeInputInvalid;
-
-  let textField: MDCTextField;
-  function init() {
-    textField = new MDCTextField(dom);
-    textField.useNativeValidation = false;
-
-    if (!ripple) {
-      textField.ripple && textField.ripple.destroy();
-    }
-  }
-
-  $: if (textField) {
-    if (textField.disabled !== disabled) {
-      textField.disabled = disabled;
-    }
-
-    if (value != undefined && textField.value !== value) {
-      textField.value = value;
-    }
-
-    if (textField.valid !== !invalid) {
-      textField.valid = !invalid;
-    }
-  }
-
-  onDestroy(() => {
-    textField && textField.destroy();
+  onMount(() => {
+    invalid = inputElement.matches(":invalid");
   });
+
+  function toNumber(value) {
+    if (value === "") {
+      return Number.NaN;
+    }
+    return +value;
+  }
+
+  function valueUpdater(e) {
+    switch (type) {
+      case "number":
+      case "range":
+        value = toNumber(e.target.value);
+        break;
+      case "file":
+        files = e.target.files;
+      // Fall through.
+      default:
+        value = e.target.value;
+        break;
+    }
+  }
+
+  function changeHandler(e) {
+    dirty = true;
+    invalid = dom.matches(":invalid");
+  }
 </script>
 
-<label
-  bind:this={dom}
-  {...props}
-  for=""
-  class="mdc-text-field {className}
-    {disabled ? 'mdc-text-field--disabled' : ''}
-    {fullwidth ? 'mdc-text-field--fullwidth' : ''}
-    {variant === 'filled' ? 'mdc-text-field--filled' : ''}
-    {variant === 'outlined' ? 'mdc-text-field--outlined' : ''}
-    {label == null ? 'mdc-text-field--no-label' : ''}
-    {withLeadingIcon ? 'mdc-text-field--with-leading-icon' : ''}
-    {withTrailingIcon ? 'mdc-text-field--with-trailing-icon' : ''}
-    {invalid ? 'mdc-text-field--invalid' : ''}">
-  <slot />
-  <Input
-    props={input$props}
-    {type}
-    {disabled}
-    {autocomplete}
-    {maxLength}
-    bind:value
-    bind:files
-    bind:dirty
-    bind:invalid={nativeInputInvalid}
-    on:change
-    on:input />
-  {#if variant !== 'outlined'}
-    {#if label != null}
-      <FloatingLabel wrapped>
-        {label}
-        <slot name="label" />
-      </FloatingLabel>
-    {/if}
+<div
+  class="smui-text-field__wrapper {fullWidth ? 'smui-text-field__wrapper--fullwidth' : ''}">
+  <label
+    bind:this={dom}
+    for={id}
+    class="{textFieldClassList}
+      {className}
+      {withLeadingIcon ? 'mdc-text-field--with-leading-icon' : ''}
+      {withTrailingIcon ? 'mdc-text-field--with-trailing-icon' : ''}"
+    {style}>
     {#if ripple}
-      <LineRipple />
+      <Ripple3
+        target={dom}
+        unbounded={false}
+        {color}
+        rippleElement="mdc-text-field__ripple" />
     {/if}
-  {/if}
-  {#if variant === 'outlined'}
-    <NotchedOutline noLabel={label == null}>
+    <slot />
+    <input
+      bind:this={inputElement}
+      {...props}
+      {id}
+      class="mdc-text-field__input"
+      {type}
+      maxlength={maxLength}
+      {autocomplete}
+      on:change={(e) => (type === 'file' || type === 'range') && valueUpdater(e)}
+      on:input={(e) => type !== 'file' && valueUpdater(e)}
+      on:change={changeHandler}
+      aria-controls={helperTextId}
+      aria-describedby={helperTextId}
+      use:forwardDOMEvents />
+    {#if variant === 'filled'}
       {#if label != null}
         <FloatingLabel wrapped>
           {label}
           <slot name="label" />
         </FloatingLabel>
       {/if}
-    </NotchedOutline>
-  {/if}
-</label>
-<slot name="helperText" />
+      {#if ripple}
+        <LineRipple />
+      {/if}
+    {:else if variant === 'outlined'}
+      <NotchedOutline noLabel={label == null}>
+        {#if label != null}
+          <FloatingLabel wrapped>
+            {label}
+            <slot name="label" />
+          </FloatingLabel>
+        {/if}
+      </NotchedOutline>
+    {/if}
+  </label>
+  <slot name="helperText" />
+</div>
 
-<Use effect once hook={init} />
+<UseTextField
+  bind:value
+  bind:invalid
+  {ripple}
+  {disabled}
+  {label}
+  {fullWidth}
+  {nativeInputInvalid}
+  {customValidation}
+  {color}
+  {variant}
+  bind:classList={textFieldClassList}
+  {dom} />

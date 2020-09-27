@@ -88,6 +88,7 @@
   } from "@material/ripple";
   import { RippleProps } from "./Ripple";
   import { Use } from "@smui/common/hooks";
+import Fragment from "@smui/common/src/components/Fragment.svelte";
 
   export let target: HTMLElement;
   export let unbounded: RippleProps["unbounded"] = null;
@@ -130,9 +131,9 @@
 <Use once effect hook={init} when={!!target}></Use>
 
 {#if target}
-  <Portal {target}>
+  <Fragment>
     {#if rippleElement}
       <span class={rippleElement} />
     {/if}
-  </Portal>
+  </Fragment>
 {/if}
