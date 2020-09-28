@@ -78,7 +78,6 @@
       .mdc-text-field__input {
         padding-left: 0;
         padding-right: 0;
-        height: 100%;
 
         &:-webkit-autofill + .mdc-floating-label {
           transform: translateY(-(textfield.$label-position-y))

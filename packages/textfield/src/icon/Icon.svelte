@@ -17,51 +17,30 @@
   import { MDCTextFieldIcon } from "@material/textfield/icon";
   import { onMount, onDestroy } from "svelte";
   import { getInputFieldContext } from "../TextFieldContext";
-  import UseState from "@smui/common/src/hooks/UseState.svelte";
 
   export let role: "button" = undefined;
-  export let tabindex = role === "button" ? "0" : "-1";
-  export let position: "trailing" | "leading";
+  export let tabindex: number = role === "button" ? 0 : -1;
+  export let ariaLabel: string = undefined;
 
   const inputFieldContext$ = getInputFieldContext();
 
-  onPositionUpdate();
-
   let icon: MDCTextFieldIcon;
   onMount(() => {
-    icon = new MDCTextFieldIcon(dom);
+    if (!inputFieldContext$) icon = new MDCTextFieldIcon(dom);
   });
 
   onDestroy(() => {
     icon && icon.destroy();
-
-    switch (position) {
-      case "trailing": $inputFieldContext$.setTrailingIcon(false); break;
-      case "leading": $inputFieldContext$.setLeadingIcon(false); break;
-    }
   });
-
-  function onPositionUpdate(oldPosition?: typeof position) {
-    switch (position) {
-      case "trailing": $inputFieldContext$.setTrailingIcon(true); break;
-      case "leading": $inputFieldContext$.setLeadingIcon(true); break;
-    }
-
-    switch (oldPosition) {
-      case "trailing": $inputFieldContext$.setTrailingIcon(false); break;
-      case "leading": $inputFieldContext$.setLeadingIcon(false); break;
-    }
-  }
 </script>
-
-<UseState bind:value={position} onUpdate={onPositionUpdate}></UseState>
 
 <i
   bind:this={dom}
+  {id}
   {...props}
-  class="mdc-text-field__icon {className}
-    {position === 'trailing' ? 'mdc-text-field__icon--trailing' : 'mdc-text-field__icon--leading'}"
+  class="mdc-text-field__icon {className}"
   {style}
   {tabindex}
-  aria-hidden={tabindex === '-1' ? 'true' : 'false'}
+  aria-hidden={tabindex === -1 ? 'true' : 'false'}
+  aria-label={ariaLabel}
   use:forwardDOMEvents><slot /></i>

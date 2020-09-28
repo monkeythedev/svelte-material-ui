@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { Textfield2, Icon, HelperText } from "@smui/textfield";
+  import Fragment from "@smui/common/src/components/Fragment.svelte";
+  import { InputField, Icon, HelperText } from "@smui/textfield";
   import classes from "./index.module.scss";
 
   let valueClickable = "";
@@ -20,27 +21,34 @@
       instead of updating it yourself, you also should include
       `updateInvalid`.
     -->
-    <Textfield2
+    <InputField
       type="email"
       withTrailingIcon={valueClickable !== ''}
       bind:dirty={dirtyClickable}
       bind:invalid={invalidClickable}
       updateInvalid
       bind:value={valueClickable}
-      label="To"
       style="min-width: 250px;"
       autocomplete="email">
-      {#if valueClickable !== '' && dirtyClickable && !invalidClickable}
-        <Icon
-          class="material-icons"
-          role="button"
-          on:click={clickableHandler}
-          position="trailing">
-          send
-        </Icon>
-      {/if}
-    </Textfield2>
-    <HelperText validationMsg>That's not a valid email address.</HelperText>
+      <div slot="trailingIcon" let:class={className}>
+        {#if valueClickable !== '' && dirtyClickable && !invalidClickable}
+          <Fragment>
+            <Icon
+              class="material-icons {className}"
+              role="button"
+              on:click={clickableHandler}>
+              send
+            </Icon>
+          </Fragment>
+        {/if}
+      </div>
+      <span slot="label">To</span>
+      <div slot="helperText">
+        <HelperText validationMsg>
+          That's not a valid email address.
+        </HelperText>
+      </div>
+    </InputField>
   </div>
 
   <pre class="status">Dirty: {dirtyClickable}, Invalid: {invalidClickable}</pre>

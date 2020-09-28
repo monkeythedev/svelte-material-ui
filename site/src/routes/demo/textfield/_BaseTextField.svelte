@@ -1,12 +1,11 @@
 <script lang="ts">
   import {
-    Textfield2 as Textfield,
+    InputField,
     Icon,
     HelperText,
     TextFieldVariant,
     CharacterCounter,
   } from "@smui/textfield";
-  import { Fragment } from "@smui/common/components";
   import classes from "./index.module.scss";
   import "./index.scss";
 
@@ -23,7 +22,12 @@
   let valueG = "";
   let valueH = "";
   let valueI = "";
+  let valueJ = "";
   let valueK = "";
+  let valueL = "";
+  let valueM = "";
+  let readonly = "Readonly value";
+  let pattern = "";
 </script>
 
 <div>
@@ -31,101 +35,85 @@
 
   <div class="{classes.columns} {classes.margins}">
     <div>
-      <Textfield
-        class={textFieldClass}
-        {variant}
-        bind:value={valueA}
-        label="Label"
-        input$aria-controls="helper-text-filled-a"
-        input$aria-describedby="helper-text-filled-a">
+      <InputField class={textFieldClass} {variant} bind:value={valueA}>
+        <span slot="label">Label</span>
         <div slot="helperText">
-          <Fragment isSlot>
-            <HelperText>Helper Text</HelperText>
-          </Fragment>
+          <HelperText>Helper Text</HelperText>
         </div>
-      </Textfield>
+      </InputField>
 
       <pre class="status">Value: {valueA}</pre>
     </div>
     <div>
-      <Textfield
-        class={textFieldClass}
-        {variant}
-        bind:value={valueB}
-        label="Leading Icon"
-        input$aria-controls="helper-text-filled-b"
-        input$aria-describedby="helper-text-filled-b">
-        <Icon class="material-icons" position="leading">event</Icon>
-        <div slot="helperText">
-          <Fragment isSlot>
-            <HelperText>Helper Text</HelperText>
-          </Fragment>
+      <InputField class={textFieldClass} {variant} bind:value={valueB}>
+        <div slot="leadingIcon" let:class={className}>
+          <Icon class="material-icons {className}">event</Icon>
         </div>
-      </Textfield>
+        <span slot="label">Leading Icon</span>
+        <div slot="helperText">
+          <HelperText>Helper Text</HelperText>
+        </div>
+      </InputField>
 
       <pre class="status">Value: {valueB}</pre>
     </div>
     <div>
-      <Textfield
-        class={textFieldClass}
-        {variant}
-        bind:value={valueC}
-        label="Trailing Icon"
-        input$aria-controls="helper-text-filled-c"
-        input$aria-describedby="helper-text-filled-c">
-        <Icon class="material-icons" position="trailing">delete</Icon>
-        <div slot="helperText">
-          <Fragment isSlot>
-            <HelperText>Helper Text</HelperText>
-          </Fragment>
+      <InputField class={textFieldClass} {variant} bind:value={valueC}>
+        <div slot="trailingIcon" let:class={className}>
+          <Icon
+            class="material-icons {className}"
+            role="button"
+            on:click={() => (valueC = '')}
+            ariaLabel="delete">
+            delete
+          </Icon>
         </div>
-      </Textfield>
+        <span slot="label">Trailing Icon</span>
+        <div slot="helperText">
+          <HelperText>Helper Text</HelperText>
+        </div>
+      </InputField>
 
       <pre class="status">Value: {valueC}</pre>
     </div>
     <div>
-      <Textfield
+      <InputField
         class={textFieldClass}
         {variant}
         customValidation={() => false}
-        bind:value={valueD}
-        label="Invalid">
+        bind:value={valueD}>
+        <span slot="label">Invalid</span>
         <div slot="helperText">
-          <Fragment isSlot>
-            <HelperText>Helper Text</HelperText>
-          </Fragment>
+          <HelperText>Helper Text</HelperText>
         </div>
-      </Textfield>
+      </InputField>
 
       <pre class="status">Value: {valueD}</pre>
     </div>
     <div>
-      <Textfield class={textFieldClass} {variant} disabled label="Disabled">
+      <InputField class={textFieldClass} {variant} disabled>
+        <span slot="label">Disabled</span>
         <div slot="helperText">
-          <Fragment isSlot>
-            <HelperText>Helper Text</HelperText>
-          </Fragment>
+          <HelperText>Helper Text</HelperText>
         </div>
-      </Textfield>
+      </InputField>
     </div>
     <div>
       <!-- due to a bug on MDC, label is not visible when variant is "filled" -->
-      <Textfield
+      <InputField
         class="dense-text-field--{variant} {textFieldClass}"
         {variant}
-        bind:value={valueE}
-        label="Dense">
+        bind:value={valueE}>
+        <span slot="label">Dense</span>
         <div slot="helperText">
-          <Fragment isSlot>
-            <HelperText>Helper Text</HelperText>
-          </Fragment>
+          <HelperText>Helper Text</HelperText>
         </div>
-      </Textfield>
+      </InputField>
 
       <pre class="status">Value: {valueE}</pre>
     </div>
     <!-- Too broken MDC side <div>
-      <Textfield
+      <InputField
         class="dense-text-field--{variant}--with-leading-icon {textFieldClass}"
         {variant}
         bind:value={valueF}
@@ -136,61 +124,137 @@
             <HelperText>Helper Text</HelperText>
           </Fragment>
         </div>
-      </Textfield>
+      </InputField>
   
       <pre class="status">Value: {valueF}</pre>
     </div> -->
     <div>
-      <Textfield class={textFieldClass} {variant} bind:value={valueG} />
+      <InputField class={textFieldClass} {variant} bind:value={valueG} />
 
       <pre class="status">Value: {valueG}</pre>
     </div>
     <div>
-      <Textfield
-        class={textFieldClass}
-        {variant}
-        bind:value={valueH}
-        label="Persistent Helper Text">
+      <InputField class={textFieldClass} {variant} bind:value={valueH}>
+        <span slot="label">Persistent Helper Text</span>
         <div slot="helperText">
-          <Fragment isSlot>
-            <HelperText persistent>Helper Text</HelperText>
-          </Fragment>
+          <HelperText persistent>Helper Text</HelperText>
         </div>
-      </Textfield>
+      </InputField>
 
       <pre class="status">Value: {valueH}</pre>
     </div>
     <div>
-      <Textfield
+      <InputField
         class={textFieldClass}
         {variant}
         bind:value={valueI}
-        label="Standard"
-        maxLength={18}>
+        maxlength={18}>
+        <span slot="label">Character counter</span>
         <div slot="helperText">
-          <Fragment>
-            <HelperText>
-              Helper Text <span slot="character-counter">
-                <CharacterCounter>0 / 18</CharacterCounter>
-              </span>
-            </HelperText>
-          </Fragment>
+          <HelperText>
+            Helper Text
+            <span slot="character-counter">
+              <CharacterCounter />
+            </span>
+          </HelperText>
         </div>
-      </Textfield>
+      </InputField>
 
       <pre class="status">Value: {valueI}</pre>
     </div>
     <div>
-      <Textfield
+      <InputField class={textFieldClass} {variant} bind:value={valueJ}>
+        <span slot="label">Both icons</span>
+        <div slot="leadingIcon" let:class={className}>
+          <Icon class="material-icons {className}">event</Icon>
+        </div>
+        <div slot="trailingIcon" let:class={className}>
+          <Icon
+            class="material-icons {className}"
+            role="button"
+            on:click={() => (valueJ = '')}
+            ariaLabel="delete">
+            delete
+          </Icon>
+        </div>
+      </InputField>
+
+      <pre class="status">Value: {valueJ}</pre>
+    </div>
+    <div>
+      <InputField
         class={textFieldClass}
         {variant}
         bind:value={valueK}
-        label="Standard">
-        <Icon position="leading" class="material-icons">event</Icon>
-        <Icon position="trailing" class="material-icons">delete</Icon>
-      </Textfield>
+        type="email">
+        <span slot="label"><Icon
+            class="material-icons"
+            style="font-size: 1em; line-height: normal; vertical-align: middle;">
+            email
+          </Icon>
+          Icon in label</span>
+      </InputField>
 
       <pre class="status">Value: {valueK}</pre>
+    </div>
+    <div>
+      <InputField
+        class={textFieldClass}
+        {variant}
+        bind:value={valueL}
+        type="text"
+        prefix="$"
+        suffix=".00">
+        <span slot="label">Suffix and prefix</span>
+      </InputField>
+
+      <pre class="status">Value: {valueL}</pre>
+    </div>
+    <div>
+      <InputField
+        class={textFieldClass}
+        {variant}
+        bind:value={valueM}
+        type="text"
+        prefix="$"
+        suffix=".00">
+        <span slot="label">Suf, pref & icons</span>
+        <div slot="leadingIcon" let:class={className}>
+          <Icon class="material-icons {className}">event</Icon>
+        </div>
+        <div slot="trailingIcon" let:class={className}>
+          <Icon
+            class="material-icons {className}"
+            role="button"
+            on:click={() => (valueM = '')}>
+            delete
+          </Icon>
+        </div>
+      </InputField>
+
+      <pre class="status">Value: {valueM}</pre>
+    </div>
+    <div>
+      <InputField
+        class={textFieldClass}
+        {variant}
+        bind:value={readonly}
+        readonly>
+        <span slot="label">Readonly</span>
+      </InputField>
+
+      <pre class="status">Value: {readonly}</pre>
+    </div>
+    <div>
+      <InputField
+        class={textFieldClass}
+        {variant}
+        bind:value={pattern}
+        pattern={'[a-z]{0,3}'}>
+        <span slot="label">Pattern /{'[a-z]{0,3}'}/</span>
+      </InputField>
+
+      <pre class="status">Value: {pattern}</pre>
     </div>
   </div>
 </div>

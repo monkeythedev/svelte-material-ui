@@ -5,7 +5,10 @@
 
   function init() {
     const isSlot = dom.parentElement.getAttribute("slot");
-    const target = isSlot ? dom.parentElement : dom;
+    let target = isSlot ? dom.parentElement : dom;
+    if (target.parentElement.classList.contains("extract-named-slot-fragment")) {
+      target = target.parentElement;
+    }
     while(dom.firstChild) {
       target.parentElement.insertBefore(dom.firstChild, target);
     }

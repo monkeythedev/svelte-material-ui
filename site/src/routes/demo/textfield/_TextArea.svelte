@@ -13,12 +13,8 @@
 
   <div class="{classes.columns} {classes.margins}">
     <div>
-      <TextArea
-        textarea
-        bind:value={valueTextarea}
-        label="Standard Text Area"
-        input$aria-controls="helper-text-textarea"
-        input$aria-describedby="helper-text-textarea">
+      <TextArea bind:value={valueTextarea}>
+        <span slot="label">Standard Text Area</span>
         <div slot="helperText">
           <Fragment>
             <HelperText id="helper-text-textarea">Helper Text</HelperText>
@@ -27,11 +23,8 @@
       </TextArea>
     </div>
     <div>
-      <TextArea
-        textarea
-        maxLength={100}
-        bind:value={valueTextareaCharCount}
-        label="Text Area with charaters counter">
+      <TextArea bind:value={valueTextareaCharCount} maxlength={18}>
+        <span slot="label">Text Area with charaters counter</span>
         <div slot="helperText">
           <Fragment>
             <HelperText id="helper-text-textarea">
@@ -50,11 +43,8 @@
   Full Width Textarea:
 
   <div class="margins">
-    <TextArea
-      fullWidth
-      textarea
-      bind:value={valueFullwidthTextarea}
-      label="Label">
+    <TextArea fullWidth bind:value={valueFullwidthTextarea}>
+      <span slot="label">Label</span>
       <div slot="helperText">
         <Fragment>
           <HelperText id="helper-text-fullwidth-textarea">

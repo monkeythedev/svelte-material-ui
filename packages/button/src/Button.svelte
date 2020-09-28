@@ -24,12 +24,8 @@
   //#endregion
 
   // Button
-  import { ButtonProps } from "@smui/common/dom";
   import {
     setContext,
-    getContext,
-    onMount,
-    createEventDispatcher,
   } from "svelte";
   import { RippleProps } from "@smui/ripple/src";
   import { getButtonBehaviour } from "./ButtonContextProps";
@@ -46,7 +42,6 @@
   export let target: string = null;
 
   let behaviour = getButtonBehaviour();
-  let rippleClasses = [];
 
   let actionProps: any = {};
   $: if ( behaviour === "dialog:action") {
@@ -84,6 +79,7 @@
   this={component}
   bind:dom
   props={{ ...props, ...actionProps, disabled, target, href }}
+  {id}
   class="mdc-button {className}
     {variant ? `mdc-button--${variant}` : ''}
     {dense ? 'mdc-button--dense' : ''}

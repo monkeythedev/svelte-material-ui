@@ -16,34 +16,47 @@
   // Textarea
   import { onMount } from "svelte";
   import UseTextField from "./hooks/UseTextField.svelte";
-  import { createTextAreaContext } from "./TextFieldContext";
-  import FloatingLabel from "@smui/floating-label/FloatingLabel.svelte";
+  import { createInputFieldContext } from "./TextFieldContext";
+  import { FloatingLabel } from "@smui/floating-label";
   import { NotchedOutline } from "@smui/notched-outline";
   import { RippleProps, Ripple3 } from "@smui/ripple";
+  import { Span } from "@smui/common/dom";
 
   //#region UseTextField params
   export let ripple: boolean = true;
   export let value: string = undefined;
   export let invalid: boolean = false;
   export let disabled: boolean = false;
-  export let label: string = undefined;
   export let fullWidth: boolean = false;
   export let color: RippleProps["color"] = undefined;
 
   let textFieldClassList: string = "";
   //#endregion
 
-  export let dirty: boolean = false;
-  export let maxLength: number = undefined;
+  export let name: string = undefined;
 
+  export let dirty: boolean = false;
+
+  export let required: boolean = undefined;
+  export let pattern: string = undefined;
+  export let readonly: boolean = undefined;
+
+  export let maxlength: number = undefined;
+
+  //#region internal props
   let helperTextId: string;
+  let labelId: string;
   let textareaElement: HTMLTextAreaElement;
   let rows: number = undefined;
   let cols: number = undefined;
+  //#endregion
 
-  createTextAreaContext({
+  createInputFieldContext({
     setHelperTextId(id: string) {
       helperTextId = id;
+    },
+    setLabelId(id: string) {
+      labelId = id;
     },
   });
 
@@ -78,19 +91,22 @@
         {id}
         class="mdc-text-field__input {className}"
         {style}
-        maxlength={maxLength}
+        {name}
+        {maxlength}
+        {pattern}
+        {required}
+        {readonly}
         on:change={changeHandler}
         aria-controls={helperTextId}
         aria-describedby={helperTextId}
-        aria-label={label}
+        aria-labelledby={labelId}
         {rows}
         {cols}
         use:forwardDOMEvents />
     </span>
-    <NotchedOutline noLabel={label == null}>
-      {#if label != null}
-        <FloatingLabel wrapped>
-          {label}
+    <NotchedOutline noLabel={!$$slots.label}>
+      {#if $$slots.label}
+        <FloatingLabel component={Span}>
           <slot name="label" />
         </FloatingLabel>
       {/if}
@@ -104,9 +120,8 @@
   bind:invalid
   {ripple}
   {disabled}
-  {label}
+  label={$$slots.label}
   {fullWidth}
-  {color}
   variant="outlined"
   bind:classList={textFieldClassList}
   {dom} />

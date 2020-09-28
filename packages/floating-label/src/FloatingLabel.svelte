@@ -1,60 +1,67 @@
-{#if wrapped}
-  <span
-    bind:this={element}
-    use:useActions={use}
-    use:forwardEvents
-    class="mdc-floating-label {className}"
-    {...exclude($$props, ['use', 'class', 'wrapped'])}
-  ><slot></slot></span>
-{:else}
-  <label
-    bind:this={element}
-    use:useActions={use}
-    use:forwardEvents
-    class="mdc-floating-label {className}"
-    {...((forId || inputProps && inputProps.id) ? {'for': forId || inputProps && inputProps.id} : {})}
-    {...exclude($$props, ['use', 'class', 'for', 'wrapped'])}
-  ><slot></slot></label>
-{/if}
+<script context="module" lang="ts">
+  let count = 0;
+</script>
 
-<script>
-  import {MDCFloatingLabel} from '@material/floating-label';
-  import {onMount, onDestroy, getContext} from 'svelte';
-  import {get_current_component} from 'svelte/internal';
-  import {forwardEventsBuilder} from '@smui/common/forwardEvents';
-  import {exclude} from '@smui/common/exclude.js';
-  import {useActions} from '@smui/common/useActions.js';
+<script lang="ts">
+  //#region Base
+  import { DOMEventsForwarder } from "@smui/common/events/DOMEventsForwarder";
+  const forwardDOMEvents = DOMEventsForwarder();
+  let className = "";
+  export { className as class };
+  export let style: string = undefined;
+  export let id: string = `smui-FloatingLabel-${count++}`;
 
-  const forwardEvents = forwardEventsBuilder(get_current_component());
+  export let dom: HTMLLabelElement | HTMLSpanElement = undefined;
 
-  export let use = [];
-  let className = '';
-  export {className as class};
-  let forId = '';
-  export {forId as for};
-  export let wrapped = false;
+  import { BaseProps } from "@smui/common/dom/Props";
+  export let props: BaseProps = {};
+  //#endregion
 
-  let element;
-  let floatingLabel;
-  let inputProps = getContext('SMUI:generic:input:props') || {};
+  // FloatingLabel
+  import { MDCFloatingLabel } from "@material/floating-label";
+  import { onMount, onDestroy, getContext } from "svelte";
+  import { getFormFieldContext } from "@smui/form-field";
+  import { Span, Label } from "@smui/common/dom";
+  import { getInputFieldContext } from "@smui/textfield/src/TextFieldContext";
 
+  export let component: typeof Span | typeof Label = Label;
+
+  const formFieldContext$ = getFormFieldContext(); //TODO: serve???
+  const inputFieldContext$ = getInputFieldContext();
+
+  $: $inputFieldContext$?.setLabelId(id);
+
+  let floatingLabel: MDCFloatingLabel;
   onMount(() => {
-    floatingLabel = new MDCFloatingLabel(element);
+    if (!inputFieldContext$) floatingLabel = new MDCFloatingLabel(dom);
   });
 
   onDestroy(() => {
     floatingLabel && floatingLabel.destroy();
   });
 
-  export function shake(shouldShake, ...args) {
-    return floatingLabel.shake(shouldShake, ...args);
-  }
+  // export function shake(shouldShake, ...args) {
+  //   return floatingLabel.shake(shouldShake, ...args);
+  // }
 
-  export function float(shouldFloat, ...args) {
-    return floatingLabel.float(shouldFloat, ...args);
-  }
+  // export function float(shouldFloat, ...args) {
+  //   return floatingLabel.float(shouldFloat, ...args);
+  // }
 
-  export function getWidth(...args) {
-    return floatingLabel.getWidth(...args);
-  }
+  // export function getWidth(...args) {
+  //   return floatingLabel.getWidth(...args);
+  // }
+
+  $: props = { ...props, for: $formFieldContext$?.inputId };
 </script>
+
+<svelte:component
+  this={component}
+  bind:dom
+  {...props}
+  {id}
+  class="mdc-floating-label {className}"
+  {style}
+  on:domEvent={forwardDOMEvents}>
+  <slot />
+</svelte:component>

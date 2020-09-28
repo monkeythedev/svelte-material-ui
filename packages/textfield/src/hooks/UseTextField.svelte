@@ -1,8 +1,6 @@
 <script lang="ts">
   import { MDCTextField } from "@material/textfield";
   import Use from "@smui/common/src/hooks/Use.svelte";
-  import { RippleProps } from "@smui/ripple";
-  import Ripple2 from "@smui/ripple/src/Ripple2.svelte";
   import { onDestroy } from "svelte";
   import { TextFieldVariant } from "../types";
   import UseClassList, { ClassListToParse } from "./UseClassList.svelte";
@@ -12,10 +10,9 @@
   export let value: any = undefined;
   export let invalid: boolean = false;
   export let disabled: boolean = false;
-  export let nativeInputInvalid = false;
-  export let label: string = undefined;
+  export let nativeInputInvalid: boolean = false;
+  export let label: boolean = false;
   export let fullWidth: boolean = false;
-  export let color: RippleProps["color"] = undefined;
   export let variant: TextFieldVariant = "filled";
 
   export let customValidation: (
@@ -60,7 +57,7 @@
   $: classListToParse = [
     "mdc-text-field",
     [disabled, "mdc-text-field--disabled"],
-    [label == null, "mdc-text-field--no-label"],
+    [!label, "mdc-text-field--no-label"],
     [invalid, "mdc-text-field--invalid"],
     [fullWidth, "mdc-text-field--fullwidth"],
     [variant === "filled", "mdc-text-field--filled"],

@@ -16,10 +16,14 @@
   // CharacterCounter
   import { MDCTextFieldCharacterCounter } from "@material/textfield/character-counter";
   import { onMount, onDestroy } from "svelte";
+  import { getInputFieldContext } from "../TextFieldContext";
+
+  const inputFieldContext$ = getInputFieldContext();
 
   let characterCounter: MDCTextFieldCharacterCounter;
   onMount(() => {
-    characterCounter = new MDCTextFieldCharacterCounter(dom);
+    if (!inputFieldContext$)
+      characterCounter = new MDCTextFieldCharacterCounter(dom);
   });
 
   onDestroy(() => {

@@ -18,22 +18,22 @@
   //#endregion
 
   // TextField
-  import { TextFieldVariant } from "./types";
-  import FloatingLabel from "@smui/floating-label/FloatingLabel.svelte";
-  import LineRipple from "@smui/line-ripple/src/LineRipple.svelte";
+  import { InputFieldType, TextFieldVariant } from "./types";
+  import { FloatingLabel } from "@smui/floating-label";
+  import { LineRipple } from "@smui/line-ripple";
   import { createInputFieldContext } from "./TextFieldContext";
   import { NotchedOutline } from "@smui/notched-outline";
   import UseTextField from "./hooks/UseTextField.svelte";
   import { onMount } from "svelte";
   import { RippleProps, Ripple3 } from "@smui/ripple";
+  import ExtractNamedSlot from "@smui/common/src/components/ExtractNamedSlot.svelte";
+  import { Span } from "@smui/common/dom";
 
   //#region UseTextField params
   export let ripple: boolean = true;
   export let value: any = undefined;
   export let invalid: boolean = false;
   export let disabled: boolean = false;
-  export let label: string = undefined;
-  export let fullWidth: boolean = false;
   export let color: RippleProps["color"] = undefined;
   export let variant: TextFieldVariant = "filled";
 
@@ -46,31 +46,44 @@
   let textFieldClassList: string = "";
   //#endregion
 
-  export let type: "text" | "file" | "range" | "number" = "text";
-  export let files = null;
-  export let dirty: boolean = false;
-  export let autocomplete: string = null;
-  export let maxLength: number = null;
+  export let name: string = undefined;
 
-  let withLeadingIcon = false;
-  let withTrailingIcon = false;
+  export let prefix: string = undefined;
+  export let suffix: string = undefined;
+
+  export let type: InputFieldType = "text";
+
+  export let dirty: boolean = false;
+
+  export let autocomplete: string = undefined;
+  export let required: boolean = undefined;
+  export let pattern: string = undefined;
+  export let readonly: boolean = undefined;
+  export let multiple: boolean = undefined;
+
+  export let maxlength: number = undefined;
+
+  export let step: number = undefined;
+  export let min: number = undefined;
+  export let max: number = undefined;
+
+  //#region internal props
   let helperTextId: string;
+  let labelId: string;
   let inputElement: HTMLInputElement;
+  //#endregion
 
   createInputFieldContext({
-    setLeadingIcon(value) {
-      withLeadingIcon = value;
-    },
-    setTrailingIcon(value) {
-      withTrailingIcon = value;
-    },
     setHelperTextId(id: string) {
       helperTextId = id;
+    },
+    setLabelId(id: string) {
+      labelId = id;
     },
   });
 
   onMount(() => {
-    invalid = inputElement.matches(":invalid");
+    updateNativeInputInvalid();
   });
 
   function toNumber(value) {
@@ -83,12 +96,8 @@
   function valueUpdater(e) {
     switch (type) {
       case "number":
-      case "range":
         value = toNumber(e.target.value);
         break;
-      case "file":
-        files = e.target.files;
-      // Fall through.
       default:
         value = e.target.value;
         break;
@@ -97,19 +106,22 @@
 
   function changeHandler(e) {
     dirty = true;
-    invalid = dom.matches(":invalid");
+    updateNativeInputInvalid();
+  }
+
+  function updateNativeInputInvalid() {
+    nativeInputInvalid = inputElement.matches(":invalid");
   }
 </script>
 
-<div
-  class="smui-text-field__wrapper {fullWidth ? 'smui-text-field__wrapper--fullwidth' : ''}">
+<div class="smui-text-field__wrapper">
   <label
     bind:this={dom}
     for={id}
     class="{textFieldClassList}
       {className}
-      {withLeadingIcon ? 'mdc-text-field--with-leading-icon' : ''}
-      {withTrailingIcon ? 'mdc-text-field--with-trailing-icon' : ''}"
+      {$$slots.leadingIcon ? 'mdc-text-field--with-leading-icon' : ''}
+      {$$slots.trailingIcon ? 'mdc-text-field--with-trailing-icon' : ''}"
     {style}>
     {#if ripple}
       <Ripple3
@@ -118,43 +130,70 @@
         {color}
         rippleElement="mdc-text-field__ripple" />
     {/if}
-    <slot />
+    {#if $$slots.leadingIcon}
+      <ExtractNamedSlot>
+        <slot name="leadingIcon" class="mdc-text-field__icon--leading" />
+      </ExtractNamedSlot>
+    {/if}
+    {#if prefix}
+      <span
+        class="mdc-text-field__affix mdc-text-field__affix--prefix">{prefix}</span>
+    {/if}
     <input
       bind:this={inputElement}
       {...props}
       {id}
       class="mdc-text-field__input"
       {type}
-      maxlength={maxLength}
+      {name}
+      {maxlength}
+      {step}
+      {min}
+      {max}
       {autocomplete}
-      on:change={(e) => (type === 'file' || type === 'range') && valueUpdater(e)}
-      on:input={(e) => type !== 'file' && valueUpdater(e)}
+      {pattern}
+      {required}
+      {readonly}
+      {multiple}
+      on:input={(e) => valueUpdater(e)}
       on:change={changeHandler}
       aria-controls={helperTextId}
       aria-describedby={helperTextId}
+      aria-labelledby={labelId}
       use:forwardDOMEvents />
+    {#if suffix}
+      <span
+        class="mdc-text-field__affix mdc-text-field__affix--suffix">{suffix}</span>
+    {/if}
+    {#if $$slots.trailingIcon}
+      <ExtractNamedSlot>
+        <slot name="trailingIcon" class="mdc-text-field__icon--trailing" />
+      </ExtractNamedSlot>
+    {/if}
     {#if variant === 'filled'}
-      {#if label != null}
-        <FloatingLabel wrapped>
-          {label}
-          <slot name="label" />
+      {#if $$slots.label}
+        <FloatingLabel component={Span}>
+          <ExtractNamedSlot>
+            <slot name="label" />
+          </ExtractNamedSlot>
         </FloatingLabel>
       {/if}
       {#if ripple}
         <LineRipple />
       {/if}
     {:else if variant === 'outlined'}
-      <NotchedOutline noLabel={label == null}>
-        {#if label != null}
-          <FloatingLabel wrapped>
-            {label}
+      <NotchedOutline noLabel={!$$slots.label}>
+        {#if $$slots.label}
+          <FloatingLabel component={Span}>
             <slot name="label" />
           </FloatingLabel>
         {/if}
       </NotchedOutline>
     {/if}
   </label>
-  <slot name="helperText" />
+  <ExtractNamedSlot>
+    <slot name="helperText" />
+  </ExtractNamedSlot>
 </div>
 
 <UseTextField
@@ -162,11 +201,10 @@
   bind:invalid
   {ripple}
   {disabled}
-  {label}
-  {fullWidth}
+  label={$$slots.label}
+  fullWidth={false}
   {nativeInputInvalid}
   {customValidation}
-  {color}
   {variant}
   bind:classList={textFieldClassList}
   {dom} />
