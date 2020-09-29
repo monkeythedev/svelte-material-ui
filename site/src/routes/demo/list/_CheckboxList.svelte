@@ -1,6 +1,6 @@
 <script lang="ts">
   import { Label } from "@smui/common/dom";
-  import { Graphic, Item, List, Meta } from "@smui/list";
+  import { Item, List, Meta } from "@smui/list";
   import { Checkbox } from "@smui/checkbox";
 
   let value = [];
@@ -9,34 +9,34 @@
 <div>
   A check list with trailing checkboxes:
   <List class="demo-list" role="group" bind:value>
-    <Item>
+    <Item value="Bruce Willis">
       <Label>Bruce Willis</Label>
       <Meta>
-        <Checkbox value="Bruce Willis" />
+        <Checkbox />
       </Meta>
     </Item>
-    <Item>
+    <Item value="Tom Hanks">
       <Label>Tom Hanks</Label>
       <Meta>
-        <Checkbox value="Tom Hanks" />
+        <Checkbox />
       </Meta>
     </Item>
-    <Item>
+    <Item value="Jack Nicholson">
       <Label>Jack Nicholson</Label>
       <Meta>
-        <Checkbox value="Jack Nicholson" />
+        <Checkbox />
       </Meta>
     </Item>
-    <Item>
+    <Item value="Leonardo DiCaprio">
       <Label>Leonardo DiCaprio</Label>
       <Meta>
-        <Checkbox value="Leonardo DiCaprio" />
+        <Checkbox />
       </Meta>
     </Item>
-    <Item>
+    <Item value="Matt Damon">
       <Label>Matt Damon</Label>
       <Meta>
-        <Checkbox value="Matt Damon" />
+        <Checkbox />
       </Meta>
     </Item>
   </List>

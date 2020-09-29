@@ -7,11 +7,10 @@
 
   const valueMemo = memo(value);
 
-  let positionMemo = memo(value);
   function onValueUpdate(value: any) {
     if (value !== valueMemo.val) {
       onUpdate(valueMemo.val);
-      positionMemo.val = value;
+      valueMemo.val = value;
     }
   }
 </script>

@@ -88,7 +88,7 @@
   }
 
   function updateValueFromChildren() {
-    const selectedItems = getSelectedItems();
+    const selectedItems = getSelectedItems().map(item => item.value);
 
     if (selectedItems.length) {
       if (selectionType === "single") {
@@ -125,7 +125,7 @@
           if (value.includes(item.value)) {
             item.setSelected(true);
           } else {
-            item.setSelected(false);
+            item.setSelected(item.selected);
           }
         });
       }

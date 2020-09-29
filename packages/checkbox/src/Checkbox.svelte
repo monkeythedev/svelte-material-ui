@@ -16,25 +16,23 @@
   // Checkbox
   //#region  imports
   import { MDCCheckbox } from "@material/checkbox";
-  import { onMount, onDestroy, getContext } from "svelte";
-  import { get_current_component } from "svelte/internal";
-  import { prefixFilter } from "@smui/common/prefixFilter.js";
-  import { getItemContext, getListContext } from "@smui/list";
-  import {
-    CheckboxContext,
-    getCheckboxBehaviour,
-    getDisableCheckboxMDCIstance,
-  } from "./CheckboxContext";
+  import { onMount, onDestroy } from "svelte";
+  import { getListContext } from "@smui/list";
+  import { CheckboxContext, getCheckboxBehaviour } from "./CheckboxContext";
   import { getFormFieldContext } from "@smui/form-field/src/FormFieldContext";
   import { getDataTableContext } from "@smui/data-table/src/DataTableContext";
   import { getSelectableContext } from "@smui/common/hoc";
+  import Selectable from "@smui/common/src/hoc/Selectable.svelte";
   //#endregion
 
   //#region exports
   export let disabled: boolean = false;
-  export let indeterminate: boolean = false;
   export let checked: boolean = false;
   export let value: any = null;
+  export let allowIndeterminated: boolean = false;
+
+  export let required: boolean = false;
+
   export let input$class: string = "";
   export let input$props: BaseProps = {};
   //#endregion
@@ -56,7 +54,9 @@
   });
 
   $: if (selectableContext$) {
-    $selectableContext$.setValue(value);
+    if ($selectableContext$.value !== value) {
+      value = $selectableContext$.value;
+    }
 
     if ($selectableContext$.selected !== checked) {
       checked = $selectableContext$.selected;
@@ -71,14 +71,16 @@
   // let getInstance = getContext("SMUI:checkbox:getInstance");
 
   //#region MDC init/destroy
-  let checkbox;
+  let checkbox: MDCCheckbox;
   onMount(async () => {
     if (!disableMDC) checkbox = new MDCCheckbox(dom);
   });
 
   $: if (checkbox) {
-    if (checkbox.indeterminate !== indeterminate) {
-      checkbox.indeterminate = indeterminate;
+    if (!checkbox.indeterminate && checked === null) {
+      checkbox.indeterminate = true;
+    } else if (checkbox.indeterminate && checked !== null) {
+      checkbox.indeterminate = false;
     }
 
     if (checkbox.checked !== checked) {
@@ -103,9 +105,20 @@
   });
   //#endregion
 
+  function setChecked(newValue: boolean) {
+    if (checked !== newValue) {
+      checked = newValue
+    }
+  }
+
   function handleChange(event: Event) {
     if (checkbox) {
-      checked = checkbox?.checked;
+      if (allowIndeterminated && checked === false && checkbox.checked) {
+        checkbox.checked = false;
+        setChecked(null)
+      } else {
+        setChecked(checkbox.checked)
+      }
 
       if (selectableContext$) {
         $selectableContext$.setSelected(checked);
@@ -114,39 +127,39 @@
   }
 </script>
 
-<div
-  bind:this={dom}
-  {...props}
-  {id}
-  class="mdc-checkbox {className}
-    {disabled ? 'mdc-checkbox--disabled' : ''}
-    {behaviour === 'data-table-header' ? 'mdc-data-table__header-row-checkbox' : ''}
-    {behaviour === 'data-table-row' ? 'mdc-data-table__row-checkbox' : ''}"
-  {style}
-  use:forwardDOMEvents>
-  <input
-    {...input$props}
-    class="mdc-checkbox__native-control {input$class}"
-    use:forwardDOMEvents
-    id={formFieldContext$ && $formFieldContext$.inputId}
-    type="checkbox"
-    {disabled}
-    {checked}
-    {value}
-    on:change={handleChange}
-    on:input={handleChange} />
-  <div class="mdc-checkbox__background">
-    <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
-      <path
-        class="mdc-checkbox__checkmark-path"
-        fill="none"
-        d="M1.73,12.91 8.1,19.28 22.79,4.59" />
-    </svg>
-    <div class="mdc-checkbox__mixedmark" />
+<Selectable bind:value bind:selected={checked}>
+  <div
+    bind:this={dom}
+    {...props}
+    {id}
+    class="mdc-checkbox {className}
+      {disabled ? 'mdc-checkbox--disabled' : ''}
+      {behaviour === 'data-table-header' ? 'mdc-data-table__header-row-checkbox' : ''}
+      {behaviour === 'data-table-row' ? 'mdc-data-table__row-checkbox' : ''}"
+    {style}>
+    <input
+      {...input$props}
+      class="mdc-checkbox__native-control {input$class}"
+      id={formFieldContext$ && $formFieldContext$.inputId}
+      type="checkbox"
+      {disabled}
+      {checked}
+      {value}
+      {required}
+      on:change={handleChange}
+      use:forwardDOMEvents />
+    <div class="mdc-checkbox__background">
+      <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
+        <path
+          class="mdc-checkbox__checkmark-path"
+          fill="none"
+          d="M1.73,12.91 8.1,19.28 22.79,4.59" />
+      </svg>
+      <div class="mdc-checkbox__mixedmark" />
+    </div>
+    <div class="mdc-checkbox__ripple" />
   </div>
-  <div class="mdc-checkbox__ripple"></div>
-</div>
-
+</Selectable>
 <!-- <div
   bind:this={element}
   use:useActions={use}

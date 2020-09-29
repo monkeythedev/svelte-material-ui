@@ -23,21 +23,14 @@
   import {
     onMount,
     onDestroy,
-    getContext,
-    setContext,
     createEventDispatcher,
   } from "svelte";
-  import { get_current_component } from "svelte/internal";
-  import { forwardEventsBuilder } from "@smui/common/forwardEvents";
-  import { exclude } from "@smui/common/exclude.js";
-  import { useActions } from "@smui/common/useActions.js";
   import { RippleProps } from "@smui/ripple/src";
   import { Li, A, Span } from "@smui/common/dom";
   import { RippleLi, RippleA } from "@smui/ripple/dom";
   import { getListContext } from "./ListContext";
   import { createItemContext, ItemContext } from "./ItemContext";
   import { getMenuSurfaceContext } from "@smui/menu-surface/src/MenuSurfaceContext";
-  import { memo } from "@smui/common/utils";
   import { Selectable, OnSelectableChange } from "@smui/common/hoc";
   //#endregion
 
