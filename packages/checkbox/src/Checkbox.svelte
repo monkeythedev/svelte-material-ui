@@ -22,13 +22,13 @@
   import { getFormFieldContext } from "@smui/form-field/src/FormFieldContext";
   import { getDataTableContext } from "@smui/data-table/src/DataTableContext";
   import { getSelectableContext } from "@smui/common/hoc";
-  import Selectable from "@smui/common/src/hoc/Selectable.svelte";
+  import { Selectable } from "@smui/common/src/hoc";
   //#endregion
 
   //#region exports
   export let disabled: boolean = false;
   export let checked: boolean = false;
-  export let value: any = null;
+  export let value: any = undefined;
   export let allowIndeterminated: boolean = false;
 
   export let required: boolean = false;
@@ -44,7 +44,6 @@
   const listContext$ = getListContext();
   const formFieldContext$ = getFormFieldContext();
   const dataTableContext$ = getDataTableContext();
-  const selectableContext$ = getSelectableContext();
 
   const disableMDC = listContext$ || dataTableContext$;
 
@@ -52,16 +51,6 @@
   $: Object.assign(context, {
     value,
   });
-
-  $: if (selectableContext$) {
-    if ($selectableContext$.value !== value) {
-      value = $selectableContext$.value;
-    }
-
-    if ($selectableContext$.selected !== checked) {
-      checked = $selectableContext$.selected;
-    }
-  }
   //#endregion
 
   // let addChangeHandler = getContext("SMUI:generic:input:addChangeHandler");
@@ -118,10 +107,6 @@
         setChecked(null)
       } else {
         setChecked(checkbox.checked)
-      }
-
-      if (selectableContext$) {
-        $selectableContext$.setSelected(checked);
       }
     }
   }

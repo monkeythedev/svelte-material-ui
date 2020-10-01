@@ -35,14 +35,14 @@
   //#endregion
 
   export let ripple: boolean = true;
-  export let color = null;
+  export let color = undefined;
   export let activated: boolean = false;
-  export let role: ItemRole = null; //TODO: forse si può togliere dagli export
+  export let role: ItemRole = undefined; //TODO: forse si può togliere dagli export
   export let selected: boolean = false;
   export let disabled: boolean = false;
   export let tabindex: number = -1;
-  export let href: string = null;
-  export let value: any = null;
+  export let href: string = undefined;
+  export let value: any = undefined;
 
   const dispatch = createEventDispatcher();
 
