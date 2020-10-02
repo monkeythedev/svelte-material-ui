@@ -22,6 +22,7 @@
   } from "svelte";
   import { Selectable } from "@smui/common/hoc";
   import { getFormFieldContext } from "@smui/form-field/src";
+import { Use } from "@smui/common/hooks";
 
   export let disabled: boolean = false;
   export let checked: boolean = null;
@@ -36,10 +37,6 @@
   onMount(() => {
     mdcSwitch = new MDCSwitch(dom);
   });
-
-  $: if (mdcSwitch && formFieldContext$) {
-    $formFieldContext$.setInput(mdcSwitch);
-  }
 
   $: if (mdcSwitch) {
     if (mdcSwitch.checked !== checked) {
@@ -59,10 +56,16 @@
     mdcSwitch && mdcSwitch.destroy();
   });
 
+  function setFormFieldInput() {
+    $formFieldContext$?.setInput(mdcSwitch);
+  }
+
   function handleChange(event: Event) {
     dispatch("change", event);
   }
 </script>
+
+<Use effect once hook={setFormFieldInput}></Use>
 
 <Selectable bind:selected={checked} bind:value>
   <div

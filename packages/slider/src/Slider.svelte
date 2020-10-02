@@ -17,6 +17,7 @@
   import { onMount, onDestroy, getContext } from "svelte";
   import { getDialogContext } from "@smui/dialog";
   import { getFormFieldContext } from "@smui/form-field/src";
+import { Use } from "@smui/common/hooks";
 
   export let disabled: boolean = false;
   export let discrete: boolean = false;
@@ -34,36 +35,40 @@
     slider = new MDCSlider(dom);
     slider.listen("MDCSlider:input", handleChange);
 
-    if (formFieldContext$) {
-      $formFieldContext$.setInput(slider as any);
-    }
+    
   });
 
-  $: if (slider && slider.disabled !== disabled) {
-    slider.disabled = disabled;
-  }
+  $: if (slider) {
+    if (slider.disabled !== disabled) {
+      slider.disabled = disabled;
+    }
 
-  $: if (slider && slider.min !== min) {
-    slider.min = min;
-  }
+    if (slider.min !== min) {
+      slider.min = min;
+    }
 
-  $: if (slider && slider.max !== max) {
-    slider.max = max;
-  }
+    if (slider.max !== max) {
+      slider.max = max;
+    }
 
-  $: if (slider && slider.step !== step) {
-    slider.step = step;
-  }
+    if (slider.step !== step) {
+      slider.step = step;
+    }
 
-  $: if (slider && slider.value !== value) {
-    slider.value = value;
-  }
+    if (slider.value !== value) {
+      slider.value = value;
+    }
 
-  $: if (slider && $dialogContext$?.isOpen) slider.layout();
+    // if ($dialogContext$?.isOpen) slider.layout();
+  }
 
   onDestroy(() => {
     slider && slider.destroy();
   });
+
+  function setFormFieldInput() {
+    $formFieldContext$?.setInput(slider as any);
+  }
 
   function handleChange() {
     value = slider.value;
@@ -83,6 +88,8 @@
 
   $: props.tabindex = props.tabindex || 0;
 </script>
+
+<Use effect once hook={setFormFieldInput}></Use>
 
 <div
   bind:this={dom}
