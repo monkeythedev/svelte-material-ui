@@ -4,9 +4,10 @@
   const forwardDOMEvents = DOMEventsForwarder();
   let className = "";
   export { className as class };
-  export let style: string = null;
+  export let style: string = undefined;
+  export let id: string = undefined;
 
-  export let dom: HTMLDivElement = null;
+  export let dom: HTMLDivElement = undefined;
   import { BaseProps } from "@smui/common/dom/Props";
   export let props: BaseProps = {};
 
@@ -20,7 +21,7 @@
   import { onMount, onDestroy, createEventDispatcher } from "svelte";
   import { MenuSurface } from "@smui/menu-surface";
   import { MDCMenuDistance } from "@material/menu-surface";
-  import { createMenuContext } from "./MenuContext";
+  import { createMenuContext, getCreateMDCMenuIstance } from "./MenuContext";
 
   let isStatic: boolean = false;
   export { isStatic as static };
@@ -28,16 +29,21 @@
   export let quickOpen: boolean = false;
   export let anchorCorner: Corner = null;
   export let wrapFocus: boolean = false;
+  export let fullWidth: boolean = false;
 
   const dispatch = createEventDispatcher();
   const context$ = createMenuContext({});
 
+  const shouldCreateMDCMenuInstance = getCreateMDCMenuIstance();
+
   let menu: MDCMenu;
   onMount(async () => {
-    menu = new MDCMenu(dom);
-    menu.listen("MDCMenu:selected", handleSelected);
-    menu.listen("MDCMenuSurface:closed", updateOpen);
-    menu.listen("MDCMenuSurface:opened", updateOpen);
+    if (shouldCreateMDCMenuInstance !== false) {
+      menu = new MDCMenu(dom);
+      menu.listen("MDCMenu:selected", handleSelected);
+      menu.listen("MDCMenuSurface:closed", updateOpen);
+      menu.listen("MDCMenuSurface:opened", updateOpen);
+    }
   });
 
   $: if (menu) {
@@ -132,14 +138,16 @@
 
 <MenuSurface
   bind:dom
+  {id}
   props={{ ...props }}
   class="mdc-menu {className}"
   {style}
-  on:domEvent={forwardDOMEvents}
   static={isStatic}
   {open}
   {quickOpen}
-  {anchorCorner}>
+  {anchorCorner}
+  {fullWidth}
+  on:domEvent={forwardDOMEvents}>
   <slot />
 </MenuSurface>
 

@@ -8,8 +8,8 @@
   const forwardDOMEvents = DOMEventsForwarder();
   let className = "";
   export { className as class };
-  export let style: string = "";
-  export let id: string = ""
+  export let style: string = undefined;
+  export let id: string = undefined
 
   import { ItemRole, ListItemDOMElement } from "./types";
   export let dom: ListItemDOMElement = null;

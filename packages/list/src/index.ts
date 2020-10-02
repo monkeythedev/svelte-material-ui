@@ -12,4 +12,5 @@ import Separator from './Separator.svelte';
 
 export * from './ItemContext';
 export * from './ListContext';
+export * from './types';
 export {List, Item, Text, PrimaryText, SecondaryText, Graphic, Meta, Label, Group, Subheader, Separator};

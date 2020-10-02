@@ -19,7 +19,7 @@
   // MenuSurface
   import { MDCMenuSurface } from "@material/menu-surface";
   import { onMount, onDestroy } from "svelte";
-  import { getMenuContext } from "@smui/menu/src/MenuContext";
+  import { getMenuContext, setCreateMDCMenuInstance } from "@smui/menu/src/MenuContext";
   import { createMenuSurfaceContext } from "./MenuSurfaceContext";
 
   let isStatic: boolean = false as boolean;
@@ -30,10 +30,13 @@
   export let quickOpen: boolean = false;
   export let anchorElement: HTMLElement = null;
   export let anchorCorner: Corner = null;
+  export let fullWidth: boolean = false;
 
   let menuSurface: MDCMenuSurface;
   const menuContext$ = getMenuContext();
   const context$ = createMenuSurfaceContext();
+
+  setCreateMDCMenuInstance(false);
 
   $: $context$.open = open;
 
@@ -138,7 +141,8 @@
   class="mdc-menu-surface {className}
     {fixed ? 'mdc-menu-surface--fixed' : ''}
     {isStatic ? 'mdc-menu-surface--open' : ''}
-    {isStatic ? 'smui-menu-surface--static' : ''}"
+    {isStatic ? 'smui-menu-surface--static' : ''}
+    {fullWidth ? 'mdc-menu-surface--fullwidth' : ''}"
   {style}>
   <slot />
 </div>

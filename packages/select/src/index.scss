@@ -1,0 +1,3 @@
+@use "@material/select/mdc-select";
+@use "./mixins";
+@include mixins.smui-select-core-styles;
