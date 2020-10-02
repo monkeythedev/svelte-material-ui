@@ -8,10 +8,10 @@
   const forwardDOMEvents = DOMEventsForwarder();
   let className = "";
   export { className as class };
-  export let style: string = null;
+  export let style: string = undefined;
   export let id: string = `SMUI-TextField-${count++}`;
 
-  export let dom: HTMLLabelElement = null;
+  export let dom: HTMLLabelElement = undefined;
 
   import { BaseProps } from "@smui/common/dom/Props";
   export let props: BaseProps = {};
@@ -191,9 +191,11 @@
       </NotchedOutline>
     {/if}
   </label>
-  <ExtractNamedSlot>
-    <slot name="helperText" />
-  </ExtractNamedSlot>
+  {#if $$slots.helperText}
+    <ExtractNamedSlot>
+      <slot name="helperText" />
+    </ExtractNamedSlot>
+  {/if}
 </div>
 
 <UseTextField

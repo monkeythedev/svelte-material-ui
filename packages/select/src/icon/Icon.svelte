@@ -14,9 +14,9 @@
   //#endregion
 
   // Icon
-  import { MDCTextFieldIcon } from "@material/textfield/icon";
   import { onMount, onDestroy } from "svelte";
-  import { getInputFieldContext } from "../TextFieldContext";
+  import { getInputFieldContext } from "@smui/textfield/src/TextFieldContext";
+  import { MDCSelectIcon } from "@material/select/icon";
 
   export let role: "button" = undefined;
   export let tabindex: number = role === "button" ? 0 : -1;
@@ -24,9 +24,9 @@
 
   const inputFieldContext$ = getInputFieldContext();
 
-  let icon: MDCTextFieldIcon;
+  let icon: MDCSelectIcon;
   onMount(() => {
-    if (!inputFieldContext$) icon = new MDCTextFieldIcon(dom);
+    if (!inputFieldContext$) icon = new MDCSelectIcon(dom);
   });
 
   onDestroy(() => {
@@ -38,7 +38,7 @@
   bind:this={dom}
   {id}
   {...props}
-  class="mdc-text-field__icon {className}"
+  class="mdc-select__icon {className}"
   {style}
   {tabindex}
   {role}

@@ -1,0 +1,34 @@
+.mdc-select {
+  &.shaped {
+    .mdc-select__anchor {
+      border-radius: 16px 16px 0 0;
+    }
+  }
+
+  &.shaped-outlined {
+    .mdc-text-field__input {
+      padding-left: 32px;
+      padding-right: 0;
+    }
+
+    .mdc-notched-outline {
+      .mdc-notched-outline__leading {
+        border-radius: 28px 0 0 28px;
+        width: 28px;
+      }
+
+      .mdc-notched-outline__trailing {
+        border-radius: 0 28px 28px 0;
+      }
+
+      .mdc-notched-outline__notch {
+        max-width: calc(100% - 28px * 2);
+      }
+    }
+
+    + .mdc-text-field-helper-line {
+      padding-left: 32px;
+      padding-right: 28px;
+    }
+  }
+}

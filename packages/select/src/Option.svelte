@@ -7,23 +7,20 @@
   export let style: string = undefined;
   export let id: string = undefined;
 
-  import { ListItemDOMElement } from "@smui/list";
+  import { ListItemDOMElement, Text } from "@smui/list";
   export let dom: ListItemDOMElement = null;
 
   import { BaseProps } from "@smui/common/dom/Props";
   export let props: BaseProps = {};
   //#endregion
 
-  import { getContext, setContext } from "svelte";
   import { Item } from "@smui/list";
+  import { getNativeSelect } from "./SelectContext";
 
   export let value = "";
   export let selected = undefined;
-
-  let enhanced = getContext("SMUI:select:option:enhanced");
-
-  setContext("SMUI:list:item:role", "option");
 </script>
+
 
 <Item
   bind:dom
@@ -31,10 +28,14 @@
   {id}
   class={className}
   {style}
-  data-value={value}
+  {value}
   {selected}
-  on:domEvent={forwardDOMEvents}>
-  <slot />
+  role="option"
+  on:domEvent={forwardDOMEvents}
+  >
+  <Text>
+    <slot></slot>
+  </Text>
 </Item>
 
 <!-- {#if enhanced}

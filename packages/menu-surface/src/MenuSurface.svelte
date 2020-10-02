@@ -5,21 +5,27 @@
 </script>
 
 <script lang="ts">
-  // Base
-  import { DOMEventsForwarder } from "@smui/common/events/DOMEventsForwarder";
+  //#region Base
+  import { DOMEventsForwarder } from "@smui/common/actions/DOMEventsForwarder";
   const forwardDOMEvents = DOMEventsForwarder();
   let className = "";
   export { className as class };
-  export let style: string = null;
+  export let style: string = undefined;
+  export let id: string = undefined;
 
-  export let dom: HTMLDivElement = null;
+  export let dom: HTMLDivElement = undefined;
+
   import { BaseProps } from "@smui/common/dom/Props";
   export let props: BaseProps = {};
+  //#endregion
 
   // MenuSurface
   import { MDCMenuSurface } from "@material/menu-surface";
   import { onMount, onDestroy } from "svelte";
-  import { getMenuContext, setCreateMDCMenuInstance } from "@smui/menu/src/MenuContext";
+  import {
+    getMenuContext,
+    setCreateMDCMenuInstance,
+  } from "@smui/menu/src/MenuContext";
   import { createMenuSurfaceContext } from "./MenuSurfaceContext";
 
   let isStatic: boolean = false as boolean;
@@ -136,14 +142,16 @@
 </script>
 
 <div
-  {...props}
   bind:this={dom}
+  {...props}
+  {id}
   class="mdc-menu-surface {className}
     {fixed ? 'mdc-menu-surface--fixed' : ''}
     {isStatic ? 'mdc-menu-surface--open' : ''}
     {isStatic ? 'smui-menu-surface--static' : ''}
     {fullWidth ? 'mdc-menu-surface--fullwidth' : ''}"
-  {style}>
+  {style}
+  use:forwardDOMEvents>
   <slot />
 </div>
 

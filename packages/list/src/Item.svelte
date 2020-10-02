@@ -125,6 +125,7 @@
     tabindex,
     href,
     "aria-current": activated ? "page" : null,
+    "data-value": value,
     //"aria-selected": $listContext$.role === "listbox" ? selected : null, Lo setta MDC
     // "aria-checked":
     //   $listContext$.role === "group" || $listContext$.role === "radiogroup"

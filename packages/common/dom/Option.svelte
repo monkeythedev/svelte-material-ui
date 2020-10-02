@@ -7,19 +7,22 @@
   export let style: string = undefined;
   export let id: string = undefined;
 
-  export let dom: HTMLParagraphElement = undefined;
+  export let dom: HTMLOptionElement = undefined;
 
   import { BaseProps } from "@smui/common/dom/Props";
   export let props: BaseProps = {};
   //#endregion
+
+  export let value: string;
 </script>
 
-<p
+<option
   bind:this={dom}
+  {...props}
   {id}
   class={className}
   {style}
   use:forwardDOMEvents
-  {...props}>
-  <slot />
-</p>
+  {value}>
+  <slot></slot>
+</option>

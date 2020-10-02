@@ -20,6 +20,7 @@ import Div from "./P.svelte";
 import Th from "./Th.svelte";
 import Td from "./Td.svelte";
 import Footer from "./Footer.svelte";
+import Option from "./Option.svelte";
 
 export {
   A,
@@ -41,5 +42,6 @@ export {
   Div,
   Th,
   Td,
-  Footer
+  Footer,
+  Option,
 };

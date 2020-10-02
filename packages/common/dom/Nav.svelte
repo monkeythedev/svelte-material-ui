@@ -1,17 +1,19 @@
 <script lang="ts">
-  import { createEventDispatcher } from "svelte";
-  // Base
+  //#region Base
   import { DOMEventsForwarder } from "@smui/common/actions/DOMEventsForwarder";
   const forwardDOMEvents = DOMEventsForwarder();
-  export let dom: HTMLDivElement = null;
-  let className = "";
+  let className = undefined;
   export { className as class };
-  export let style: string = "";
+  export let style: string = undefined;
+  export let id: string = undefined;
 
-  import { BaseProps } from "./Props";
+  export let dom: HTMLDivElement = undefined;
+
+  import { BaseProps } from "@smui/common/dom/Props";
   export let props: BaseProps = {};
+  //#endregion
 </script>
 
-<nav bind:this={dom} {...props} class={className} {style} use:forwardDOMEvents >
+<nav bind:this={dom} {...props} {id} class={className} {style} use:forwardDOMEvents >
   <slot />
 </nav>
