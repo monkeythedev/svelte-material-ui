@@ -30,17 +30,16 @@
 
   let isStatic: boolean = false as boolean;
   export { isStatic as static };
-  export let anchor: boolean = true;
   export let fixed: boolean = false;
   export let open: boolean = false;
   export let quickOpen: boolean = false;
-  export let anchorElement: HTMLElement = null;
-  export let anchorCorner: Corner = null;
+  export let anchorCorner: Corner = Corner.BOTTOM_LEFT;
   export let fullWidth: boolean = false;
 
   let menuSurface: MDCMenuSurface;
   const menuContext$ = getMenuContext();
   const context$ = createMenuSurfaceContext();
+  let anchorElement: HTMLElement = null; // It seems not worthy to export this prop because makes API confusing since the only anchor that makes sense is the parent
 
   setCreateMDCMenuInstance(false);
 
@@ -53,7 +52,7 @@
       menuSurface.listen("MDCMenuSurface:opened", updateOpen);
     }
 
-    anchorElement = dom.parentElement;
+    if (!anchorElement) anchorElement = dom.parentElement;
   });
 
   $: if (menuSurface) {
@@ -78,13 +77,12 @@
     menuSurface.setFixedPosition(fixed);
   }
 
-  if (menuSurface && ~anchorCorner) {
+  $: if (menuSurface && ~anchorCorner) {
     menuSurface.setAnchorCorner(anchorCorner);
   }
 
   $: if (
     dom &&
-    anchor &&
     anchorElement &&
     !anchorElement.classList.contains("mdc-menu-surface--anchor")
   ) {
@@ -92,9 +90,7 @@
   }
 
   onDestroy(() => {
-    if (anchor) {
-      dom && dom.parentElement.classList.remove("mdc-menu-surface--anchor");
-    }
+    anchorElement?.classList.remove("mdc-menu-surface--anchor");
   });
 
   function updateOpen() {
@@ -140,6 +136,8 @@
     return menuSurface.getDefaultFoundation();
   }
 </script>
+
+<svelte:options immutable={true}></svelte:options>
 
 <div
   bind:this={dom}

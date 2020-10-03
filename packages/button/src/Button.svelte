@@ -18,7 +18,7 @@
   export let id: string = null;
 
   export let dom: HTMLButtonElement | HTMLAnchorElement = null;
-  
+
   import { BaseProps } from "@smui/common/dom/Props";
   export let props: BaseProps = {};
   //#endregion

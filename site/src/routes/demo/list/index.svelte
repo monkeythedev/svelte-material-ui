@@ -28,7 +28,7 @@
 <section>
   <Typography variant="headline2">Lists</Typography>
 
-  <!-- <SimpleList />
+  <SimpleList />
   <SimpleHorizontalList />
   <DenseGraphicList />
   <NonInteractiveList />
@@ -36,6 +36,6 @@
   <ThreeLineList />
   <GroupList />
   <ListBox />
-  <RadioList /> -->
+  <RadioList />
   <CheckboxList />
 </section>
