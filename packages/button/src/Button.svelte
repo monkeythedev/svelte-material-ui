@@ -1,11 +1,8 @@
 <script lang="ts" context="module">
   import { A, Button } from "@smui/common/dom";
-  import { RippleButton, RippleA } from "@smui/ripple/dom";
   export type ButtonComponent =
     | typeof Button
     | typeof A
-    | typeof RippleButton
-    | typeof RippleA;
 </script>
 
 <script lang="ts">
@@ -14,8 +11,8 @@
   const forwardDOMEvents = DOMEventsForwarder();
   let className = "";
   export { className as class };
-  export let style: string = null;
-  export let id: string = null;
+  export let style: string = undefined;
+  export let id: string = undefined;
 
   export let dom: HTMLButtonElement | HTMLAnchorElement = null;
 
@@ -24,11 +21,10 @@
   //#endregion
 
   // Button
-  import {
-    setContext,
-  } from "svelte";
-  import { RippleProps } from "@smui/ripple/src";
+  import { setContext } from "svelte";
   import { getButtonBehaviour } from "./ButtonContextProps";
+import { Ripple3 } from "@smui/ripple";
+import { setLabelBehaviour } from "@smui/common/dom/LabelContext";
 
   export let ripple: boolean = true;
   export let color: "primary" | "secondary" = "primary";
@@ -37,46 +33,33 @@
   export let href: string = null;
   export let action: string = "close";
   let defaultAction: boolean = false;
-  export {defaultAction as default}
+  export { defaultAction as default };
   export let disabled: boolean = false;
   export let target: string = null;
 
   let behaviour = getButtonBehaviour();
 
   let actionProps: any = {};
-  $: if ( behaviour === "dialog:action") {
+  $: if (behaviour === "dialog:action") {
     if (defaultAction) {
-      actionProps["data-mdc-dialog-button-default"] = ""
+      actionProps["data-mdc-dialog-button-default"] = "";
     }
 
     if (action !== null) {
-      actionProps["data-mdc-dialog-action"] = action
+      actionProps["data-mdc-dialog-action"] = action;
     }
 
-    console.log(actionProps)
+    console.log(actionProps);
   }
 
-  setContext("SMUI:label:context", "button");
+  setLabelBehaviour("button");
   setContext("SMUI:icon:context", "button");
-
-  export let component: ButtonComponent = Button;
-  function getComponent(ripple = false) {
-    if (ripple) return href == null ? RippleButton : RippleA;
-    else return href == null ? Button : A;
-  }
-  $: component = getComponent(ripple);
-
-  let rippleProps: RippleProps;
-  $: rippleProps = ripple
-    ? {
-        rippleElement: "mdc-button__ripple",
-        component: getComponent(),
-      }
-    : undefined;
 </script>
 
+<svelte:options immutable={true} />
+
 <svelte:component
-  this={component}
+  this={href == null ? Button : A}
   bind:dom
   props={{ ...props, ...actionProps, disabled, target, href }}
   {id}
@@ -91,7 +74,9 @@
     {behaviour === 'top-app-bar:action' ? 'mdc-top-app-bar__action-item' : ''}
     {behaviour === 'snackbar' ? 'mdc-snackbar__action' : ''}"
   {style}
-  on:domEvent={forwardDOMEvents}
-  {rippleProps}>
+  on:domEvent={forwardDOMEvents}>
+  {#if ripple}
+    <Ripple3 rippleElement="mdc-button__ripple" target={dom}></Ripple3>
+  {/if}
   <slot />
 </svelte:component>

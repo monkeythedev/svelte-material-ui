@@ -52,8 +52,8 @@
   let closePromise = new Promise(resolve => closeResolve = resolve);
 
   setContext('SMUI:button:context', 'snackbar');
-  setContext('SMUI:icon-button:context', 'snackbar');
-  setContext('SMUI:label:context', 'snackbar');
+  setIconButtonBehaviour('snackbar');
+  setLabelBehaviour("snackbar");
 
   $: if (snackbar && snackbar.timeoutMs !== timeoutMs) {
     snackbar.timeoutMs = timeoutMs;

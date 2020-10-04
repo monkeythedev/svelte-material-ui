@@ -1,27 +1,26 @@
 <script lang="ts">
-  // Base
+  //#region Base
   import { DOMEventsForwarder } from "@smui/common/actions/DOMEventsForwarder";
   const forwardDOMEvents = DOMEventsForwarder();
-  export let dom: HTMLButtonElement = null;
   let className = "";
   export { className as class };
-  export let style: string = null;
+  export let style: string = undefined;
+  export let id: string = undefined;
 
+  export let dom: HTMLDivElement = null;
+
+  import { BaseProps } from "./Props";
   export let props: BaseProps = {};
-  export let id: string = null;
+  //#endregion
 
   // Label
   import { getLabelBehaviour } from "./LabelContext";
-  import { BaseProps } from "./Props";
 
-  //const context = getContext("SMUI:label:context");
   const behaviour = getLabelBehaviour();
 </script>
 
 <span
   bind:this={dom}
-  role={behaviour === "snackbar" ? "status" : null}
-  aria-live={behaviour === "snackbar" ? "polite" : null}
   {...props}
   {id}
   class="{className}
@@ -32,6 +31,8 @@
     {behaviour === 'image-list' ? 'mdc-image-list__label' : ''}
     {behaviour === 'snackbar' ? 'mdc-snackbar__label' : ''}"
   {style}
+  role={behaviour === "snackbar" ? "status" : null}
+  aria-live={behaviour === "snackbar" ? "polite" : null}
   use:forwardDOMEvents>
   <slot />
 </span>

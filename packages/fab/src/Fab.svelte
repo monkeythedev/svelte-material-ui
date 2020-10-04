@@ -1,6 +1,7 @@
-<script lang="ts"> 
+<script lang="ts">
   //#region Base
   import { DOMEventsForwarder } from "@smui/common/actions/DOMEventsForwarder";
+  import { setLabelBehaviour } from "@smui/common/dom/LabelContext";
   const forwardDOMEvents = DOMEventsForwarder();
   let className = "";
   export { className as class };
@@ -14,21 +15,17 @@
   //#endregion
 
   // Fab
-  import { Ripple2 } from "@smui/ripple";
+  import { Ripple3, RippleProps } from "@smui/ripple";
 
-  export let ripple = true;
-  export let color = "secondary";
-  export let mini = false;
-  export let exited = false;
-  export let extended = false;
+  export let ripple: boolean = true;
+  export let color: RippleProps["color"] = "secondary";
+  export let mini: boolean = false;
+  export let exited: boolean = false;
+  export let extended: boolean = false;
 
-  // setContext("SMUI:label:context", "fab");
+  setLabelBehaviour("fab");
   // setContext("SMUI:icon:context", "fab");
 </script>
-
-{#if ripple}
- <Ripple2 target={dom} unbounded={false} rippleElement="mdc-fab__ripple"/>
-{/if}
 
 <button
   bind:this={dom}
@@ -41,5 +38,8 @@
     {color === 'primary' ? 'smui-fab--color-primary' : ''}"
   {style}
   use:forwardDOMEvents>
+  {#if ripple}
+    <Ripple3 rippleElement="mdc-fab__ripple" target={dom} {color} />
+  {/if}
   <slot />
 </button>

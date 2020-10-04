@@ -7,19 +7,21 @@
   export let style: string = undefined;
   export let id: string = undefined;
 
-  export let dom: HTMLParagraphElement = undefined;
+  export let dom: HTMLParagraphElement = null;
 
-  import { BaseProps } from "@smui/common/dom/Props";
+  import { BaseProps } from "./Props";
   export let props: BaseProps = {};
   //#endregion
+
+  // P
 </script>
 
 <p
   bind:this={dom}
+  {...props}
   {id}
   class={className}
   {style}
-  use:forwardDOMEvents
-  {...props}>
+  use:forwardDOMEvents>
   <slot />
 </p>

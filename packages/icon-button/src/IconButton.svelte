@@ -8,16 +8,15 @@
   export let id: string = null;
 
   export let dom: HTMLAnchorElement | HTMLButtonElement = null;
-  
+
   import { BaseProps } from "@smui/common/dom/Props";
   export let props: BaseProps = {};
   //#endregion
 
   // IconButton
-  import { RippleProps } from "@smui/ripple";
   import { Button, A, setIconStyle } from "@smui/common/dom";
-  import { RippleButton, RippleA } from "@smui/ripple/dom";
   import { getIconButtonBehaviour } from "./IconButtonContextProps";
+  import { UseRipple } from "@smui/ripple";
 
   export let ripple: boolean = true;
   export let color: "primary" | "secondary" = null;
@@ -29,31 +28,7 @@
 
   const behaviour = getIconButtonBehaviour();
 
-  let component = getComponent(ripple);
-  
-  //let context = getContext("SMUI:icon-button:context");
-
   setIconStyle("icon-button");
-
-  let rippleProps: RippleProps;
-  $: rippleProps =
-    ripple
-      ? {
-          unbounded: true,
-          color,
-          component: getComponent()
-        }
-      : null;
-
-  function getComponent(
-    ripple?: boolean
-  ): typeof RippleA | typeof RippleButton | typeof A | typeof Button {
-    if (ripple) {
-      return href ? RippleA : RippleButton;
-    } else {
-      return href ? A : Button;
-    }
-  }
 
   $: props = {
     ...props,
@@ -63,12 +38,12 @@
     title,
     "aria-pressed": pressed,
     "aria-hidden": true,
-    "aria-label": props["aria-label"] || title
+    "aria-label": props["aria-label"] || title,
   };
 </script>
 
 <svelte:component
-  this={component}
+  this={href ? A : Button}
   bind:dom
   {props}
   {id}
@@ -80,10 +55,13 @@
     {behaviour === 'top-app-bar:action' ? 'mdc-top-app-bar__action-item' : ''}
     {behaviour === 'snackbar' ? 'mdc-snackbar__dismiss' : ''}"
   {style}
-  on:domEvent={forwardDOMEvents}
-  {rippleProps}>
+  on:domEvent={forwardDOMEvents}>
   <slot />
 </svelte:component>
+
+{#if ripple}
+  <UseRipple target={dom} {color} unbounded={true} />
+{/if}
 
 <!-- {#if href}
   <a

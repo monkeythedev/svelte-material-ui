@@ -66,7 +66,4 @@
 </script>
 
 <UseClassList toParse={classListToParse} bind:parsed={classList} />
-<!-- {#if ripple}
-  <Ripple2 target={dom} unbounded={false} {color} rippleElement="mdc-text-field__ripple" />
-{/if} -->
 <Use effect once hook={init} />

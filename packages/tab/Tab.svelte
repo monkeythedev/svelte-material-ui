@@ -75,8 +75,8 @@
 
   setContext('SMUI:tab-indicator:instantiate', false);
   setContext('SMUI:tab-indicator:getInstance', getTabIndicatorInstancePromise);
-  setContext('SMUI:label:context', 'tab');
   setContext('SMUI:icon:context', 'tab');
+  setLabelBehaviour("tab");
 
   if (!tabEntry) {
     throw new Error('The tab property is required! It should be passed down from the TabBar to the Tab.');

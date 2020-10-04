@@ -1,19 +1,27 @@
 <script lang="ts">
-  // Base component
+  //#region Base
   import { DOMEventsForwarder } from "@smui/common/actions/DOMEventsForwarder";
   const forwardDOMEvents = DOMEventsForwarder();
-  export let dom: HTMLHeadingElement = null;
-  let className = "";
+  let className = undefined;
   export { className as class };
-  export let style: string = "";
-  export let props: any = {};
+  export let style: string = undefined;
+  export let id: string = undefined;
+
+  export let dom: HTMLDivElement = null;
+
+  import { BaseProps } from "./Props";
+  export let props: BaseProps = {};
+  //#endregion
+
+  // H5
 </script>
 
 <h5
   bind:this={dom}
-  class="{className}"
+  {...props}
+  {id}
+  class={className}
   {style}
-  use:forwardDOMEvents
-  {...props}>
+  use:forwardDOMEvents>
   <slot />
 </h5>

@@ -7,16 +7,18 @@
 </script>
 
 <script lang="ts">
-  // Base
+  //#region Base
   import { DOMEventsForwarder } from "@smui/common/actions/DOMEventsForwarder";
   const forwardDOMEvents = DOMEventsForwarder();
-  export let dom: HTMLButtonElement = null;
-  let className = "";
+  let className = undefined;
   export { className as class };
-  export let style: string = "";
+  export let style: string = undefined;
+  export let id: string = undefined;
+
+  export let dom: HTMLButtonElement = null;
 
   export let props: ButtonProps = {};
-  export let id: string = "";
+  //#endregion
 
   // Button
 </script>

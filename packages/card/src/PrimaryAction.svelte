@@ -14,7 +14,7 @@
   //#endregion
 
   // PrimaryAction
-  import { Ripple2, RippleProps } from '@smui/ripple';
+  import { UseRipple, RippleProps } from "@smui/ripple";
 
   export let ripple: boolean = true;
   export let color: RippleProps["color"] = null;
@@ -23,7 +23,7 @@
 </script>
 
 {#if ripple}
-  <Ripple2 target={dom} unbounded={false} {color}></Ripple2>
+  <UseRipple target={dom} {color} />
 {/if}
 
 <div
@@ -37,5 +37,6 @@
   "
   {style}
   {tabindex}
-  use:forwardDOMEvents
-><slot></slot></div>
+  use:forwardDOMEvents>
+  <slot />
+</div>

@@ -7,13 +7,21 @@
   export let style: string = undefined;
   export let id: string = undefined;
 
-  export let dom: HTMLDivElement = undefined;
+  export let dom: HTMLDivElement = null;
 
-  import { BaseProps } from "@smui/common/dom/Props";
+  import { BaseProps } from "./Props";
   export let props: BaseProps = {};
   //#endregion
+
+  // Nav
 </script>
 
-<nav bind:this={dom} {...props} {id} class={className} {style} use:forwardDOMEvents >
+<nav
+  bind:this={dom}
+  {...props}
+  {id}
+  class={className}
+  {style}
+  use:forwardDOMEvents>
   <slot />
 </nav>

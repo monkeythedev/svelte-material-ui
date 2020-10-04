@@ -7,13 +7,17 @@
   export let style: string = undefined;
   export let id: string = undefined;
 
-  export let dom: HTMLOptionElement = undefined;
+  export let dom: HTMLOptionElement = null;
 
-  import { BaseProps } from "@smui/common/dom/Props";
+  import { BaseProps } from "./Props";
   export let props: BaseProps = {};
   //#endregion
 
+  // Option
+
   export let value: string;
+
+  // A svelte bug thorw error "not implemented empty" when this is used ?
 </script>
 
 <option
@@ -22,7 +26,7 @@
   {id}
   class={className}
   {style}
-  use:forwardDOMEvents
-  {value}>
-  <slot></slot>
+  {value}
+  use:forwardDOMEvents>
+  <slot />
 </option>

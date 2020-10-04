@@ -1,35 +1,36 @@
 <script lang="ts" context="module">
-  export interface AProps {
+  import { BaseProps } from "@smui/common/dom/Props";
+
+  export interface AProps extends BaseProps {
     target?: string;
     href?: string;
   }
 </script>
 
 <script lang="ts">
-  // Base
+  //#region Base
   import { DOMEventsForwarder } from "@smui/common/actions/DOMEventsForwarder";
   const forwardDOMEvents = DOMEventsForwarder();
-  export let dom: HTMLAnchorElement = null;
-  let className = "";
+  let className = undefined;
   export { className as class };
-  export let style: string = "";
+  export let style: string = undefined;
+  export let id: string = undefined;
 
-  export let props: AProps = {
-    href: "javascript:void(0)"
-  };
+  export let dom: HTMLAnchorElement = null;
 
-  // Button
-  import { Ripple, RippleProps } from "@smui/ripple/src";
-  export let useRipple: RippleProps = null;
+  export let props: AProps = {};
+  //#endregion
+
+  // A
 </script>
 
 <a
-  {...props}
-  href={props.href}
   bind:this={dom}
-  class="{className}"
+  {...props}
+  {id}
+  class={className}
   {style}
-  use:forwardDOMEvents
-  use:Ripple={useRipple}>
+  href={props.href}
+  use:forwardDOMEvents>
   <slot />
 </a>

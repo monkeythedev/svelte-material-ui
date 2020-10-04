@@ -9,7 +9,7 @@
   let className = "";
   export { className as class };
   export let style: string = undefined;
-  export let id: string = undefined
+  export let id: string = undefined;
 
   import { ItemRole, ListItemDOMElement } from "../types";
   export let dom: ListItemDOMElement = null;
@@ -20,14 +20,9 @@
 
   // Item
   //#region import
-  import {
-    onMount,
-    onDestroy,
-    createEventDispatcher,
-  } from "svelte";
-  import { RippleProps } from "@smui/ripple/src";
+  import { onMount, onDestroy, createEventDispatcher } from "svelte";
+  import { Ripple3 } from "@smui/ripple";
   import { Li, A, Span } from "@smui/common/dom";
-  import { RippleLi, RippleA } from "@smui/ripple/dom";
   import { getListContext } from "../";
   import { createItemContext, ItemContext, getIsSelectionGroup } from "./";
   import { getMenuSurfaceContext } from "@smui/menu-surface/src/MenuSurfaceContext";
@@ -55,28 +50,22 @@
   const context$ = createItemContext({
     sendOnSelected() {
       dispatch("selected", dom);
-    }
+    },
   });
 
   $: if ($listContext$.role === "radiogroup") {
     role = "radio";
   } else if ($listContext$.role === "menu" || menuSurfaceContext$) {
-    role = "menuitem"
+    role = "menuitem";
   } else if ($listContext$.role === "listbox") {
-    role = "option"
+    role = "option";
   } else if ($listContext$.role === "group") {
-    role = "checkbox"
+    role = "checkbox";
   }
 
   $: if (disabled && selected) selected = false;
 
   let component: typeof Li | typeof A | typeof Span;
-
-  $: if ($listContext$.isNav && href) {
-    component = ripple ? RippleA : A;
-  } else {
-    component = ripple ? RippleLi : Li;
-  }
 
   const context = {} as ItemContext;
   $: $context$ = Object.assign(context, {
@@ -85,7 +74,7 @@
     selected,
     tabindex,
     dom,
-    value
+    value,
   });
 
   function handleChange(event: CustomEvent<OnSelectableChange>) {
@@ -112,16 +101,6 @@
     $listContext$.unregisterItem(context);
   });
 
-  let rippleProps: RippleProps;
-  $: rippleProps = ripple
-    ? {
-        color,
-        component,
-        rippleElement: "mdc-list-item__ripple",
-        keyboardEvents: true,
-      }
-    : null;
-
   $: props = {
     ...props,
     tabindex,
@@ -133,13 +112,18 @@
     //   $listContext$.role === "group" || $listContext$.role === "radiogroup"
     //     ? `${selected}`
     //     : null,
-    role
+    role,
   };
 </script>
 
-<Selectable bind:this={selectable} bind:value bind:selected on:change={handleChange} bind:tabindex>
+<Selectable
+  bind:this={selectable}
+  bind:value
+  bind:selected
+  on:change={handleChange}
+  bind:tabindex>
   <svelte:component
-    this={component}
+    this={$listContext$.isNav && href ? A : Li}
     bind:dom
     props={{ ...props }}
     {id}
@@ -149,8 +133,14 @@
       {role === 'menuitem' && selected ? 'mdc-menu-item--selected' : ''}"
     {style}
     on:domEvent={forwardDOMEvents}
-    on:focus={onFocus}
-    {rippleProps}>
+    on:focus={onFocus}>
+    {#if ripple}
+      <Ripple3
+        rippleElement="mdc-list-item__ripple"
+        {color}
+        target={dom}
+        keyboardEvents />
+    {/if}
     <slot />
   </svelte:component>
 </Selectable>
