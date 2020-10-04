@@ -1,5 +1,7 @@
 <script lang="ts">
-  import Ripple from "@smui/ripple";
+  import { UseRipple, Ripple3 } from "@smui/ripple";
+
+  let rippleTarget: HTMLSpanElement;
 </script>
 
 <style>
@@ -26,27 +28,28 @@
 <section>
   <h2>Ripple</h2>
 
-  <p use:Ripple={{ ripple: true, color: 'surface' }} tabindex="0">
+  <p tabindex="0">
+    <Ripple3 color="surface" />
     SMUI ripples can be added to arbitrary elements, like this
     <code>p</code>
     element. Try clicking it to see the ripple.
   </p>
 
   <p>
-    Unbounded:
-    <span
-      use:Ripple={{ ripple: true, unbounded: true, color: 'surface' }}
-      tabindex="0"
-      class="unbounded">
+    Unbounded with hook:
+    <span bind:this={rippleTarget} tabindex="0" class="unbounded">
       &copy;
     </span>
+    <UseRipple target={rippleTarget} color="surface" />
   </p>
 
-  <p use:Ripple={{ ripple: true, color: 'primary' }} tabindex="0">
+  <p tabindex="0">
+    <Ripple3 color="primary" />
     Primary color.
   </p>
 
-  <p use:Ripple={{ ripple: true, color: 'secondary' }} tabindex="0">
+  <p tabindex="0">
+    <Ripple3 color="secondary" />
     Secondary color.
   </p>
 </section>
