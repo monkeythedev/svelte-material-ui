@@ -29,7 +29,9 @@ import { Use } from "@smui/common/hooks";
   export let value: any = null;
   export let input$class: string = "";
 
-  const dispatch = createEventDispatcher();
+  const dispatch = createEventDispatcher<{
+    change: Event;
+  }>();
 
   const formFieldContext$ = getFormFieldContext();
 

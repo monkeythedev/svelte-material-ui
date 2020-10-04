@@ -45,7 +45,12 @@
   export let indexHasValues: boolean = null;
   //#endregion
 
-  const dispatch = createEventDispatcher();
+  const dispatch = createEventDispatcher<{
+    change: {
+      value: typeof value,
+      dom: typeof dom
+    }
+  }>();
 
   //#region local varaibles
   const items = new Set<ItemContext>();

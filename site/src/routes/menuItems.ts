@@ -227,7 +227,7 @@ export const menuItems = [
   },
   {
     name: "Snackbars",
-    route: "/demo/snackbars",
+    route: "/demo/snackbar",
     indent: 0,
     repos: [
       "https://github.com/hperrin/svelte-material-ui/tree/master/packages/snackbar",

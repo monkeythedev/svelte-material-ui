@@ -6,5 +6,4 @@ export {setIconButtonBehaviour, getIconButtonBehaviour}
 type IconButtonBehaviour =
   | "card:action"
   | "top-app-bar:navigation"
-  | "top-app-bar:action"
-  | "snackbar";
+  | "top-app-bar:action";

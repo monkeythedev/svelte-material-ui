@@ -12,7 +12,6 @@
     "sveltejs"
   ],
   "scripts": {
-    "prepare": "echo \"$(npx glob '**/*' | sed 's/^/-I /' | paste -s -d ' ' -) --no-source-map _style.scss bare.css\" | xargs sass",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "publishConfig": {
@@ -34,6 +33,6 @@
   },
   "devDependencies": {
     "glob-cmd": "0.0.7",
-    "sass": "^1.26.10"
+    "sass": "^1.26.11"
   }
 }

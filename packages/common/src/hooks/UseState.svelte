@@ -13,6 +13,11 @@
       valueMemo.val = value;
     }
   }
+
+  export function setValue(newValue: typeof value) {
+    valueMemo.val = newValue;
+    value = newValue;
+  }
 </script>
 
 <Use hook={() => onValueUpdate(value)} />

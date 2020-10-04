@@ -52,8 +52,7 @@
     {behaviour === 'card:action' ? 'mdc-card__action' : ''}
     {behaviour === 'card:action' ? 'mdc-card__action--icon' : ''}
     {behaviour === 'top-app-bar:navigation' ? 'mdc-top-app-bar__navigation-icon' : ''}
-    {behaviour === 'top-app-bar:action' ? 'mdc-top-app-bar__action-item' : ''}
-    {behaviour === 'snackbar' ? 'mdc-snackbar__dismiss' : ''}"
+    {behaviour === 'top-app-bar:action' ? 'mdc-top-app-bar__action-item' : ''}"
   {style}
   on:domEvent={forwardDOMEvents}>
   <slot />

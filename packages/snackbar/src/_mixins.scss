@@ -1,0 +1,12 @@
+@use "@material/feature-targeting";
+@use "@material/icon-button";
+@use "@material/snackbar";
+
+@mixin smui-snackbar-core-styles($query: feature-targeting.all()) {
+  @include snackbar.core-styles();
+
+  // Fix color.
+  .mdc-snackbar__actions .mdc-snackbar__action {
+    @include icon-button.ink-color(primary, $query: $query);
+  }
+}

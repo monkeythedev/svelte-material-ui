@@ -9,27 +9,17 @@
 
   export let dom: HTMLDivElement = null;
 
-  import { BaseProps } from "./Props";
+  import { BaseProps } from "@smui/common/dom/Props";
   export let props: BaseProps = {};
   //#endregion
-
-  // Label
-  import { getLabelBehaviour } from "./LabelContext";
-
-  const behaviour = getLabelBehaviour();
 </script>
 
-<span
+<div
   bind:this={dom}
   {...props}
   {id}
-  class="{className}
-    {behaviour === 'button' ? 'mdc-button__label' : ''}
-    {behaviour === 'fab' ? 'mdc-fab__label' : ''}
-    {behaviour === 'chip' ? 'mdc-chip__text' : ''}
-    {behaviour === 'tab' ? 'mdc-tab__text-label' : ''}
-    {behaviour === 'image-list' ? 'mdc-image-list__label' : ''}"
+  class="mdc-snackbar__actions {className}"
   {style}
   use:forwardDOMEvents>
   <slot />
-</span>
+</div>

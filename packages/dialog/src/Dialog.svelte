@@ -30,7 +30,10 @@
   export let initialFocus: HTMLElement = null;
   export let open: boolean = false;
 
-  const dispatch = createEventDispatcher();
+  const dispatch = createEventDispatcher<{
+    opened: undefined,
+    closed: MDCDialogCloseEvent
+  }>();
   let mounted: boolean = false;
 
   let context$ = createDialogContext();

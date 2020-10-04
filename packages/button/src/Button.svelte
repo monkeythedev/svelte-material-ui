@@ -1,8 +1,6 @@
 <script lang="ts" context="module">
   import { A, Button } from "@smui/common/dom";
-  export type ButtonComponent =
-    | typeof Button
-    | typeof A
+  export type ButtonComponent = typeof Button | typeof A;
 </script>
 
 <script lang="ts">
@@ -23,8 +21,8 @@
   // Button
   import { setContext } from "svelte";
   import { getButtonBehaviour } from "./ButtonContextProps";
-import { Ripple3 } from "@smui/ripple";
-import { setLabelBehaviour } from "@smui/common/dom/LabelContext";
+  import { Ripple3 } from "@smui/ripple";
+  import { setLabelBehaviour } from "@smui/common/dom/LabelContext";
 
   export let ripple: boolean = true;
   export let color: "primary" | "secondary" = "primary";
@@ -71,12 +69,11 @@ import { setLabelBehaviour } from "@smui/common/dom/LabelContext";
     {behaviour === 'card:action' ? 'mdc-card__action--button' : ''}
     {behaviour === 'dialog:action' ? 'mdc-dialog__button' : ''}
     {behaviour === 'top-app-bar:navigation' ? 'mdc-top-app-bar__navigation-icon' : ''}
-    {behaviour === 'top-app-bar:action' ? 'mdc-top-app-bar__action-item' : ''}
-    {behaviour === 'snackbar' ? 'mdc-snackbar__action' : ''}"
+    {behaviour === 'top-app-bar:action' ? 'mdc-top-app-bar__action-item' : ''}"
   {style}
   on:domEvent={forwardDOMEvents}>
   {#if ripple}
-    <Ripple3 rippleElement="mdc-button__ripple" target={dom}></Ripple3>
+    <Ripple3 rippleElement="mdc-button__ripple" target={dom} />
   {/if}
   <slot />
 </svelte:component>

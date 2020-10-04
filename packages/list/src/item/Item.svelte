@@ -39,7 +39,10 @@
   export let href: string = undefined;
   export let value: any = undefined;
 
-  const dispatch = createEventDispatcher();
+  const dispatch = createEventDispatcher<{
+    opened: undefined,
+    closed: MDCDialogCloseEvent
+  }>();
 
   let selectable: Selectable;
 

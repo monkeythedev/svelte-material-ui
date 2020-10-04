@@ -10,5 +10,4 @@ export type LabelBehaviour =
   | "fab"
   | "chip"
   | "tab"
-  | "image-list"
-  | "snackbar";
+  | "image-list";

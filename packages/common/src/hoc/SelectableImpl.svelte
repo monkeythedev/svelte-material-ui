@@ -12,7 +12,12 @@
   export let value: any = null;
   export let tabindex: number = null;
 
-  const dispatch = createEventDispatcher();
+  const dispatch = createEventDispatcher<{
+    change: {
+      value: typeof value,
+      selected: boolean,
+    }
+  }>();
 
   const selectableListContext$ = getSelectableListContext();
 

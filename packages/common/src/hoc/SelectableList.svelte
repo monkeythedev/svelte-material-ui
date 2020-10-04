@@ -16,7 +16,12 @@
 
   let mounted = false;
 
-  const dispatch = createEventDispatcher();
+  const dispatch = createEventDispatcher<{
+    change: {
+      value: typeof value,
+      selectedItemsIndex: number | number[]
+    }
+  }>();
 
   const items = new Set<SelectableContext>();
 

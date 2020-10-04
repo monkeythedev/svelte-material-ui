@@ -29,7 +29,9 @@
   export let wrapFocus: boolean = false;
   export let fullWidth: boolean = false;
 
-  const dispatch = createEventDispatcher();
+  const dispatch = createEventDispatcher<{
+    selected: { item: Element; index: number };
+  }>();
   const context$ = createMenuContext({});
 
   const shouldCreateMDCMenuInstance = getCreateMDCMenuIstance();
@@ -67,7 +69,7 @@
   });
 
   function handleSelected(
-    event: CustomEvent<{ detail: { item: Element; index: number } }>
+    event: CustomEvent<{ item: Element; index: number }>
   ) {
     dispatch("selected", event.detail);
     updateOpen();

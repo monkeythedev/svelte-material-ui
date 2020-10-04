@@ -64,7 +64,10 @@ const essentialDomEvents: DOMEvents[] = [
 ]
 
 export function DOMEventsForwarder() {
-  const dispatch = createEventDispatcher();
+  const dispatch = createEventDispatcher<{
+    domEvent: Event;
+    [event: string]: Event;
+  }>();
 
   return function forwardAllDOMEvents(
     node: HTMLElement

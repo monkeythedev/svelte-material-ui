@@ -6,7 +6,9 @@
 
   export let color: "primary" = null;
 
-  const dispatch = createEventDispatcher();
+  const dispatch = createEventDispatcher<{
+    click: undefined;
+  }>();
 
   let clicked = 0;
   let exited = false;
