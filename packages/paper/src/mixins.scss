@@ -1,0 +1,92 @@
+@use "@material/feature-targeting";
+@use "@material/elevation";
+@use "@material/shape";
+@use "@material/theme";
+@use "@material/typography";
+@use "./variables";
+
+@mixin smui-paper-core-styles($query: feature-targeting.all()) {
+  $feat-color: feature-targeting.create-target($query, color);
+  $feat-structure: feature-targeting.create-target($query, structure);
+
+  .smui-paper {
+    @include smui-paper-fill-color(surface, $query);
+    @include smui-paper-ink-color(on-surface, $query);
+
+    padding: variables.$smui-paper-padding;
+
+    &.smui-paper--rounded {
+      @include smui-paper-shape-radius(medium, $query: $query);
+    }
+
+    &.smui-paper--color-primary {
+      @include smui-paper-elevation(primary, $query: $query);
+
+      @include smui-paper-fill-color(primary, $query);
+      @include smui-paper-ink-color(on-primary, $query);
+    }
+    &.smui-paper--color-secondary {
+      @include smui-paper-elevation(secondary, $query: $query);
+
+      @include smui-paper-fill-color(secondary, $query);
+      @include smui-paper-ink-color(on-secondary, $query);
+    }
+
+    .smui-paper__title {
+      @include typography.typography(headline5, $query);
+      margin-top: 0;
+      margin-bottom: .4rem;
+    }
+
+    .smui-paper__subtitle {
+      @include typography.typography(subtitle1, $query);
+      margin-top: -.2rem;
+      margin-bottom: .4rem;
+    }
+
+    .smui-paper__content {
+      @include typography.typography(body1, $query);
+    }
+  }
+}
+
+@mixin smui-paper-shape-radius($radius, $rtl-reflexive: false, $query: feature-targeting.all()) {
+  @include shape.radius(
+    $radius,
+    $rtl-reflexive,
+    $query: $query
+  );
+
+  // &.smui-paper--dense {
+  //   @include shape.radius(
+  //     $radius,
+  //     $rtl-reflexive,
+  //     $query: $query
+  //   );
+  // }
+}
+
+@mixin smui-paper-ink-color($color, $query: feature-targeting.all()) {
+  $feat-color: feature-targeting.create-target($query, color);
+
+  @include feature-targeting.targets($feat-color) {
+    @include theme.prop(color, $color);
+  }
+}
+
+@mixin smui-paper-fill-color($color, $query: feature-targeting.all()) {
+  $feat-color: feature-targeting.create-target($query, color);
+
+  @include feature-targeting.targets($feat-color) {
+    //@include theme.property(background-color, $color); broken  https://github.com/material-components/material-components-web/issues/6158
+    @include theme.prop(background-color, $color);
+  }
+}
+
+@mixin smui-paper-elevation($color: elevation.$baseline-color, $query: feature-targeting.all()) {
+  @for $i from 0 through 24 {
+    &.mdc-elevation--z#{$i} {
+      @include elevation.elevation($i, $color, $query: $query);
+    }
+  }
+}

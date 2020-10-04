@@ -7,19 +7,19 @@
   export let style: string = undefined;
   export let id: string = undefined;
 
-  export let dom: HTMLDivElement = null;
+  export let dom: HTMLHeadingElement = null;
 
   import { BaseProps } from "@smui/common/dom/Props";
   export let props: BaseProps = {};
   //#endregion
 </script>
 
-<div
+<h6
   bind:this={dom}
   {...props}
   {id}
-  class="smui-card__content {className}"
+  class="smui-paper__subtitle {className}"
   {style}
   use:forwardDOMEvents>
   <slot />
-</div>
+</h6>

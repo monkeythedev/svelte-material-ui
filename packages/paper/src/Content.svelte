@@ -18,7 +18,7 @@
   bind:this={dom}
   {...props}
   {id}
-  class="smui-card__content {className}"
+  class="smui-paper__content {className}"
   {style}
   use:forwardDOMEvents>
   <slot />
