@@ -28,8 +28,6 @@
   } from "@smui/menu/src/MenuContext";
   import { createMenuSurfaceContext } from "./MenuSurfaceContext";
 
-  let isStatic: boolean = false as boolean;
-  export { isStatic as static };
   export let fixed: boolean = false;
   export let open: boolean = false;
   export let quickOpen: boolean = false;
@@ -95,11 +93,7 @@
 
   function updateOpen() {
     if (menuSurface) {
-      if (isStatic) {
-        open = true;
-      } else {
-        open = menuSurface.isOpen();
-      }
+      open = menuSurface.isOpen();
     }
   }
 
@@ -145,8 +139,7 @@
   {id}
   class="mdc-menu-surface {className}
     {fixed ? 'mdc-menu-surface--fixed' : ''}
-    {isStatic ? 'mdc-menu-surface--open' : ''}
-    {isStatic ? 'smui-menu-surface--static' : ''}
+    {open ? 'mdc-menu-surface--open' : ''}
     {fullWidth ? 'mdc-menu-surface--fullwidth' : ''}"
   {style}
   use:forwardDOMEvents>

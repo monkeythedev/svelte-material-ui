@@ -1,12 +1,23 @@
 <script lang="ts">
-  import { MenuSurface } from "@smui/menu-surface";
-  import {List, Item, Separator, Text} from '@smui/list';
+  import { Menu } from "@smui/menu";
+  import {
+    List,
+    Item,
+    Separator,
+    Text,
+  } from "@smui/list";
 
-  let clicked = "";
+  export let clicked: string;
 </script>
 
+<style>
+  :global(.static-menu) {
+    position: unset;
+  }
+</style>
+
 <div>
-  <MenuSurface class="non-abosulte-menu-surface" open>
+  <Menu class="static-menu" open>
     <List>
       <Item on:click={() => (clicked = 'Cut')}>
         <Text>Cut</Text>
@@ -22,7 +33,5 @@
         <Text>Delete</Text>
       </Item>
     </List>
-  </MenuSurface>
+  </Menu>
 </div>
-
-<pre class="status">Clicked: {clicked}</pre>

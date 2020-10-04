@@ -11,7 +11,7 @@
   export let style: string = undefined;
   export let id: string = undefined
 
-  import { ItemRole, ListItemDOMElement } from "./types";
+  import { ItemRole, ListItemDOMElement } from "../types";
   export let dom: ListItemDOMElement = null;
 
   import { BaseProps } from "@smui/common/dom/Props";
@@ -28,8 +28,8 @@
   import { RippleProps } from "@smui/ripple/src";
   import { Li, A, Span } from "@smui/common/dom";
   import { RippleLi, RippleA } from "@smui/ripple/dom";
-  import { getListContext } from "./ListContext";
-  import { createItemContext, ItemContext } from "./ItemContext";
+  import { getListContext } from "../";
+  import { createItemContext, ItemContext, getIsSelectionGroup } from "./";
   import { getMenuSurfaceContext } from "@smui/menu-surface/src/MenuSurfaceContext";
   import { Selectable, OnSelectableChange } from "@smui/common/hoc";
   //#endregion
@@ -47,6 +47,8 @@
   const dispatch = createEventDispatcher();
 
   let selectable: Selectable;
+
+  const isSelectionGroup = getIsSelectionGroup();
 
   const listContext$ = getListContext();
   const menuSurfaceContext$ = getMenuSurfaceContext();
@@ -143,7 +145,7 @@
     {id}
     class="mdc-list-item {className}
       {disabled ? 'mdc-list-item--disabled' : ''}
-      {role === 'option' && selected ? 'mdc-list-item--selected' : ''}
+      {(role === 'option' || (role === 'menuitem' && isSelectionGroup)) && selected ? 'mdc-list-item--selected' : ''}
       {role === 'menuitem' && selected ? 'mdc-menu-item--selected' : ''}"
     {style}
     on:domEvent={forwardDOMEvents}

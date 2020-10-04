@@ -1,4 +1,4 @@
-import { ItemContext } from "./ItemContext";
+import { ItemContext } from "./item";
 import { createContextBuilder } from "@smui/common";
 import { MDCList } from '@material/list'
 import { SelectableListContext } from "@smui/common/hoc";

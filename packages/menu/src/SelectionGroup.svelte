@@ -11,17 +11,13 @@
   export let props: BaseProps = {};
 
   // Selection group
-  export let list$class: string = "";
-  export let list$style: string = "";
+  import { setIsSelectionGroup } from "@smui/list";
+
+  setIsSelectionGroup(true);
 </script>
 
-<li
-  {...props}
-  class={className}
-  {style}
-  bind:this={dom}
-  use:forwardDOMEvents>
-  <ul class="mdc-menu__selection-group {list$class}" style={list$style}>
+<li {...props} class={className} {style} bind:this={dom} use:forwardDOMEvents>
+  <ul class="mdc-menu__selection-group">
     <slot />
   </ul>
 </li>

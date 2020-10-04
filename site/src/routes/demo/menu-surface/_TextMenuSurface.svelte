@@ -3,7 +3,7 @@
 </script>
 
 <div>
-  <MenuSurface static style="max-width: 350px;">
+  <MenuSurface class="non-abosulte-menu-surface" open style="max-width: 350px;">
     <p style="margin: 1em;">
       This is a menu surface. It's similar to a menu. It is more versatile, but
       requires more configuration. It can contain more than just a list, like

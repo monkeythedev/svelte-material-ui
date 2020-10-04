@@ -23,11 +23,9 @@
   import { MDCMenuDistance } from "@material/menu-surface";
   import { createMenuContext, getCreateMDCMenuIstance } from "./MenuContext";
 
-  let isStatic: boolean = false;
-  export { isStatic as static };
   export let open: boolean = false;
   export let quickOpen: boolean = false;
-  export let anchorCorner: Corner = null;
+  export let anchorCorner: Corner = undefined;
   export let wrapFocus: boolean = false;
   export let fullWidth: boolean = false;
 
@@ -47,10 +45,6 @@
   });
 
   $: if (menu) {
-    if (isStatic) {
-      open = true;
-    }
-
     if (menu.open !== open) {
       menu.open = open;
     }
@@ -142,7 +136,6 @@
   props={{ ...props }}
   class="mdc-menu {className}"
   {style}
-  static={isStatic}
   {open}
   {quickOpen}
   {anchorCorner}

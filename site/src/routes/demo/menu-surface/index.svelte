@@ -15,7 +15,7 @@
 
   <TextMenuSurface />
   <ListMenuSurface />
-  <AnchorMenuSurface />
+  <AnchorMenuSurface /> 
   <!-- <ManualAnchorMenuSurface /> seems not worthy to expose this API -->
   
   

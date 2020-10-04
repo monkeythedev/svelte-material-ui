@@ -1,5 +1,4 @@
 import MenuSurface from "./MenuSurface.svelte";
-import Anchor from "./Anchor";
 
-export { MenuSurface, Anchor };
+export { MenuSurface };
 export * from "./MenuSurface.svelte";

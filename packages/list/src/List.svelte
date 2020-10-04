@@ -19,7 +19,7 @@
   import Nav from "@smui/common/dom/Nav.svelte";
   import Ul from "@smui/common/dom/Ul.svelte";
   import { createListContext, getListContext, ListRole } from "./ListContext";
-  import { ItemContext } from "./ItemContext";
+  import { ItemContext } from "./item";
   import { getMenuContext } from "@smui/menu/src/MenuContext";
   import { getMenuSurfaceContext } from "@smui/menu-surface/src/MenuSurfaceContext";
   import { getDrawerContext } from "@smui/drawer/src/DrawerContext";
