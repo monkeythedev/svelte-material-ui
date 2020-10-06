@@ -1,6 +1,6 @@
 <script lang="ts">
   import { createEventDispatcher, onMount } from "svelte";
-  import { Use } from "../hooks";
+  import { Use, UseState } from "../hooks";
   import { arrEquals, memo } from "../utils";
   import {
     SelectableContext,
@@ -10,17 +10,15 @@
   import { OnSelectableListChange } from "./types";
   import { initTabIndex } from "./initTabIndex";
 
-  export let value: any = null;
+  export let value: any = undefined;
   export let selectionType: SelectionType = "multi";
-  export let indexHasValues: boolean = null;
-
-  let mounted = false;
+  export let indexHasValues: boolean = undefined;
 
   const dispatch = createEventDispatcher<{
     change: {
-      value: typeof value,
-      selectedItemsIndex: number | number[]
-    }
+      value: typeof value;
+      selectedItemsIndex: number | number[];
+    };
   }>();
 
   const items = new Set<SelectableContext>();
@@ -74,17 +72,14 @@
 
   $: $context$ = { ...$context$, value };
 
-  onMount(() => {
-    mounted = true;
-  });
-
   const valueMemo = memo(value);
-  // React to value changes
-  $: if (mounted && value !== valueMemo.val) {
-    handleValueChange();
-  }
 
-  function useSyncValueAndChildren() {
+  function init() {
+    if (shouldUseIndexHasValues()) {
+      let index = 0;
+      items.forEach((item) => item.setValue(index++));
+    }
+
     if (value == null) {
       updateValueFromChildren();
     } else {
@@ -93,7 +88,7 @@
   }
 
   function updateValueFromChildren() {
-    const selectedItems = getSelectedItems().map(item => item.value);
+    const selectedItems = getSelectedItems().map((item) => item.value);
 
     if (selectedItems.length) {
       if (selectionType === "single") {
@@ -168,13 +163,13 @@
           }
         })
         .map(({ item, index }) => index);
-      
+
       let tabindexSetted = false;
       Array.from(items).forEach((item, index) => {
         if (!tabindexSetted && selectedItemsIndex.includes(index)) {
-          item.setTabIndex(0)
+          item.setTabIndex(0);
         } else {
-          item.setTabIndex(-1)
+          item.setTabIndex(-1);
         }
       });
 
@@ -199,7 +194,7 @@
 
   function setResetValue() {
     if (selectionType === "single") {
-      setValue(value == null && !shouldUseIndexHasValues() ? null : -1);
+      setValue(null);
     } else if (selectionType === "multi") {
       setValue([]);
     }
@@ -207,9 +202,9 @@
 
   function isResetValue() {
     if (selectionType === "single") {
-      return value == null || value === -1;
+      return value === null;
     } else if (selectionType === "multi") {
-      return value == null || value.length === 0;
+      return value === null || value.length === 0;
     }
   }
 
@@ -261,9 +256,14 @@
   export function unselectAll() {
     items.forEach((item) => item.setSelected(false));
   }
+
+  export function getItems() {
+    return items;
+  }
 </script>
 
-<Use effect hook={useSyncValueAndChildren} />
+<Use effect hook={init} />
 <Use effect hook={() => initTabIndex(selectionType, items)} />
+<UseState {value} onUpdate={handleValueChange} />
 
 <slot />

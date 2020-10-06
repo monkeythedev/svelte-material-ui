@@ -9,8 +9,8 @@
 
   export let selected: boolean = false;
   export let disabled: boolean = false;
-  export let value: any = null;
-  export let tabindex: number = null;
+  export let value: any = undefined;
+  export let tabindex: number = undefined;
 
   const dispatch = createEventDispatcher<{
     change: {
@@ -73,8 +73,12 @@
     }
   }
 
-  export function setValue(_value: any) {
-    if (value !== _value) value = _value;
+  export function setValue(newValue: any) {
+    if (value !== newValue) {
+      value = newValue;
+      //@ts-ignore
+      context.value = newValue;
+    }
   }
 
   export function notifyFocus() {

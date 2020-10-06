@@ -29,6 +29,8 @@
 
 <svelte:options immutable={true} />
 
+<Use effect once hook={init} when={!!dom} />
+
 <UseRipple
   bind:target
   bind:unbounded
@@ -36,8 +38,6 @@
   bind:classForward
   bind:keyboardEvents
   bind:class={className} />
-
-<Use effect once hook={init} when={!!dom} />
 
 {#if !rippleElement}<span bind:this={dom} class="smui-ripple-ghost" />{/if}
 {#if target}

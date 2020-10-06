@@ -12,7 +12,7 @@
   export let id: string = undefined;
 
   import { ItemRole, ListItemDOMElement } from "../types";
-  export let dom: ListItemDOMElement = null;
+  export let dom: ListItemDOMElement = undefined;
 
   import { BaseProps } from "@smui/common/dom/Props";
   export let props: BaseProps = {};
@@ -117,8 +117,11 @@
     //     : null,
     role,
   };
+
 </script>
 
+
+          
 <Selectable
   bind:this={selectable}
   bind:value
@@ -137,6 +140,7 @@
     {style}
     on:domEvent={forwardDOMEvents}
     on:focus={onFocus}>
+    
     {#if ripple}
       <Ripple3
         rippleElement="mdc-list-item__ripple"

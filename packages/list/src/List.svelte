@@ -7,7 +7,7 @@
   export let style: string = "";
   export let id: string = "";
 
-  export let dom: HTMLDivElement | HTMLUListElement = null;
+  export let dom: HTMLDivElement | HTMLUListElement = undefined;
   import { BaseProps } from "@smui/common/dom/Props";
   export let props: BaseProps = {};
   //#endregion
@@ -47,9 +47,9 @@
 
   const dispatch = createEventDispatcher<{
     change: {
-      value: typeof value,
-      dom: typeof dom
-    }
+      value: typeof value;
+      dom: typeof dom;
+    };
   }>();
 
   //#region local varaibles
@@ -93,14 +93,9 @@
   }
 
   // Try to use index as values if no items has value or indexHasValues is true
-  $: if (list && indexHasValues !== false && hasInteractiveItems()) {
-    if (shouldUseIndexHasValues()) {
-      Array.from(items).forEach((item, index) => item.setValue(index));
-      if (value == null) {
-        list.selectedIndex = -1;
-        selectableList.setValue(-1);
-      }
-    }
+  $: if (list && value == null) {
+    list.selectedIndex = -1;
+    selectableList.setValue(-1);
   }
 
   //#endregion
@@ -153,18 +148,6 @@
     list && list.destroy();
   });
 
-  function shouldUseIndexHasValues() {
-    return indexHasValues || !someItemsHasValue();
-  }
-
-  function someItemsHasValue() {
-    return Array.from(items).some((item) => item.value != null);
-  }
-
-  function hasInteractiveItems() {
-    return !nonInteractive && !!items.size;
-  }
-
   function handleAction(event: MDCListActionEvent) {
     const item = Array.from(items)[event.detail.index];
 
@@ -215,18 +198,7 @@
   on:change={handleChange}>
   <svelte:component
     this={component}
-    bind:dom
-    {props}
-    {id}
-    class="mdc-list {className}
-      {nonInteractive ? 'mdc-list--non-interactive' : ''}
-      {dense ? 'mdc-list--dense' : ''}
-      {avatarList ? 'mdc-list--avatar-list' : ''}
-      {twoLine ? 'mdc-list--two-line' : ''}
-      {threeLine && !twoLine ? 'smui-list--three-line' : ''}
-      {orientation === 'horizontal' ? 'smui-list--horizontal' : ''}"
-    {style}
-    on:domEvent={forwardDOMEvents}>
+    bind:dom>
     <slot />
   </svelte:component>
 </SelectableList>

@@ -1,3 +1,5 @@
+<script>
+</script>
 <svelte:head>
   <title>Svelte Material UI</title>
 </svelte:head>
