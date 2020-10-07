@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { createEventDispatcher, onMount } from "svelte";
+  import { createEventDispatcher, tick } from "svelte";
   import { Use, UseState } from "../hooks";
   import { arrEquals, memo } from "../utils";
   import {
@@ -75,16 +75,18 @@
   const valueMemo = memo(value);
 
   function init() {
-    if (shouldUseIndexHasValues()) {
-      let index = 0;
-      items.forEach((item) => item.setValue(index++));
-    }
+    tick().then(() => {
+      if (shouldUseIndexHasValues()) {
+        let index = 0;
+        items.forEach((item) => item.setValue(index++));
+      }
 
-    if (value == null) {
-      updateValueFromChildren();
-    } else {
-      updateChildrenWithValue();
-    }
+      if (value == null) {
+        updateValueFromChildren();
+      } else {
+        updateChildrenWithValue();
+      }
+    });
   }
 
   function updateValueFromChildren() {
