@@ -27,6 +27,7 @@
   import { createItemContext, ItemContext, getIsSelectionGroup } from "./";
   import { getMenuSurfaceContext } from "@smui/menu-surface/src/MenuSurfaceContext";
   import { Selectable, OnSelectableChange } from "@smui/common/hoc";
+  import { MDCDialogCloseEvent } from "@material/dialog";
   //#endregion
 
   export let ripple: boolean = true;
@@ -40,8 +41,9 @@
   export let value: any = undefined;
 
   const dispatch = createEventDispatcher<{
-    opened: undefined,
-    closed: MDCDialogCloseEvent
+    opened: undefined;
+    closed: MDCDialogCloseEvent;
+    selected: ListItemDOMElement;
   }>();
 
   let selectable: Selectable;
@@ -67,8 +69,6 @@
   }
 
   $: if (disabled && selected) selected = false;
-
-  let component: typeof Li | typeof A | typeof Span;
 
   const context = {} as ItemContext;
   $: $context$ = Object.assign(context, {
@@ -117,11 +117,8 @@
     //     : null,
     role,
   };
-
 </script>
 
-
-          
 <Selectable
   bind:this={selectable}
   bind:value
@@ -140,7 +137,6 @@
     {style}
     on:domEvent={forwardDOMEvents}
     on:focus={onFocus}>
-    
     {#if ripple}
       <Ripple3
         rippleElement="mdc-list-item__ripple"

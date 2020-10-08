@@ -29,6 +29,7 @@
     OnSelectableListChange,
   } from "@smui/common/hoc";
   import { getDialogContext } from "@smui/dialog";
+  import { setDisableCheckboxMDCIstance } from "@smui/checkbox";
   //#endregion
 
   //#region exports
@@ -71,6 +72,8 @@
   const menuSurfaceContext$ = getMenuSurfaceContext();
   const drawerContext$ = getDrawerContext();
   const dialogContext$ = getDialogContext();
+
+  setDisableCheckboxMDCIstance(true);
 
   const context$ = createListContext({
     registerItem(item: ItemContext) {
@@ -198,7 +201,18 @@
   on:change={handleChange}>
   <svelte:component
     this={component}
-    bind:dom>
+    bind:dom
+    {props}
+    {id}
+    class="mdc-list {className}
+      {nonInteractive ? 'mdc-list--non-interactive' : ''}
+      {dense ? 'mdc-list--dense' : ''}
+      {avatarList ? 'mdc-list--avatar-list' : ''}
+      {twoLine ? 'mdc-list--two-line' : ''}
+      {threeLine && !twoLine ? 'smui-list--three-line' : ''}
+      {orientation === 'horizontal' ? 'smui-list--horizontal' : ''}"
+    {style}
+    on:domEvent={forwardDOMEvents}>
     <slot />
   </svelte:component>
 </SelectableList>

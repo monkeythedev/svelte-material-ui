@@ -39,9 +39,6 @@
       items.delete(item);
     },
     notifySelected(itemSelected: SelectableContext) {
-      const listItems = Array.from(items);
-      const index = listItems.indexOf(itemSelected);
-
       if (selectionType === "single") {
         items.forEach((item) => {
           if (item !== itemSelected) {
@@ -86,6 +83,8 @@
       } else {
         updateChildrenWithValue();
       }
+
+      initTabIndex(selectionType, items);
     });
   }
 
@@ -146,7 +145,7 @@
       }
 
       if (isResetValue()) {
-        deselectAll();
+        items.forEach((item) => item.setSelected(false));
       } else {
         if (!isValueSynched()) {
           updateChildrenWithValue();
@@ -227,16 +226,8 @@
     }
   }
 
-  function deselectAll() {
-    items.forEach((item) => item.setSelected(false));
-    if (selectionType === "single") {
-      setResetValue();
-    } else if (selectionType === "multi") {
-      setResetValue();
-    }
-  }
-
   function _setValue(_value: any) {
+    // Maybe in can be deleted, hooks will take care of comparing with previous value
     if (valueMemo.val !== _value && selectionType) {
       value = _value;
       valueMemo.val = value;
@@ -252,11 +243,18 @@
   }
 
   export function selectAll() {
-    items.forEach((item) => item.setSelected(true));
+    if (selectionType === "multi") {
+      const values = Array.from(items).map(item => item.value);
+      value = values;
+    }
   }
 
   export function unselectAll() {
-    items.forEach((item) => item.setSelected(false));
+    if (selectionType === "single") {
+      setResetValue();
+    } else if (selectionType === "multi") {
+      setResetValue();
+    }
   }
 
   export function getItems() {
@@ -265,7 +263,6 @@
 </script>
 
 <Use effect hook={init} />
-<Use effect hook={() => initTabIndex(selectionType, items)} />
 <UseState {value} onUpdate={handleValueChange} />
 
 <slot />

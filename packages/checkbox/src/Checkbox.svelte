@@ -17,11 +17,8 @@
   //#region  imports
   import { MDCCheckbox } from "@material/checkbox";
   import { onMount, onDestroy } from "svelte";
-  import { getListContext } from "@smui/list";
-  import { CheckboxContext, getCheckboxBehaviour } from "./CheckboxContext";
+  import { CheckboxContext, getCheckboxBehaviour, getDisableCheckboxMDCIstance } from "./CheckboxContext";
   import { getFormFieldContext } from "@smui/form-field/src/FormFieldContext";
-  import { getDataTableContext } from "@smui/data-table/src/DataTableContext";
-  import { getSelectableContext } from "@smui/common/hoc";
   import { Selectable } from "@smui/common/src/hoc";
   //#endregion
 
@@ -41,11 +38,8 @@
 
   //#region Init contexts
   //const itemContext$ = getItemContext();
-  const listContext$ = getListContext();
   const formFieldContext$ = getFormFieldContext();
-  const dataTableContext$ = getDataTableContext();
-
-  const disableMDC = listContext$ || dataTableContext$;
+  const disableMDC = getDisableCheckboxMDCIstance();
 
   const context = {} as CheckboxContext;
   $: Object.assign(context, {

@@ -18,8 +18,7 @@
     MDCDataTable,
     MDCDataTableRowSelectionChangedEventDetail,
   } from "@material/data-table";
-  import { onMount, onDestroy, getContext, setContext } from "svelte";
-  import { createDataTableContext } from "./DataTableContext";
+  import { onMount, onDestroy } from "svelte";
   import { SelectableList } from "@smui/common/src/hoc";
   import { setDisableCheckboxMDCIstance } from "@smui/checkbox";
   import { getDialogContext } from "@smui/dialog";
@@ -47,6 +46,9 @@
   $: if (dataTable && $dialogContext$?.isOpen) dataTable.layout();
 
   onDestroy(() => {
+    (dataTable as any).headerRowCheckbox = {destroy(){}}; // Workaround for MDCDataTable bug on destroy
+    (dataTable as any).rowCheckboxList = []; // Workaround for MDCDataTable bug on destroy
+
     dataTable && dataTable.destroy();
   });
 

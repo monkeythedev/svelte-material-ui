@@ -18,7 +18,7 @@
 
   function onComponentUpdate(selected: boolean, value: any) {
     if ($parentContext$.selected !== selected) {
-      // $parentContext$?.setSelected(selected);
+      $parentContext$?.setSelected(selected);
     }
 
     if ($parentContext$.value !== value) {
