@@ -124,6 +124,10 @@
 
     ripple.unbounded = unbounded;
   }
+
+  export function reinstantiate() {
+    init();
+  }
 </script>
 
 <Use once effect hook={init} when={!!target}></Use>

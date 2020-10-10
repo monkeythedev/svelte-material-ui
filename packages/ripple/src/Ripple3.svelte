@@ -13,11 +13,16 @@
   export { className as class };
 
   let dom: HTMLSpanElement;
+  let rippleInstance: UseRipple;
 
   function init() {
     if (!target) {
       target = dom.parentElement;
     }
+  }
+
+  export function reinstantiate() {
+    rippleInstance.reinstantiate();
   }
 </script>
 
@@ -32,6 +37,7 @@
 <Use effect once hook={init} when={!!dom} />
 
 <UseRipple
+  bind:this={rippleInstance}
   bind:target
   bind:unbounded
   bind:color

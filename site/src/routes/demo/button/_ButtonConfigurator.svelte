@@ -67,7 +67,7 @@
       {variant}
       density={getDensity(density)}
       href={link ? 'javascript:void(0)' : null}>
-      <Label>Default</Label>
+      <Label>Button</Label>
     </Button>
   </div>
   <div slot="options-sidebar" class="options-sidebar">

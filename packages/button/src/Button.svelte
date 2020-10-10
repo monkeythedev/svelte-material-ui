@@ -24,6 +24,7 @@
   import { getButtonBehaviour } from "./ButtonContextProps";
   import { Ripple3 } from "@smui/ripple";
   import { setLabelBehaviour } from "@smui/common/dom";
+import { UseState } from "@smui/common/hooks";
 
   export let ripple: boolean = true;
   export let color: "primary" | "secondary" = "primary";
@@ -35,6 +36,8 @@
   export let disabled: boolean = false;
   export let target: string = null;
   export let density: number = undefined;
+
+  let rippleInstance: Ripple3;
 
   $: {
     if (density > 3) density = 3;
@@ -58,9 +61,17 @@
 
   setLabelBehaviour("button");
   setContext("SMUI:icon:context", "button");
+
+  function onVariantUpdated() {
+    if (rippleInstance) {
+      rippleInstance.reinstantiate();
+    }
+  }
 </script>
 
 <svelte:options immutable={true} />
+
+<UseState value={variant} onUpdate={onVariantUpdated}></UseState>
 
 <svelte:component
   this={href == null || disabled ? Button : A}
@@ -79,7 +90,7 @@
   {style}
   on:domEvent={forwardDOMEvents}>
   {#if ripple}
-    <Ripple3 rippleElement="mdc-button__ripple" target={dom} />
+    <Ripple3 bind:this={rippleInstance} rippleElement="mdc-button__ripple" target={dom} />
   {/if}
   <slot />
 </svelte:component>
