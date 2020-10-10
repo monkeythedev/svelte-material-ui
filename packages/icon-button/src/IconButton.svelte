@@ -14,7 +14,7 @@
   //#endregion
 
   // IconButton
-  import { Button, A, setIconStyle } from "@smui/common/dom";
+  import { Button, A, setIconBehaviour } from "@smui/common/dom";
   import { getIconButtonBehaviour } from "./IconButtonContextProps";
   import { UseRipple } from "@smui/ripple";
 
@@ -28,7 +28,7 @@
 
   const behaviour = getIconButtonBehaviour();
 
-  setIconStyle("icon-button");
+  setIconBehaviour("icon-button");
 
   $: props = {
     ...props,

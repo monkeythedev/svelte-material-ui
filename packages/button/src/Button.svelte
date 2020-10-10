@@ -1,6 +1,7 @@
 <script lang="ts" context="module">
   import { A, Button } from "@smui/common/dom";
   export type ButtonComponent = typeof Button | typeof A;
+  export type ButtonVariant = "raised" | "unelevated" | "outlined";
 </script>
 
 <script lang="ts">
@@ -22,18 +23,23 @@
   import { setContext } from "svelte";
   import { getButtonBehaviour } from "./ButtonContextProps";
   import { Ripple3 } from "@smui/ripple";
-  import { setLabelBehaviour } from "@smui/common/dom/LabelContext";
+  import { setLabelBehaviour } from "@smui/common/dom";
 
   export let ripple: boolean = true;
   export let color: "primary" | "secondary" = "primary";
-  export let variant: "raised" | "unelevated" | "outlined" = null;
-  export let dense: boolean = false;
+  export let variant: ButtonVariant = undefined;
   export let href: string = null;
   export let action: string = "close";
   let defaultAction: boolean = false;
   export { defaultAction as default };
   export let disabled: boolean = false;
   export let target: string = null;
+  export let density: number = undefined;
+
+  $: {
+    if (density > 3) density = 3;
+    else if (density < 0) density = 0;
+  }
 
   let behaviour = getButtonBehaviour();
 
@@ -57,19 +63,19 @@
 <svelte:options immutable={true} />
 
 <svelte:component
-  this={href == null ? Button : A}
+  this={href == null || disabled ? Button : A}
   bind:dom
   props={{ ...props, ...actionProps, disabled, target, href }}
   {id}
   class="mdc-button {className}
     {variant ? `mdc-button--${variant}` : ''}
-    {dense ? 'mdc-button--dense' : ''}
     {color === 'secondary' ? 'smui-button--color-secondary' : ''}
     {behaviour === 'card:action' ? 'mdc-card__action' : ''}
     {behaviour === 'card:action' ? 'mdc-card__action--button' : ''}
     {behaviour === 'dialog:action' ? 'mdc-dialog__button' : ''}
     {behaviour === 'top-app-bar:navigation' ? 'mdc-top-app-bar__navigation-icon' : ''}
-    {behaviour === 'top-app-bar:action' ? 'mdc-top-app-bar__action-item' : ''}"
+    {behaviour === 'top-app-bar:action' ? 'mdc-top-app-bar__action-item' : ''}
+    {density != null ? `smui-button--dense--${density}` : ''}"
   {style}
   on:domEvent={forwardDOMEvents}>
   {#if ripple}

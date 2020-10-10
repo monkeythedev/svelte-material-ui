@@ -23,7 +23,7 @@
   import UseTextField from "./hooks/UseTextField.svelte";
   import { onMount } from "svelte";
   import { RippleProps, Ripple3 } from "@smui/ripple";
-  import ExtractNamedSlot from "@smui/common/src/components/ExtractNamedSlot.svelte";
+  import { ExtractNamedSlot } from "@smui/common/components";
 
   //#region UseTextField params
   export let ripple: boolean = true;

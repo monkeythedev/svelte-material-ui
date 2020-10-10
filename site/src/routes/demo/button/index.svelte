@@ -6,11 +6,10 @@
   import { Menu } from "@smui/menu";
   import { List, Item, Text, Separator } from "@smui/list";
   import { Corner } from "@smui/menu-surface";
-  import { A } from "@smui/common/dom";
-  import { IconButton } from "@smui/icon-button";
   import { Typography } from "@smui/typography";
-import SelectionGroup from "@smui/menu/src/SelectionGroup.svelte";
-import SelectionGroupIcon from "@smui/menu/src/SelectionGroupIcon.svelte";
+  import SelectionGroup from "@smui/menu/src/SelectionGroup.svelte";
+  import SelectionGroupIcon from "@smui/menu/src/SelectionGroupIcon.svelte";
+  import ButtonConfigurator from "./_ButtonConfigurator.svelte";
 
   let clicked = 0;
   let menu: Menu;
@@ -19,6 +18,9 @@ import SelectionGroupIcon from "@smui/menu/src/SelectionGroupIcon.svelte";
 
 <section>
   <Typography variant="headline2">Button</Typography>
+
+  <ButtonConfigurator />
+
   <div>
     <Button on:click={() => clicked++}>
       <Label>Default</Label>
@@ -211,7 +213,10 @@ import SelectionGroupIcon from "@smui/menu/src/SelectionGroupIcon.svelte";
           <Icon class="material-icons" style="margin: 0;">arrow_drop_down</Icon>
         </MenuButton>
 
-        <Menu bind:this={menu} anchorCorner={Corner.TOP_LEFT} on:selected={() => clicked++}>
+        <Menu
+          bind:this={menu}
+          anchorCorner={Corner.TOP_LEFT}
+          on:selected={() => clicked++}>
           <List>
             <Item>
               <Text>Thing 1</Text>
@@ -225,9 +230,7 @@ import SelectionGroupIcon from "@smui/menu/src/SelectionGroupIcon.svelte";
             </Item>
             <SelectionGroup>
               <Item>
-                <SelectionGroupIcon>
-                  check
-                </SelectionGroupIcon>
+                <SelectionGroupIcon>check</SelectionGroupIcon>
                 <Text>Thing 4</Text>
               </Item>
             </SelectionGroup>

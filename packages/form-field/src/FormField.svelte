@@ -23,16 +23,18 @@
   import { createFormFieldContext } from "./FormFieldContext";
 
   export let align: FormFieldLabelAlign = "start";
-  export let inputId = `SMUI-form-field-${counter}`;
+  export let inputId: string = `SMUI-form-field-${counter}`;
+  export let noWrap: boolean = false;
+  export let vertical: boolean = false;
+
   counter++;
 
-  const context$ = createFormFieldContext({
+  createFormFieldContext({
     inputId,
     setInput(input) {
       formField.input = input;
     },
   });
-  //setContext('SMUI:generic:input:props', {id: inputId});
 
   let formField: MDCFormField;
   onMount(() => {
@@ -44,17 +46,35 @@
   });
 </script>
 
+<style lang="scss">
+  .smui-form-field--vertical {
+    display: flex;
+    flex-direction: column;
+
+    &.mdc-form-field--align-end {
+      > label {
+        margin-left: 0;
+        margin-right: auto;
+      }
+    }
+  }
+</style>
+
 <div
   bind:this={dom}
   {...props}
   class="mdc-form-field {className}
-    {align === 'end' ? 'mdc-form-field--align-end' : ''}"
+    {align === 'end' ? 'mdc-form-field--align-end' : ''}
+    {noWrap ? 'mdc-form-field--nowrap' : ''}
+    {vertical ? 'smui-form-field--vertical' : ''}"
   {style}
   use:forwardDOMEvents>
   <slot />
-  <label for={inputId}>
-    <slot name="label" />
-  </label>
+  {#if $$slots.label}
+    <label for={inputId}>
+      <slot name="label" />
+    </label>
+  {/if}
 </div>
 
 <!-- <div

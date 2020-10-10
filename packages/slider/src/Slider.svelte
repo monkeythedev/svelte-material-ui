@@ -17,7 +17,7 @@
   import { onMount, onDestroy, getContext } from "svelte";
   import { getDialogContext } from "@smui/dialog";
   import { getFormFieldContext } from "@smui/form-field/src";
-import { Use } from "@smui/common/hooks";
+  import { Use } from "@smui/common/hooks";
 
   export let disabled: boolean = false;
   export let discrete: boolean = false;
@@ -34,8 +34,6 @@ import { Use } from "@smui/common/hooks";
   onMount(() => {
     slider = new MDCSlider(dom);
     slider.listen("MDCSlider:input", handleChange);
-
-    
   });
 
   $: if (slider) {
@@ -89,7 +87,13 @@ import { Use } from "@smui/common/hooks";
   $: props.tabindex = props.tabindex || 0;
 </script>
 
-<Use effect once hook={setFormFieldInput}></Use>
+<style>
+  .mdc-slider {
+    min-width: 200px;
+  }
+</style>
+
+<Use effect once hook={setFormFieldInput} />
 
 <div
   bind:this={dom}

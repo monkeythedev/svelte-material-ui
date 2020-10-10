@@ -5,33 +5,42 @@ const svelteConfig = require("./svelte.config");
 const DefinePlugin = require("webpack/lib/DefinePlugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin");
-const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
+const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
 
 const mode = process.env.NODE_ENV;
 const dev = mode === "development";
 
-const alias = { svelte: path.resolve("node_modules", "svelte"), src: path.resolve("./src") };
+const alias = {
+  svelte: path.resolve("node_modules", "svelte"),
+  src: path.resolve("./src"),
+};
 const extensions = [".ts", ".mjs", ".js", ".json", ".html"];
 const mainFields = ["svelte", "module", "browser", "main"];
 
 const cssOptions = {
-  sourceMap: dev
-}
+  sourceMap: dev,
+};
 
 const sassOptions = {
-  includePaths: [path.resolve("./src/styles/smui"), path.resolve("./node_modules")],
-  sourceMap: dev
+  includePaths: [
+    path.resolve("./src/styles/smui"),
+    path.resolve("./node_modules"),
+  ],
+  sourceMap: dev,
 };
 
 module.exports = {
   client: {
     entry: {
-      main: config.client.entry().main.replace(/\.js$/, ".ts")
+      main: config.client.entry().main.replace(/\.js$/, ".ts"),
     },
     output: config.client.output(),
-    resolve: { alias, extensions, mainFields, plugins: [
-      new TsconfigPathsPlugin()
-    ] },
+    resolve: {
+      alias,
+      extensions,
+      mainFields,
+      plugins: [new TsconfigPathsPlugin()],
+    },
     module: {
       rules: [
         {
@@ -39,9 +48,9 @@ module.exports = {
           use: {
             loader: "ts-loader",
             options: {
-              
-            }
-          }
+              allowTsInNodeModules: true,
+            },
+          },
         },
         {
           test: /\.(svelte)$/,
@@ -51,9 +60,9 @@ module.exports = {
               ...svelteConfig,
               dev,
               hydratable: true,
-              hotReload: false // pending https://github.com/sveltejs/svelte/issues/2377
-            }
-          }
+              hotReload: false, // pending https://github.com/sveltejs/svelte/issues/2377
+            },
+          },
         },
         {
           test: /module\.s?css$/,
@@ -64,19 +73,19 @@ module.exports = {
               loader: "css-loader",
               options: {
                 modules: {
-                  localIdentName: "[local]--[hash:base64:5]"
+                  localIdentName: "[local]--[hash:base64:5]",
                 },
                 esModule: true,
-                sourceMap: dev
-              }
+                sourceMap: dev,
+              },
             },
             {
               loader: "sass-loader",
               options: {
-                sassOptions
-              }
-            }
-          ]
+                sassOptions,
+              },
+            },
+          ],
         },
         {
           test: /\.s?css$/,
@@ -86,17 +95,17 @@ module.exports = {
             MiniCssExtractPlugin.loader,
             {
               loader: "css-loader",
-              options: cssOptions
+              options: cssOptions,
             },
             {
               loader: "sass-loader",
               options: {
-                sassOptions
-              }
-            }
-          ]
-        }
-      ]
+                sassOptions,
+              },
+            },
+          ],
+        },
+      ],
     },
     mode,
     plugins: [
@@ -104,11 +113,11 @@ module.exports = {
       // dev && new webpack.HotModuleReplacementPlugin(),
       new DefinePlugin({
         "process.browser": ~~true,
-        "process.env.NODE_ENV": JSON.stringify(mode)
+        "process.env.NODE_ENV": JSON.stringify(mode),
       }),
       new MiniCssExtractPlugin({
         filename: "[name].css",
-        chunkFilename: "[name].[id].css"
+        chunkFilename: "[name].[id].css",
       }),
       // new OptimizeCssAssetsPlugin({ Rompe i sourcemap
       //   assetNameRegExp: /\.css$/g,
@@ -120,18 +129,21 @@ module.exports = {
       //   sourceMap: dev
       // })
     ].filter(Boolean),
-    devtool: dev && "inline-source-map"
+    devtool: dev && "inline-source-map",
   },
 
   server: {
     entry: {
-      server: config.server.entry().server.replace(/\.js$/, ".ts")
+      server: config.server.entry().server.replace(/\.js$/, ".ts"),
     },
     output: config.server.output(),
     target: "node",
-    resolve: { alias, extensions, mainFields, plugins: [
-      new TsconfigPathsPlugin()
-    ] },
+    resolve: {
+      alias,
+      extensions,
+      mainFields,
+      plugins: [new TsconfigPathsPlugin()],
+    },
     externals: Object.keys(pkg.dependencies).concat("encoding"),
     module: {
       rules: [
@@ -140,8 +152,9 @@ module.exports = {
           use: {
             loader: "ts-loader",
             options: {
-            }
-          }
+              allowTsInNodeModules: true,
+            },
+          },
         },
         {
           test: /\.(svelte)$/,
@@ -151,9 +164,9 @@ module.exports = {
               ...svelteConfig,
               css: false,
               generate: "ssr",
-              dev
-            }
-          }
+              dev,
+            },
+          },
         },
         {
           test: /module\.s?css$/,
@@ -164,19 +177,19 @@ module.exports = {
               loader: "css-loader",
               options: {
                 modules: {
-                  localIdentName: "[local]--[hash:base64:5]"
+                  localIdentName: "[local]--[hash:base64:5]",
                 },
                 esModule: true,
-                sourceMap: dev
-              }
+                sourceMap: dev,
+              },
             },
             {
               loader: "sass-loader",
               options: {
-                sassOptions
-              }
-            }
-          ]
+                sassOptions,
+              },
+            },
+          ],
         },
         {
           test: /\.s?css$/,
@@ -186,41 +199,43 @@ module.exports = {
             MiniCssExtractPlugin.loader,
             {
               loader: "css-loader",
-              options: cssOptions
+              options: cssOptions,
             },
             {
               loader: "sass-loader",
               options: {
-                sassOptions
-              }
-            }
-          ]
-        }
-      ]
+                sassOptions,
+              },
+            },
+          ],
+        },
+      ],
     },
     mode: process.env.NODE_ENV,
     plugins: [
       new MiniCssExtractPlugin({
         filename: "[name].css",
-        chunkFilename: "[name].[id].css"
+        chunkFilename: "[name].[id].css",
       }),
       new OptimizeCssAssetsPlugin({
         assetNameRegExp: /\.css$/g,
         cssProcessor: require("cssnano"),
         cssProcessorPluginOptions: {
-          preset: ["default", { discardComments: { removeAll: true } }]
+          preset: ["default", { discardComments: { removeAll: true } }],
         },
-        canPrint: true
-      })
+        canPrint: true,
+      }),
     ].filter(Boolean),
     performance: {
-      hints: false // it doesn't matter if server.js is large
-    }
+      hints: false, // it doesn't matter if server.js is large
+    },
   },
 
   serviceworker: {
     entry: {
-      "service-worker": config.serviceworker.entry()["service-worker"].replace(/\.js$/, ".ts")
+      "service-worker": config.serviceworker
+        .entry()
+        ["service-worker"].replace(/\.js$/, ".ts"),
     },
     output: config.serviceworker.output(),
     resolve: { extensions },
@@ -229,11 +244,14 @@ module.exports = {
         {
           test: /\.ts$/,
           use: {
-            loader: "ts-loader"
-          }
-        }
-      ]
+            loader: "ts-loader",
+            options: {
+              allowTsInNodeModules: true,
+            },
+          },
+        },
+      ],
     },
-    mode: process.env.NODE_ENV
-  }
+    mode: process.env.NODE_ENV,
+  },
 };

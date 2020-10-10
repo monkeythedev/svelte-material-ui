@@ -20,10 +20,10 @@
   import TabIndicator from "@smui/tab-indicator/src/TabIndicator.svelte";
   import { setLabelBehaviour } from "@smui/common/dom/LabelContext";
   import { Selectable } from "@smui/common/hoc";
-  import { setIconStyle } from "@smui/common/dom";
+  import { setIconBehaviour } from "@smui/common/dom";
   import { setCreateMDCTabIndicatorInstance } from "@smui/tab-indicator";
   import { UseState } from "@smui/common/hooks";
-  import ExtractNamedSlot from "@smui/common/src/components/ExtractNamedSlot.svelte";
+  import { ExtractNamedSlot } from "@smui/common/components";
 
   export let ripple: boolean = true;
   export let key: any = undefined;
@@ -35,7 +35,7 @@
 
   let instantiate = getCreateMDCTabInstance();
 
-  setIconStyle("tab");
+  setIconBehaviour("tab");
   setLabelBehaviour("tab");
   setCreateMDCTabIndicatorInstance(false);
 

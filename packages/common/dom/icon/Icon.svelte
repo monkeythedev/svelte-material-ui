@@ -4,29 +4,29 @@
   const forwardDOMEvents = DOMEventsForwarder();
   let className = "";
   export { className as class };
-  export let style: string = "";
+  export let style: string = undefined;
+  export let id: string = undefined;
 
   export let dom: HTMLSpanElement = null;
   import { BaseProps } from "../Props";
   export let props: BaseProps = {};
 
   // Icon
-  import { getContext } from "svelte";
-  import { getIconStyle } from "./IconContextProps";
+  import { getIconBehaviour } from "./IconContextProps";
 
   export let on: boolean = false;
   export let leading: boolean = false;
   export let leadingHidden: boolean = false;
   export let trailing: boolean = false;
 
-  const context = getContext("SMUI:icon:context");
-  const iconStyle = getIconStyle();
+  const iconStyle = getIconBehaviour();
 </script>
 
 <i
   bind:this={dom}
   {...props}
-  class="{className}
+  {id}
+  class="{className || 'material-icons'}
     {iconStyle === 'button' ? 'mdc-button__icon' : ''}
     {iconStyle === 'fab' ? 'mdc-fab__icon' : ''}
     {iconStyle === 'icon-button' ? 'mdc-icon-button__icon' : ''}
@@ -37,8 +37,7 @@
     {iconStyle === 'chip' && trailing ? 'mdc-chip__icon--trailing mdc-chip-trailing-action' : ''}
     {iconStyle === 'tab' ? 'mdc-tab__icon' : ''}"
   {style}
-  use:forwardDOMEvents
-  aria-hidden="true">
+  use:forwardDOMEvents>
   <slot />
 </i>
 

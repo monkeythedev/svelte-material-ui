@@ -1,5 +1,5 @@
-import Fab from './Fab.svelte';
-import Label from '@smui/common/dom/Label.svelte';
-import Icon from '@smui/common/dom/icon/Icon.svelte';
+import Fab from "./Fab.svelte";
+import Label from "@smui/common/dom/Label.svelte";
+import { Icon } from "@smui/common/dom";
 
-export {Fab, Label, Icon};
+export { Fab, Label, Icon };

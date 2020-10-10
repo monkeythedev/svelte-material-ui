@@ -10,4 +10,5 @@ type ButtonBehaviour =
   | "dialog:action"
   | "top-app-bar:navigation"
   | "top-app-bar:action"
-  | "snackbar";
+  | "snackbar"
+  | "banner:action";

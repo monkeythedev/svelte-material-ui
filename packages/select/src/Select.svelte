@@ -28,7 +28,7 @@
   import { NotchedOutline } from "@smui/notched-outline";
   import { setCreateMDCMenuInstance } from "@smui/menu/src/MenuContext";
   import { Span } from "@smui/common/dom";
-  import ExtractNamedSlot from "@smui/common/src/components/ExtractNamedSlot.svelte";
+  import { ExtractNamedSlot } from "@smui/common/components";
   import { createInputFieldContext } from "@smui/textfield/src/TextFieldContext";
   import { SelectVariant } from "./types";
   import { UseState } from "@smui/common/hooks";

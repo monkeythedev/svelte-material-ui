@@ -22,6 +22,8 @@ import Td from "./Td.svelte";
 import Footer from "./Footer.svelte";
 import Option from "./Option.svelte";
 
+export * from "./LabelContext";
+
 export {
   A,
   Button,

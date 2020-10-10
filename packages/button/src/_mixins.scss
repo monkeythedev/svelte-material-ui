@@ -6,6 +6,7 @@
 @mixin smui-button-core-styles($query: functions.all()) {
   @include smui-button-without-ripple($query);
   @include smui-button-ripple($query);
+  @include smui-button__density($query);
 }
 
 @mixin smui-button-without-ripple($query: functions.all()) {
@@ -77,7 +78,7 @@
   }
 }
 
-@mixin smui-button__group-mdc-button--raised_($query) {
+@mixin smui-button__group-mdc-button--raised_($query: functions.all()) {
   @include button.shape-radius(small, $query);
   @include elevation.elevation(0, $query: $query);
 
@@ -92,5 +93,17 @@
 
   &:disabled {
     @include elevation.elevation(0, $query: $query);
+  }
+}
+
+@mixin smui-button__density($query: functions.all()) {
+  @each $density in 0, 1, 2, 3 {
+    .smui-button--dense--#{$density} {
+      @if ($density != 0){
+        $density: -$density
+      }
+      
+      @include button.density($density, $query: $query);
+    }
   }
 }

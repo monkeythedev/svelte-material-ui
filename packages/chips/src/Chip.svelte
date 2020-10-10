@@ -21,7 +21,7 @@
   import { ChipContext } from "./ChipContext";
   import { Selectable } from "@smui/common/hoc";
   import { setLabelBehaviour } from "@smui/common/dom/LabelContext";
-  import { setIconStyle } from "@smui/common/dom";
+  import { setIconBehaviour } from "@smui/common/dom";
   import Use from "@smui/common/src/hooks/Use.svelte";
 
   export let value: any = null;
@@ -32,7 +32,7 @@
   let selectable: Selectable;
 
   setLabelBehaviour("chip");
-  setIconStyle("chip");
+  setIconBehaviour("chip");
 
   const chipSetContext$ = getChipSetContext();
   
