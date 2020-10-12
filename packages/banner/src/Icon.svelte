@@ -17,6 +17,8 @@
   import { Icon } from "@smui/common/dom";
 </script>
 
+<svelte:options immutable={true} />
+
 <Icon
   bind:dom
   {props}

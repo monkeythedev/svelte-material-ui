@@ -39,6 +39,7 @@
       items.delete(item);
     },
     notifySelected(itemSelected: SelectableContext) {
+      debugger;
       if (selectionType === "single") {
         items.forEach((item) => {
           if (item !== itemSelected) {
@@ -265,4 +266,5 @@
 <Use effect hook={init} />
 <UseState {value} onUpdate={handleValueChange} />
 
+{""+value}
 <slot />

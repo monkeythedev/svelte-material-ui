@@ -70,7 +70,7 @@ export function DOMEventsForwarder() {
   }>();
 
   return function forwardAllDOMEvents(
-    node: HTMLElement
+    node: Node
   ) {
     function listener(event: Event) {
       dispatch(event.type, event);
@@ -86,7 +86,7 @@ export function DOMEventsForwarder() {
 }
 
 function listenAllDOMEvents(
-  node: HTMLElement,
+  node: Node,
   listener: (event: Event) => void
 ) {
   const domListeners = createDOMEventsListeners(listener);
@@ -102,7 +102,7 @@ function listenAllDOMEvents(
 }
 
 function listenDOMEvents(
-  node: HTMLElement,
+  node: Node,
   opts: ListenerOpt<Event>[]
 ) {
   return listenEvents(node, opts);

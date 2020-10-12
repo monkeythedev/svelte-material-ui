@@ -46,6 +46,7 @@
     selected: ListItemDOMElement;
   }>();
 
+  let rippleClasses: string = "";
   let selectable: Selectable;
 
   const isSelectionGroup = getIsSelectionGroup();
@@ -132,8 +133,9 @@
     {id}
     class="mdc-list-item {className}
       {disabled ? 'mdc-list-item--disabled' : ''}
-      {(role === 'option' || (role === 'menuitem' && isSelectionGroup)) && selected ? 'mdc-list-item--selected' : ''}
-      {role === 'menuitem' && selected ? 'mdc-menu-item--selected' : ''}"
+      {(role === 'option' || role === 'menuitem') && selected ? 'mdc-list-item--selected' : ''}
+      {role === 'menuitem' && selected ? 'mdc-menu-item--selected' : ''}
+      {rippleClasses}"
     {style}
     on:domEvent={forwardDOMEvents}
     on:focus={onFocus}>
@@ -142,7 +144,8 @@
         rippleElement="mdc-list-item__ripple"
         {color}
         target={dom}
-        keyboardEvents />
+        keyboardEvents
+        bind:rippleClasses />
     {/if}
     <slot />
   </svelte:component>

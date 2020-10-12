@@ -6,7 +6,6 @@ const [setLabelBehaviour, getLabelBehaviour] = createContextPropBuilder<
 export { setLabelBehaviour, getLabelBehaviour };
 
 export type LabelBehaviour =
-  | "button"
   | "fab"
   | "chip"
   | "tab"

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Button, Label, ButtonVariant } from "@smui/button";
+  import { Button, Label, ButtonVariant, Icon } from "@smui/button";
   import { Checkbox } from "@smui/checkbox";
   import { FormField } from "@smui/form-field";
   import { Option, Select } from "@smui/select";
@@ -11,10 +11,29 @@
   let variant: ButtonVariant = undefined;
   let density: number = 0;
   let link: boolean = false;
+  let leadingIcon: "material-icon" | "svg" | "" = "";
+  let trailingIcon: "material-icon" | "svg" | "" = "";
+  let customStyle: "mdc-mixins" | "custom-css" | "" = "";
 
   function getDensity(density: number): number {
     return density ? density : null;
   }
+
+  let svelteCode: string = "";
+  $: svelteCode = `
+      <Button${getCodeProps(disabled, ripple, variant, density, link)}>
+        ${getLeadingIconCode(leadingIcon)}
+        <Label>Button</Label>
+        ${getTrailingIconCode(trailingIcon)}
+      </Button>
+    `;
+
+  let scssCode: string = "";
+  $: scssCode = customStyle ? `
+      .buttonShapedRound {
+        @include button.shape-radius(999px);
+      }
+    ` : "";
 
   function getCodeProps(disabled, ripple, variant, density, link) {
     let props = [];
@@ -26,6 +45,38 @@
     let result = props.join(" ");
     if (result.length > 0) result = " " + result;
     return result;
+  }
+
+  function getLeadingIconCode(
+    leadingIcon: "material-icon" | "svg" | ""
+  ): string {
+    if (leadingIcon === "material-icon") {
+      return "<Icon>favorite</Icon>";
+    } else if (leadingIcon === "svg") {
+      return `
+        <Icon svg props={{viewBox: "0 0 24 24"}}>
+          <circle cx="12" cy="12" r="12">
+        </Icon>
+      `;
+    } else {
+      return "";
+    }
+  }
+
+  function getTrailingIconCode(
+    leadingIcon: "material-icon" | "svg" | ""
+  ): string {
+    if (leadingIcon === "material-icon") {
+      return "<Icon>play_circle_filled</Icon>";
+    } else if (leadingIcon === "svg") {
+      return `
+        <Icon svg props={{viewBox: "0 0 24 24"}}>
+          <polygon points="0,24 12,0 24,24" />
+        </Icon>
+      `;
+    } else {
+      return "";
+    }
   }
 </script>
 
@@ -59,7 +110,8 @@
   }
 </style>
 
-<Configurator>
+{""+variant}
+<Configurator svelte={svelteCode} scss={scssCode}>
   <div slot="preview">
     <Button
       {disabled}
@@ -67,7 +119,21 @@
       {variant}
       density={getDensity(density)}
       href={link ? 'javascript:void(0)' : null}>
+      {#if leadingIcon === 'material-icon'}
+        <Icon>favorite</Icon>
+      {:else if leadingIcon === 'svg'}
+        <Icon svg props={{ viewBox: '0 0 24 24' }}>
+          <circle cx="12" cy="12" r="12" />
+        </Icon>
+      {/if}
       <Label>Button</Label>
+      {#if trailingIcon === 'material-icon'}
+        <Icon>play_circle_filled</Icon>
+      {:else if trailingIcon === 'svg'}
+        <Icon svg props={{ viewBox: '0 0 24 24' }}>
+          <polygon points="0,24 12,0 24,24" />
+        </Icon>
+      {/if}
     </Button>
   </div>
   <div slot="options-sidebar" class="options-sidebar">
@@ -88,6 +154,22 @@
         </div>
         <span slot="label">Density</span>
       </FormField>
+      <FormField>
+        <Select bind:value={leadingIcon} style="width: 100%">
+          <span slot="label">Leading icon</span>
+          <Option value="" />
+          <Option value="material-icon">Material icon</Option>
+          <Option value="svg">SVG</Option>
+        </Select>
+      </FormField>
+      <FormField>
+        <Select bind:value={customStyle} style="width: 100%">
+          <span slot="label">Custom style</span>
+          <Option value="" />
+          <Option value="mdc-mixins">MDC Mixins</Option>
+          <Option value="custom-css">Custom CSS</Option>
+        </Select>
+      </FormField>
     </div>
     <div class="right">
       <FormField>
@@ -102,13 +184,14 @@
         <Checkbox bind:checked={link} />
         <span slot="label">Link</span>
       </FormField>
+      <FormField>
+        <Select bind:value={trailingIcon} style="width: 100%">
+          <span slot="label">Trailing icon</span>
+          <Option value="" />
+          <Option value="material-icon">Material icon</Option>
+          <Option value="svg">SVG</Option>
+        </Select>
+      </FormField>
     </div>
-  </div>
-  <div slot="code">
-    {`
-      <Button${getCodeProps(disabled, ripple, variant, density, link)}>
-        <Label>Button</Label>
-      </Button>
-    `}
   </div>
 </Configurator>

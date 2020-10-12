@@ -27,7 +27,6 @@
   {...props}
   {id}
   class="{className || 'material-icons'}
-    {iconStyle === 'button' ? 'mdc-button__icon' : ''}
     {iconStyle === 'fab' ? 'mdc-fab__icon' : ''}
     {iconStyle === 'icon-button' ? 'mdc-icon-button__icon' : ''}
     {iconStyle === 'icon-button' && on ? 'mdc-icon-button__icon--on' : ''}

@@ -47,6 +47,8 @@
   }
 </script>
 
+<svelte:options immutable={true} />
+
 <UseState value={open} onUpdate={handleOpenChange}></UseState>
 
 <div

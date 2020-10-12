@@ -1,6 +1,6 @@
 import Button from "./Button.svelte";
-import Label from "@smui/common/Label.svelte";
-import { Icon } from "@smui/common/dom";
+import Label from "./Label.svelte";
+import Icon from "./Icon.svelte";
 import MenuButton from "./MenuButton.svelte";
 
 export { Button, Label, Icon, MenuButton };

@@ -1,6 +1,8 @@
 <script lang="ts">
-  import { ExtractNamedSlot } from "@smui/common/components";
-  import Code from "./code/Code.svelte";
+  import CodeSelector from "./CodeSelector.svelte";
+
+  export let svelte: string;
+  export let scss: string;
 </script>
 
 <style lang="scss">
@@ -39,12 +41,6 @@
     <slot name="options-sidebar" />
   </div>
   <div class="code">
-    {#if typeof window != 'undefined'}
-      <Code>
-        <ExtractNamedSlot>
-          <slot name="code" />
-        </ExtractNamedSlot>
-      </Code>
-    {/if}
+    <CodeSelector {svelte} {scss}></CodeSelector>
   </div>
 </div>

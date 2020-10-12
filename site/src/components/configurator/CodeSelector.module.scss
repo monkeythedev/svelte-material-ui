@@ -1,0 +1,19 @@
+@use "@material/theme";
+
+.code-selector {
+  display: flex;
+  
+  .source {
+    flex-grow: 1;
+    display: flex;
+  }
+  
+  .selection-list {
+    background: #1e1e1e;
+  
+    > .list {
+      background-color: theme.$surface;
+      padding: 0px;
+    }
+  }
+}

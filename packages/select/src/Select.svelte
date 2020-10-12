@@ -99,6 +99,7 @@
 
 <UseState {value} onUpdate={onValueChange} />
 
+{""+value}
 <div
   bind:this={dom}
   class="mdc-select {className}
@@ -164,7 +165,7 @@
   {/if}
 
   <Menu class="mdc-select__menu" fullWidth>
-    <List role="listbox">
+    <List bind:value>
       <slot />
     </List>
   </Menu>

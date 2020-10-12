@@ -6,7 +6,7 @@
   export let target: HTMLElement;
   export let unbounded: RippleProps["unbounded"] = undefined;
   export let color: RippleProps["color"] = undefined;
-  export let classForward: RippleProps["classForward"] = undefined;
+  export let rippleClasses: string = "";
   export let keyboardEvents: RippleProps["keyboardEvents"] = undefined;
   export let rippleElement: RippleProps["rippleElement"] = undefined;
   let className = "";
@@ -41,7 +41,7 @@
   bind:target
   bind:unbounded
   bind:color
-  bind:classForward
+  bind:rippleClasses
   bind:keyboardEvents
   bind:class={className} />
 

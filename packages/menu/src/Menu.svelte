@@ -21,7 +21,9 @@
   import { onMount, onDestroy, createEventDispatcher } from "svelte";
   import { MenuSurface } from "@smui/menu-surface";
   import { MDCMenuDistance } from "@material/menu-surface";
-  import { createMenuContext, getCreateMDCMenuIstance } from "./MenuContext";
+  import { getCreateMDCMenuIstance } from "./MenuContext";
+  import { setCreateMDCListInstance } from "@smui/list";
+  import { setCreateMDCMenuSurfaceInstance } from "@smui/menu-surface";
 
   export let open: boolean = false;
   export let quickOpen: boolean = false;
@@ -32,8 +34,9 @@
   const dispatch = createEventDispatcher<{
     selected: { item: Element; index: number };
   }>();
-  const context$ = createMenuContext({});
 
+  setCreateMDCListInstance(false);
+  setCreateMDCMenuSurfaceInstance(false);
   const shouldCreateMDCMenuInstance = getCreateMDCMenuIstance();
 
   let menu: MDCMenu;
@@ -71,6 +74,7 @@
   function handleSelected(
     event: CustomEvent<{ item: Element; index: number }>
   ) {
+    debugger;
     dispatch("selected", event.detail);
     updateOpen();
   }

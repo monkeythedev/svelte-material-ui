@@ -18,9 +18,8 @@
   import { onMount, onDestroy, createEventDispatcher } from "svelte";
   import Nav from "@smui/common/dom/Nav.svelte";
   import Ul from "@smui/common/dom/Ul.svelte";
-  import { createListContext, getListContext, ListRole } from "./ListContext";
+  import { createListContext, getCreateMDCListInstance, ListRole } from "./ListContext";
   import { ItemContext } from "./item";
-  import { getMenuContext } from "@smui/menu/src/MenuContext";
   import { getMenuSurfaceContext } from "@smui/menu-surface/src/MenuSurfaceContext";
   import { getDrawerContext } from "@smui/drawer/src/DrawerContext";
   import {
@@ -42,8 +41,8 @@
   export let twoLine: boolean = false;
   export let threeLine: boolean = false;
   export let wrapFocus: boolean = false;
-  export let value: any = null;
-  export let indexHasValues: boolean = null;
+  export let value: any = undefined;
+  export let indexHasValues: boolean = undefined;
   //#endregion
 
   const dispatch = createEventDispatcher<{
@@ -58,7 +57,12 @@
   let selectableList: SelectableList;
 
   let selectionType: SelectionType = null;
-  $: if ((!nonInteractive && role === "listbox") || role === "radiogroup") {
+  
+  $: if (menuSurfaceContext$) {
+    role = "menu";
+  }
+
+  $: if ((!nonInteractive && role === "listbox") || role === "radiogroup" || role === "menu") {
     selectionType = "single";
   } else if (!nonInteractive && role === "group") {
     selectionType = "multi";
@@ -68,11 +72,11 @@
   //#endregion
 
   //#region init contexts
-  const menuContext$ = getMenuContext();
   const menuSurfaceContext$ = getMenuSurfaceContext();
   const drawerContext$ = getDrawerContext();
   const dialogContext$ = getDialogContext();
 
+  const shouldCreateMDCListInstance = getCreateMDCListInstance();
   setDisableCheckboxMDCIstance(true);
 
   const context$ = createListContext({
@@ -86,10 +90,6 @@
 
   let component: typeof Nav | typeof Ul;
   $: component = drawerContext$ ? Nav : Ul;
-
-  $: if (menuSurfaceContext$) {
-    role = "menu";
-  }
 
   $: if (drawerContext$) {
     wrapFocus = true;
@@ -106,7 +106,7 @@
   let list: MDCList;
   onMount(async () => {
     if (
-      !menuContext$ &&
+      shouldCreateMDCListInstance !== false &&
       $drawerContext$?.variant !== "dismissible" &&
       $drawerContext$?.variant !== "modal"
     ) {
@@ -173,10 +173,12 @@
   }
 
   function handleChange(event: CustomEvent<OnSelectableListChange>) {
-    if (selectionType === "single") {
-      list.selectedIndex = event.detail.selectedItemsIndex[0] ?? -1;
-    } else if (selectionType === "multi") {
-      list.selectedIndex = event.detail.selectedItemsIndex;
+    if (list) {
+      if (selectionType === "single") {
+        list.selectedIndex = event.detail.selectedItemsIndex[0] ?? -1;
+      } else if (selectionType === "multi") {
+        list.selectedIndex = event.detail.selectedItemsIndex;
+      }
     }
 
     dispatch("change", {
@@ -194,6 +196,7 @@
   };
 </script>
 
+{""+value}
 <SelectableList
   bind:this={selectableList}
   bind:value

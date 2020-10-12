@@ -17,6 +17,8 @@
   export let alt: string = "";
 </script>
 
+<svelte:options immutable={true} />
+
 <div
   bind:this={dom}
   {...props}

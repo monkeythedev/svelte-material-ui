@@ -1,10 +1,12 @@
 import { ItemContext } from "./item";
-import { createContextBuilder } from "@smui/common";
+import { createContextBuilder, createContextPropBuilder } from "@smui/common";
 import { MDCList } from '@material/list'
 import { SelectableListContext } from "@smui/common/hoc";
 
 const [createListContext, getListContext] = createContextBuilder<ListContext>();
 export { createListContext, getListContext };
+
+export const [setCreateMDCListInstance, getCreateMDCListInstance] = createContextPropBuilder<boolean>()
 
 export interface ListContext extends SelectableListContext {
   role: ListRole;

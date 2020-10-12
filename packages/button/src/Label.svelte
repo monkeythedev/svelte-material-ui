@@ -13,17 +13,17 @@
   export let props: BaseProps = {};
   //#endregion
 
-  // Actions
+  // Label
 </script>
 
 <svelte:options immutable={true} />
 
-<div
+<span
   bind:this={dom}
   {...props}
   {id}
-  class="mdc-banner__actions {className}"
+  class="mdc-button__label {className}"
   {style}
   use:forwardDOMEvents>
   <slot />
-</div>
+</span>

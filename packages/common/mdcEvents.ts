@@ -1,5 +1,5 @@
 export function listenEvents<E extends Event = Event>(
-  node: HTMLElement,
+  node: Node,
   opts: ListenerOpt<E>[]
 ) {
   let destructors = addListeners(node, opts);
@@ -16,7 +16,7 @@ export function listenEvents<E extends Event = Event>(
 }
 
 function addListeners<E extends Event>(
-  node: HTMLElement,
+  node: Node,
   opts: ListenerOpt<E>[]
 ): ListenerDestructor<E>[] {
   return opts.map(({eventName, listener}) => {
@@ -31,7 +31,7 @@ function addListeners<E extends Event>(
 }
 
 function removeListener<E extends Event>(
-  node: HTMLElement,
+  node: Node,
   destructors: ListenerDestructor<E>[]
 ) {
   destructors.forEach(([eventName, listener]) => {

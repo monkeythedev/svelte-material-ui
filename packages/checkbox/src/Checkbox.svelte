@@ -94,6 +94,12 @@
     }
   }
 
+  function handleKeyPress(event: KeyboardEvent) {
+    if (event.key === " " || event.key === "Enter") {
+      setChecked(!checked);
+    }
+  }
+
   function handleChange(event: Event) {
     if (checkbox) {
       if (allowIndeterminated && checked === false && checkbox.checked) {
@@ -126,6 +132,7 @@
       {value}
       {required}
       on:change={handleChange}
+      on:keyup={handleKeyPress}
       use:forwardDOMEvents />
     <div class="mdc-checkbox__background">
       <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">

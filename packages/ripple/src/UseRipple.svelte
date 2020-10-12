@@ -92,7 +92,7 @@
   export let target: HTMLElement;
   export let unbounded: RippleProps["unbounded"] = null;
   export let color: RippleProps["color"] = null;
-  export let classForward: RippleProps["classForward"] = null;
+  export let rippleClasses: string = "";
   export let keyboardEvents: RippleProps["keyboardEvents"] = null;
   let className = "";
   export { className as class };
@@ -112,6 +112,10 @@
     if (color == 'primary') target.classList.add("mdc-ripple-surface--primary");
     if (color == 'secondary') target.classList.add("mdc-ripple-surface--accent");
     if (className) className.split(" ").forEach(classToken => target.classList.add(classToken))
+  }
+
+  function classForward(classList: string[]) {
+    rippleClasses = classList.join(" ");
   }
 
   function init() {

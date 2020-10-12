@@ -22,6 +22,8 @@
   setButtonBehaviour("banner:action");
 </script>
 
+<svelte:options immutable={true} />
+
 <Button
   bind:dom
   {props}

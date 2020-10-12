@@ -24,7 +24,6 @@
   {...props}
   {id}
   class="{className}
-    {behaviour === 'button' ? 'mdc-button__label' : ''}
     {behaviour === 'fab' ? 'mdc-fab__label' : ''}
     {behaviour === 'chip' ? 'mdc-chip__text' : ''}
     {behaviour === 'tab' ? 'mdc-tab__text-label' : ''}

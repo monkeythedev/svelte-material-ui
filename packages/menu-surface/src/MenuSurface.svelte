@@ -26,7 +26,7 @@
     getMenuContext,
     setCreateMDCMenuInstance,
   } from "@smui/menu/src/MenuContext";
-  import { createMenuSurfaceContext } from "./MenuSurfaceContext";
+  import { createMenuSurfaceContext, getCreateMDCMenuSurfaceInstance } from "./MenuSurfaceContext";
 
   export let fixed: boolean = false;
   export let open: boolean = false;
@@ -34,8 +34,8 @@
   export let anchorCorner: Corner = Corner.BOTTOM_LEFT;
   export let fullWidth: boolean = false;
 
-  let menuSurface: MDCMenuSurface;
-  const menuContext$ = getMenuContext();
+  const shouldCreateMDCMenuSurfaceInstance = getCreateMDCMenuSurfaceInstance();
+  
   const context$ = createMenuSurfaceContext();
   let anchorElement: HTMLElement = null; // It seems not worthy to export this prop because makes API confusing since the only anchor that makes sense is the parent
 
@@ -43,8 +43,9 @@
 
   $: $context$.open = open;
 
+  let menuSurface: MDCMenuSurface;
   onMount(async () => {
-    if (!menuContext$) {
+    if (shouldCreateMDCMenuSurfaceInstance !== false) {
       menuSurface = new MDCMenuSurface(dom);
       menuSurface.listen("MDCMenuSurface:closed", updateOpen);
       menuSurface.listen("MDCMenuSurface:opened", updateOpen);
