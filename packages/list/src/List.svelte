@@ -97,8 +97,11 @@
 
   // Try to use index as values if no items has value or indexHasValues is true
   $: if (list && value == null) {
-    list.selectedIndex = -1;
-    selectableList.setValue(-1);
+    if (selectionType === "single") {
+      list.selectedIndex = -1;
+    } else if (selectionType === "multi") {
+      list.selectedIndex = [];
+    }
   }
 
   //#endregion
@@ -196,7 +199,6 @@
   };
 </script>
 
-{""+value}
 <SelectableList
   bind:this={selectableList}
   bind:value

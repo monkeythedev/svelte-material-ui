@@ -74,7 +74,6 @@
   function handleSelected(
     event: CustomEvent<{ item: Element; index: number }>
   ) {
-    debugger;
     dispatch("selected", event.detail);
     updateOpen();
   }
