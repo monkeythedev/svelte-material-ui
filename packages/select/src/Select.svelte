@@ -20,7 +20,12 @@
 
   // Select
   import { MDCSelect, MDCSelectEvent } from "@material/select";
-  import { onMount, onDestroy, getContext, setContext } from "svelte";
+  import {
+    onMount,
+    onDestroy,
+    setContext,
+    createEventDispatcher,
+  } from "svelte";
   import { Menu } from "@smui/menu";
   import { List } from "@smui/list";
   import { FloatingLabel } from "@smui/floating-label";
@@ -32,6 +37,9 @@
   import { createInputFieldContext } from "@smui/textfield/src/TextFieldContext";
   import { SelectVariant } from "./types";
   import { UseState } from "@smui/common/hooks";
+  import SelectableGroup from "@smui/common/src/hoc/selectable-group/SelectableGroup.svelte";
+  import { OnSelectableGroupChange } from "@smui/common/hoc";
+  import A from "@smui/common/dom/A.svelte";
 
   export let ripple: boolean = true;
   export let disabled: boolean = false;
@@ -45,6 +53,13 @@
   let labelId: string;
   let invalid = customValidation ? !customValidation(value, true) : false;
   const selectedTextId = `SMUI-Select-SelectedText-${_count}`;
+
+  const dispatch = createEventDispatcher<{
+    change: {
+      value: typeof value;
+      dom: typeof dom;
+    };
+  }>();
 
   createInputFieldContext({
     setHelperTextId(id: string) {
@@ -63,7 +78,8 @@
     select = new MDCSelect(dom);
 
     select.listen("MDCSelect:change", (event: MDCSelectEvent) => {
-      changeHandler(event);
+      value = event.detail.value;
+      dirty = true;
     });
   });
 
@@ -85,9 +101,15 @@
     select && select.destroy();
   });
 
-  function changeHandler(e: MDCSelectEvent) {
-    value = e.detail.value;
-    dirty = true;
+  function handleChange(event: CustomEvent<OnSelectableGroupChange>) {
+    if (select) {
+      select.value = value;
+    }
+
+    dispatch("change", {
+      value,
+      dom: dom,
+    });
   }
 
   function onValueChange(oldValue: any) {
@@ -99,77 +121,83 @@
 
 <UseState {value} onUpdate={onValueChange} />
 
-{""+value}
-<div
-  bind:this={dom}
-  class="mdc-select {className}
-  {variant === 'filled' ? 'mdc-select--filled' : ''}
-  {variant === 'outlined' ? 'mdc-select--outlined' : ''}
-  {disabled ? 'mdc-select--disabled' : ''}
-  {required ? 'mdc-select--required' : ''}
-  {$$slots.leadingIcon ? 'mdc-select--with-leading-icon' : ''}
-  {invalid ? 'mdc-select--invalid' : ''}"
-  {style}
-  use:forwardDOMEvents>
+<SelectableGroup bind:value selectionType="single" on:change={handleChange}>
   <div
-    class="mdc-select__anchor"
-    role="button"
-    aria-haspopup="listbox"
-    aria-labelledby="{labelId} {selectedTextId}"
-    aria-required={required || null}
-    aria-disabled={disabled || null}
-    aria-controls={helperTextId}
-    aria-describedby={helperTextId}>
-    {#if ripple && variant === 'filled'}<span class="mdc-select__ripple" />{/if}
-    {#if $$slots.leadingIcon}
-      <ExtractNamedSlot>
-        <slot name="leadingIcon" />
-      </ExtractNamedSlot>
-    {/if}
-    <span id={selectedTextId} class="mdc-select__selected-text">{value}</span>
-    <span class="mdc-select__dropdown-icon">
-      <svg class="mdc-select__dropdown-icon-graphic" viewBox="7 10 10 5">
-        <polygon
-          class="mdc-select__dropdown-icon-inactive"
-          stroke="none"
-          fill-rule="evenodd"
-          points="7 10 12 15 17 10" />
-        <polygon
-          class="mdc-select__dropdown-icon-active"
-          stroke="none"
-          fill-rule="evenodd"
-          points="7 15 12 10 17 15" />
-      </svg>
-    </span>
-    {#if variant === 'filled'}
-      {#if $$slots.label}
-        <FloatingLabel component={Span}>
-          <ExtractNamedSlot>
-            <slot name="label" />
-          </ExtractNamedSlot>
-        </FloatingLabel>
+    bind:this={dom}
+    {...props}
+    class="mdc-select {className}
+      {variant === 'filled' ? 'mdc-select--filled' : ''}
+      {variant === 'outlined' ? 'mdc-select--outlined' : ''}
+      {disabled ? 'mdc-select--disabled' : ''}
+      {required ? 'mdc-select--required' : ''}
+      {$$slots.leadingIcon ? 'mdc-select--with-leading-icon' : ''}
+      {invalid ? 'mdc-select--invalid' : ''}"
+    {style}
+    {id}
+    use:forwardDOMEvents>
+    <div
+      class="mdc-select__anchor"
+      role="button"
+      aria-haspopup="listbox"
+      aria-labelledby="{labelId} {selectedTextId}"
+      aria-required={required || null}
+      aria-disabled={disabled || null}
+      aria-controls={helperTextId}
+      aria-describedby={helperTextId}>
+      {#if ripple && variant === 'filled'}
+        <span class="mdc-select__ripple" />
       {/if}
-    {:else if variant === 'outlined'}
-      <NotchedOutline noLabel={!$$slots.label}>
+      {#if $$slots.leadingIcon}
+        <ExtractNamedSlot>
+          <slot name="leadingIcon" />
+        </ExtractNamedSlot>
+      {/if}
+      <span id={selectedTextId} class="mdc-select__selected-text">{value}</span>
+      <span class="mdc-select__dropdown-icon">
+        <svg class="mdc-select__dropdown-icon-graphic" viewBox="7 10 10 5">
+          <polygon
+            class="mdc-select__dropdown-icon-inactive"
+            stroke="none"
+            fill-rule="evenodd"
+            points="7 10 12 15 17 10" />
+          <polygon
+            class="mdc-select__dropdown-icon-active"
+            stroke="none"
+            fill-rule="evenodd"
+            points="7 15 12 10 17 15" />
+        </svg>
+      </span>
+      {#if variant === 'filled'}
         {#if $$slots.label}
           <FloatingLabel component={Span}>
-            <slot name="label" />
+            <ExtractNamedSlot>
+              <slot name="label" />
+            </ExtractNamedSlot>
           </FloatingLabel>
         {/if}
-      </NotchedOutline>
+      {:else if variant === 'outlined'}
+        <NotchedOutline noLabel={!$$slots.label}>
+          {#if $$slots.label}
+            <FloatingLabel component={Span}>
+              <slot name="label" />
+            </FloatingLabel>
+          {/if}
+        </NotchedOutline>
+      {/if}
+    </div>
+
+    {#if ripple && variant === 'filled'}
+      <LineRipple />
     {/if}
+
+    <Menu class="mdc-select__menu" fullWidth>
+      <List>
+        <slot />
+      </List>
+    </Menu>
   </div>
+</SelectableGroup>
 
-  {#if ripple && variant === 'filled'}
-    <LineRipple />
-  {/if}
-
-  <Menu class="mdc-select__menu" fullWidth>
-    <List bind:value>
-      <slot />
-    </List>
-  </Menu>
-</div>
 {#if $$slots.helperText}
   <ExtractNamedSlot>
     <slot name="helperText" />

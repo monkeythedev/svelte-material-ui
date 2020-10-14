@@ -1,6 +1,6 @@
 <script lang="ts">
   import { Use, UseState } from "../../hooks";
-  import { OnSelectableListChange } from "../types";
+  import { OnSelectableGroupChange } from "../types";
   import { initTabIndex } from "../initTabIndex";
   import { createEventDispatcher, tick } from "svelte";
   import { arrEquals } from "../../utils";
@@ -21,34 +21,29 @@
   }>();
 
   function init() {
-    tick().then(() => {
+    // tick().then(() => { Probably it's not needed anymore since now Selectable and SelectableGroup use Hooks
       if (shouldUseIndexHasValues()) {
         let index = 0;
         items.forEach((item) => item.setValue(index++));
       }
 
+      fixValue(); 
+
       if (value === undefined) {
         updateValueFromChildren();
       } else {
         updateChildrenWithValue(
-          null /* TODO: or is better undefined since we haven't initilized it yet? */
+          undefined /* TODO: or is better undefined since we haven't initilized it yet? */
         );
       }
 
       initTabIndex(selectionType, items);
-    });
+    // });
   }
 
   function handleValueChange(oldValue: typeof value) {
     if (selectionType) {
-      // If multiselection, value must be an array
-      if (selectionType === "multi") {
-        if (value == null) {
-          setResetValue();
-        } else if (!Array.isArray(value)) {
-          setValue([value]);
-        }
-      }
+      fixValue();
 
       if (isResetValue()) {
         items.forEach((item) => item.setSelected(false));
@@ -81,9 +76,20 @@
       dispatch("change", {
         value,
         selectedItemsIndex,
-      } as OnSelectableListChange);
+      } as OnSelectableGroupChange);
     } else {
       setValue(null);
+    }
+  }
+
+  function fixValue() {
+    // If multiselection, value must be an array
+    if (selectionType === "multi") {
+      if (value == null) {
+        setResetValue();
+      } else if (!Array.isArray(value)) {
+        setValue([value]);
+      }
     }
   }
 

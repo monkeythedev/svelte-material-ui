@@ -1,4 +1,4 @@
-import { SelectableContext } from "./SelectableContext";
+import { SelectableContext } from "./selectable";
 import { SelectionType } from "./types";
 
 // The first item of the list must have the attribute tabindex="0"

@@ -23,9 +23,9 @@
   import { getMenuSurfaceContext } from "@smui/menu-surface/src/MenuSurfaceContext";
   import { getDrawerContext } from "@smui/drawer/src/DrawerContext";
   import {
-    SelectableList,
+    SelectableGroup,
     SelectionType,
-    OnSelectableListChange,
+    OnSelectableGroupChange,
   } from "@smui/common/hoc";
   import { getDialogContext } from "@smui/dialog";
   import { setDisableCheckboxMDCIstance } from "@smui/checkbox";
@@ -54,7 +54,7 @@
 
   //#region local varaibles
   const items = new Set<ItemContext>();
-  let selectableList: SelectableList;
+  let selectableGroup: SelectableGroup;
 
   let selectionType: SelectionType = null;
   
@@ -146,7 +146,7 @@
     }
 
     if (role === "list") {
-      selectableList.setValue(null);
+      selectableGroup.setValue(null);
     }
   }
 
@@ -166,16 +166,16 @@
         (selectionType === "multi" &&
           (list.selectedIndex as number[]).includes(event.detail.index))
       ) {
-        selectableList.setItemSelected(event.detail.index, true);
+        selectableGroup.setItemSelected(event.detail.index, true);
       } else {
-        selectableList.setItemSelected(event.detail.index, false);
+        selectableGroup.setItemSelected(event.detail.index, false);
       }
     } else {
       item.sendOnSelected();
     }
   }
 
-  function handleChange(event: CustomEvent<OnSelectableListChange>) {
+  function handleChange(event: CustomEvent<OnSelectableGroupChange>) {
     if (list) {
       if (selectionType === "single") {
         list.selectedIndex = event.detail.selectedItemsIndex[0] ?? -1;
@@ -199,10 +199,11 @@
   };
 </script>
 
-<SelectableList
-  bind:this={selectableList}
+<SelectableGroup
+  bind:this={selectableGroup}
   bind:value
   {selectionType}
+  {indexHasValues}
   on:change={handleChange}>
   <svelte:component
     this={component}
@@ -220,7 +221,7 @@
     on:domEvent={forwardDOMEvents}>
     <slot />
   </svelte:component>
-</SelectableList>
+</SelectableGroup>
 
 <!-- {#if nav}
   <nav

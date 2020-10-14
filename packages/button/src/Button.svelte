@@ -53,8 +53,6 @@
     if (action !== null) {
       actionProps["data-mdc-dialog-action"] = action;
     }
-
-    console.log(actionProps);
   }
 
   function onVariantUpdated() {

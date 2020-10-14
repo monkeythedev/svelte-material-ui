@@ -3,7 +3,7 @@ export interface OnSelectableChange {
   selected: boolean
 }
 
-export interface OnSelectableListChange {
+export interface OnSelectableGroupChange {
   value: any,
   selectedItemsIndex: number[]
 }

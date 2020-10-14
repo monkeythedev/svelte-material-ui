@@ -10,7 +10,9 @@
   let runDone = false;
 
   let runDestroyer: DestroyerFunc;
-  $: if(when && hook && !effect) runDestroyer = runHook();
+  $: if(when && hook && !effect) {
+    runDestroyer = runHook();
+  }
 
   let mounted = false;
   onMount(() => {

@@ -16,7 +16,7 @@
   // ChipSet
   import { MDCChipSet } from "@material/chips";
   import { onMount, onDestroy, afterUpdate } from "svelte";
-  import { SelectableList } from "@smui/common/hoc";
+  import { SelectableGroup } from "@smui/common/hoc";
   import { createChipSetContext } from "./ChipSetContext";
   import { ChipContext } from "./ChipContext";
   import { arrRemove, arrAdd, arrHas } from "@smui/common/src/utils";
@@ -28,7 +28,7 @@ import Use from "@smui/common/src/hooks/Use.svelte";
   export let input: boolean = false;
 
   let items: ChipContext[] = [];
-  let selectableList: SelectableList;
+  let selectableGroup: SelectableGroup;
   const context$ = createChipSetContext({
     registerItem(chip: ChipContext) {
       if (chipSet && !arrHas(items, chip)) {
@@ -62,8 +62,8 @@ import Use from "@smui/common/src/hooks/Use.svelte";
   });
 </script>
 
-<SelectableList
-  bind:this={selectableList}
+<SelectableGroup
+  bind:this={selectableGroup}
   selectionType={choice ? 'single' : filter || input ? 'multi' : null}
   bind:value>
   <div
@@ -79,6 +79,6 @@ import Use from "@smui/common/src/hooks/Use.svelte";
     use:forwardDOMEvents>
     <slot />
   </div>
-</SelectableList>
+</SelectableGroup>
 
 <Use effect hook={initChipSet}></Use>

@@ -153,7 +153,7 @@
               <Text class="mdc-theme--on-secondary">{section.name}</Text>
             </Item>
           {/each}
-        </List>
+        </List> 
       </Content>
     </Drawer>
 

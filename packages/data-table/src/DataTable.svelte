@@ -19,7 +19,7 @@
     MDCDataTableRowSelectionChangedEventDetail,
   } from "@material/data-table";
   import { onMount, onDestroy } from "svelte";
-  import { SelectableList } from "@smui/common/src/hoc";
+  import { SelectableGroup } from "@smui/common/src/hoc";
   import { setDisableCheckboxMDCIstance } from "@smui/checkbox";
   import { getDialogContext } from "@smui/dialog";
 
@@ -28,7 +28,7 @@
   export let table$class = "";
   export let value: any = null;
 
-  let selectableList: SelectableList;
+  let selectableGroup: SelectableGroup;
 
   setDisableCheckboxMDCIstance(true);
   const dialogContext$ = getDialogContext();
@@ -46,31 +46,33 @@
   $: if (dataTable && $dialogContext$?.isOpen) dataTable.layout();
 
   onDestroy(() => {
-    (dataTable as any).headerRowCheckbox = {destroy(){}}; // Workaround for MDCDataTable bug on destroy
-    (dataTable as any).rowCheckboxList = []; // Workaround for MDCDataTable bug on destroy
-
-    dataTable && dataTable.destroy();
+    if (dataTable) {
+      (dataTable as any).headerRowCheckbox = {destroy(){}}; // Workaround for MDCDataTable bug on destroy
+      (dataTable as any).rowCheckboxList = []; // Workaround for MDCDataTable bug on destroy
+  
+      dataTable.destroy();
+    }
   });
 
   function handleChange(
     event: CustomEvent<MDCDataTableRowSelectionChangedEventDetail>
   ) {
-    selectableList.setItemSelected(
+    selectableGroup.setItemSelected(
       event.detail.rowIndex,
       event.detail.selected
     );
   }
 
   function selectAllRows() {
-    selectableList.selectAll();
+    selectableGroup.selectAll();
   }
 
   function unselectAllRows() {
-    selectableList.unselectAll();
+    selectableGroup.unselectAll();
   }
 </script>
 
-<SelectableList bind:this={selectableList} bind:value>
+<SelectableGroup bind:this={selectableGroup} bind:value>
   <div
     bind:this={dom}
     {...props}
@@ -82,7 +84,7 @@
       <slot />
     </table>
   </div>
-</SelectableList>
+</SelectableGroup>
 
 <!-- <div
   bind:this={element}

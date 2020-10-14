@@ -8,7 +8,6 @@
   let indeterminateChecked = null;
   let oldIntedeterminateValue = indeterminateChecked
   function handleIndeterminableCheckbox() {
-    console.log(oldIntedeterminateValue, indeterminateChecked)
     if (oldIntedeterminateValue === true) {
       indeterminateChecked = false;
     } else if (oldIntedeterminateValue === false) {

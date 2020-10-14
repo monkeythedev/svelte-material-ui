@@ -1,30 +1,34 @@
+<script context="module" lang="ts">
+  let count = 0;
+</script>
+
 <script lang="ts">
-  import { setSelectableListContext } from "./";
   import { SelectableContext, SelectionType } from "../";
-  import UseInputGroup from "./UseInputGroup.svelte";
+  import {UseSelectableGroup} from "./";
   import {
-    getSelectableListContext,
-    SelectableListContext,
-  } from "./SelectableListContext";
+    getSelectableGroupContext,
+    SelectableGroupContext,
+    setSelectableGroupContext
+  } from "./SelectableGroupContext";
   import { Writable } from "svelte/store";
-  import { Use } from "../../hooks";
+  import { Use, UseState } from "../../hooks";
 
   export let value: any = undefined;
   export let selectionType: SelectionType = "multi";
   export let indexHasValues: boolean = undefined;
-  export let contextOverride$: Writable<SelectableListContext> = undefined;
+  export let contextOverride$: Writable<SelectableGroupContext> = undefined;
+  
+  let id = "SelectableGroup-" + count++;
+  let selectableGroup: UseSelectableGroup;
 
-  let inputGroup: UseInputGroup;
-
-  const parentContext$ = getSelectableListContext();
-
+  const parentContext$ = getSelectableGroupContext();
   if (parentContext$ && contextOverride$ === undefined) {
     contextOverride$ = parentContext$;
   }
 
-  let context$: Writable<SelectableListContext>;
+  let context$: Writable<SelectableGroupContext>;
   if (contextOverride$) {
-    context$ = setSelectableListContext({
+    context$ = setSelectableGroupContext({
       notifyFocus(itemFocused: SelectableContext) {
         $contextOverride$.notifyFocus(itemFocused);
       },
@@ -55,52 +59,56 @@
       getItems() {
         return $contextOverride$.getItems();
       },
-      value: $contextOverride$.value,
+      value: $contextOverride$?.value,
     });
   } else {
-    context$ = setSelectableListContext({
+    context$ = setSelectableGroupContext({
       notifyFocus(itemFocused: SelectableContext) {
-        inputGroup?.notifyFocus(itemFocused);
+        selectableGroup?.notifyFocus(itemFocused);
       },
       registerItem(item: SelectableContext) {
-        inputGroup?.registerItem(item);
+        selectableGroup?.registerItem(item);
       },
       unregisterItem(item: SelectableContext) {
-        inputGroup?.unregisterItem(item);
+        selectableGroup?.unregisterItem?.(item);
       },
       notifySelected(itemSelected: SelectableContext) {
-        inputGroup?.notifySelected(itemSelected);
+        selectableGroup?.notifySelected(itemSelected);
       },
       notifyUnselected(itemDeselected: SelectableContext) {
-        inputGroup?.notifyUnselected(itemDeselected);
+        selectableGroup?.notifyUnselected(itemDeselected);
       },
       setValue(newValue: any) {
-        inputGroup?.setValue(newValue);
+        selectableGroup?.setValue(newValue);
       },
       setItemSelected(index: number, selected: boolean) {
-        inputGroup?.setItemSelected(index, selected);
+        selectableGroup?.setItemSelected(index, selected);
       },
       selectAll() {
-        inputGroup?.selectAll();
+        selectableGroup?.selectAll();
       },
       unselectAll() {
-        inputGroup?.unselectAll();
+        selectableGroup?.unselectAll();
       },
       getItems() {
-        return inputGroup?.getItems();
+        return selectableGroup?.getItems();
       },
       value,
     });
   }
 
-  $: $context$ = { ...$context$, value };
-
-  function onSelfUpdated(newValue: typeof value) {
-    $contextOverride$?.setValue(newValue);
+  $: if (contextOverride$) {
+    $context$ = { ...$context$, value: $contextOverride$.value };
+  } else {
+    $context$ = { ...$context$, value };
   }
 
-  function onContextOverrideUpdate(contextOverride: SelectableListContext) {
-    if (contextOverride.value !== value) {
+  function onSelfUpdated() {
+    $contextOverride$?.setValue(value);
+  }
+
+  function onContextOverrideUpdate(contextOverride: SelectableGroupContext) {
+    if (contextOverride && contextOverride.value !== value) {
       value = contextOverride.value;
     }
   }
@@ -125,20 +133,21 @@
     return $context$.getItems();
   }
 
-  export function getContext(): Writable<SelectableListContext> {
+  export function getContext(): Writable<SelectableGroupContext> {
     return context$;
   }
 </script>
 
 {#if parentContext$}
-  <Use hook={() => onSelfUpdated(value)} />
-  <Use hook={() => onContextOverrideUpdate($contextOverride$)} />
+  <UseState {value} onUpdate={onSelfUpdated} />
+  <Use effect hook={() => onContextOverrideUpdate($contextOverride$)} />
 {:else}
-  <UseInputGroup
-    bind:this={inputGroup}
+  <UseSelectableGroup
+    bind:this={selectableGroup}
     bind:value
     bind:selectionType
-    bind:indexHasValues />
+    bind:indexHasValues
+    on:change />
 {/if}
 
 <slot />

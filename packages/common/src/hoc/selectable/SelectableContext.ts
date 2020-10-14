@@ -1,4 +1,4 @@
-import { createContextBuilder } from "../context";
+import { createContextBuilder } from "../../context";
 
 const [setSelectableContext, getSelectableContext] = createContextBuilder<SelectableContext>();
 export {setSelectableContext, getSelectableContext};

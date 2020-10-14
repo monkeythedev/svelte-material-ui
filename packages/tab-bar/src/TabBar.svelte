@@ -17,7 +17,7 @@
   import { MDCTabBar, MDCTabBarActivatedEvent } from "@material/tab-bar";
   import { onMount, onDestroy, setContext } from "svelte";
   import TabScroller from "@smui/tab-scroller/src/TabScroller.svelte";
-  import { SelectableContext, SelectableList } from "@smui/common/hoc";
+  import { SelectableContext, SelectableGroup } from "@smui/common/hoc";
   import { UseState } from "@smui/common/hooks";
   import { setCreateMDCTabScrollerInstance } from "@smui/tab-scroller";
   import { setCreateMDCTabInstance } from "@smui/tab/src/TabContext";
@@ -29,10 +29,10 @@ import Use from "@smui/common/src/hooks/Use.svelte";
 
   let tabs: Set<SelectableContext> = undefined;
 
-  let selectableList: SelectableList;
+  let selectableGroup: SelectableGroup;
 
-  $: if (selectableList) {
-    tabs = selectableList.getItems();
+  $: if (selectableGroup) {
+    tabs = selectableGroup.getItems();
   }
 
   setCreateMDCTabScrollerInstance(false);
@@ -102,8 +102,8 @@ import Use from "@smui/common/src/hooks/Use.svelte";
 
 <UseState value={active} onUpdate={onActiveTabChange} />
 
-<SelectableList
-  bind:this={selectableList}
+<SelectableGroup
+  bind:this={selectableGroup}
   selectionType="single"
   bind:value={active}>
   <div
@@ -118,6 +118,6 @@ import Use from "@smui/common/src/hooks/Use.svelte";
       <slot />
     </TabScroller>
   </div>
-</SelectableList>
+</SelectableGroup>
 
 <Use effect once hook={init}></Use>

@@ -1,13 +1,13 @@
 import { createContextBuilder } from "../../context";
-import { SelectableContext } from "../SelectableContext";
+import { SelectableContext } from "../selectable/SelectableContext";
 
 const [
-  setSelectableListContext,
-  getSelectableListContext,
-] = createContextBuilder<SelectableListContext>();
-export { setSelectableListContext, getSelectableListContext };
+  setSelectableGroupContext,
+  getSelectableGroupContext,
+] = createContextBuilder<SelectableGroupContext>();
+export { setSelectableGroupContext, getSelectableGroupContext };
 
-export interface SelectableListContext {
+export interface SelectableGroupContext {
   readonly value: any;
   notifyFocus(itemFocused: SelectableContext): void;
   notifySelected(itemSelected: SelectableContext): void;

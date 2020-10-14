@@ -14,7 +14,7 @@
   // Row
   import { getRowBehaviour, createRowContext } from "./RowContext";
   import { Selectable } from "@smui/common/hoc";
-  import { SelectableList } from "@smui/common/src/hoc";
+  import { SelectableGroup } from "@smui/common/src/hoc";
 
   export let value: any = undefined;
 
@@ -25,8 +25,8 @@
 </script>
 
 {#if behaviour === 'header'}
-  <SelectableList>
-    <!-- Workaround to prevent header checkbox to dirty the table SelectableList -->
+  <SelectableGroup>
+    <!-- Workaround to prevent header checkbox to dirty the table SelectableGroup -->
     <tr
       bind:this={dom}
       class="mdc-data-table__header-row {className}"
@@ -34,7 +34,7 @@
       {...props}>
       <slot />
     </tr>
-  </SelectableList>
+  </SelectableGroup>
 {:else}
   <Selectable bind:selected bind:value>
     <tr

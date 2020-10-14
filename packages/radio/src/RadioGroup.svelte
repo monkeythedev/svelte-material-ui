@@ -1,9 +1,9 @@
 <script lang="ts">
-  import { SelectableList } from "@smui/common/src/hoc";
+  import { SelectableGroup } from "@smui/common/src/hoc";
 
   export let value: any = null;
 </script>
 
-<SelectableList selectionType="single" bind:value>
+<SelectableGroup selectionType="single" bind:value>
   <slot />
-</SelectableList>
+</SelectableGroup>
