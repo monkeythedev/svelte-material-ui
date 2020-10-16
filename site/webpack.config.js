@@ -67,7 +67,7 @@ module.exports = {
         {
           test: /module\.s?css$/,
           use: [
-            "style-loader",
+            MiniCssExtractPlugin.loader,
             //"@teamsupercell/typings-for-css-modules-loader", Non si può usare per colpa di sapper ...
             {
               loader: "css-loader",
@@ -91,7 +91,6 @@ module.exports = {
           test: /\.s?css$/,
           exclude: /module\.s?css$/,
           use: [
-            "style-loader",
             MiniCssExtractPlugin.loader,
             {
               loader: "css-loader",

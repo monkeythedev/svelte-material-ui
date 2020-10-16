@@ -5,6 +5,7 @@
   import { Option, Select } from "@smui/select";
   import { Slider } from "@smui/slider";
   import { Configurator } from "src/components/configurator";
+  import classes from "./button.module.scss";
 
   let disabled: boolean = false;
   let ripple: boolean = true;
@@ -21,7 +22,15 @@
 
   let svelteCode: string = "";
   $: svelteCode = `
-      <Button${getCodeProps(disabled, ripple, variant, density, link)}>
+      <Button${getCodeProps(
+        customStyle,
+        disabled,
+        ripple,
+        variant,
+        density,
+        link,
+        "        "
+      )}>
         ${getLeadingIconCode(leadingIcon)}
         <Label>Button</Label>
         ${getTrailingIconCode(trailingIcon)}
@@ -29,20 +38,70 @@
     `;
 
   let scssCode: string = "";
-  $: scssCode = customStyle ? `
+  $: if (customStyle === "mdc-mixins") {
+    scssCode = `
+      @use "@material/button";
+       
       .buttonShapedRound {
         @include button.shape-radius(999px);
       }
-    ` : "";
+    `;
+  } else if (customStyle === "custom-css") {
+    scssCode = `
+      .buttonShapedNotch {
+        --notchSize: #{shape.$small-component-radius * 2};
 
-  function getCodeProps(disabled, ripple, variant, density, link) {
+        // source: https://css-tricks.com/notched-boxes/
+        -webkit-clip-path: polygon(
+          0% var(--notchSize),
+          var(--notchSize) 0%,
+          calc(100% - var(--notchSize)) 0%,
+          100% var(--notchSize),
+          100% calc(100% - var(--notchSize)),
+          calc(100% - var(--notchSize)) 100%,
+          var(--notchSize) 100%,
+          0% calc(100% - var(--notchSize))
+        );
+        clip-path: polygon(
+          0% var(--notchSize),
+          var(--notchSize) 0%,
+          calc(100% - var(--notchSize)) 0%,
+          100% var(--notchSize),
+          100% calc(100% - var(--notchSize)),
+          calc(100% - var(--notchSize)) 100%,
+          var(--notchSize) 100%,
+          0% calc(100% - var(--notchSize))
+        );
+      }
+    `;
+  } else {
+    scssCode = "";
+  }
+
+  function getCustomStyleClass(selectedCustomStyle: typeof customStyle) {
+    if (customStyle === "mdc-mixins") return "buttonShapedRound";
+    else if (customStyle === "custom-css") return "buttonShapedNotch";
+    else return null;
+  }
+
+  function getCodeProps(
+    selectedCustomStyle: typeof customStyle,
+    disabled: boolean,
+    ripple: boolean,
+    selectedVariant: typeof variant,
+    density: number,
+    link: boolean,
+    space: string
+  ) {
     let props = [];
+    if (selectedCustomStyle)
+      props.push(`class="${getCustomStyleClass(selectedCustomStyle)}"`);
     if (disabled) props.push("disabled");
     if (ripple) props.push("ripple");
-    if (variant) props.push(`variant="${variant}"`);
+    if (selectedVariant) props.push(`variant="${selectedVariant}"`);
     if (density) props.push(`density={${getDensity(density)}}`);
     if (link) props.push(`href="javascript:void(0)"`);
-    let result = props.join(" ");
+    let result = props.join(" \n" + space);
     if (result.length > 0) result = " " + result;
     return result;
   }
@@ -110,10 +169,10 @@
   }
 </style>
 
-{""+variant}
 <Configurator svelte={svelteCode} scss={scssCode}>
   <div slot="preview">
     <Button
+      class={classes[getCustomStyleClass(customStyle)]}
       {disabled}
       {ripple}
       {variant}

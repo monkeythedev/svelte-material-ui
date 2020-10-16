@@ -9,7 +9,7 @@
   .configurator {
     $border: #989898 1px solid;
     $padding: 1em;
-
+    max-width: 80em;
     display: grid;
     grid-template:
       "preview options-sidebar"

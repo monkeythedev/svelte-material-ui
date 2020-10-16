@@ -5,3 +5,4 @@ import MenuButton from "./MenuButton.svelte";
 
 export { Button, Label, Icon, MenuButton };
 export * from "./ButtonContextProps";
+export * from "./Button.svelte";

@@ -12,6 +12,7 @@
     "test": "run-p --race dev cy:run"
   },
   "dependencies": {
+    "@material/list": "^7.0.0",
     "@types/prismjs": "^1.16.1",
     "compression": "^1.7.4",
     "polka": "next",

@@ -1,3 +1,3 @@
-import Configurator from "./Configuratorz.svelte";
+import Configurator from "./Configurator.svelte";
 
 export { Configurator };

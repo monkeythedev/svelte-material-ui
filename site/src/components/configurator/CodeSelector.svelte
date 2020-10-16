@@ -24,7 +24,7 @@
   </div>
   {#if scss}
     <div class={classes['selection-list']}>
-      <List class={classes['list']} bind:value={selection} role="listbox">
+      <List class={classes['list']} bind:value={selection} role="listbox" orientation="horizontal">
         <Item value="svelte">
           <Text>Svelte</Text>
         </Item>

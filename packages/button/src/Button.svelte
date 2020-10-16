@@ -23,6 +23,7 @@
   import { getButtonBehaviour } from "./ButtonContextProps";
   import { Ripple3 } from "@smui/ripple";
   import { UseState } from "@smui/common/hooks";
+import { tick } from "svelte";
 
   export let ripple: boolean = true;
   export let color: "primary" | "secondary" = "primary";
@@ -36,6 +37,10 @@
   export let density: number = undefined;
 
   let rippleInstance: Ripple3;
+  let rippleClasses: string;
+  let component: typeof Button | typeof A;
+
+  $: component = href == null || disabled ? Button : A;
 
   $: {
     if (density > 3) density = 3;
@@ -55,23 +60,23 @@
     }
   }
 
-  function onVariantUpdated() {
-    if (rippleInstance) {
-      rippleInstance.reinstantiate();
-    }
+  function onComponentChanged() {
+    tick().then(() => {
+      rippleInstance.reinstantiate()
+    });
   }
 </script>
 
 <svelte:options immutable={true} />
 
-<UseState value={variant} onUpdate={onVariantUpdated} />
+<UseState value={component} onUpdate={onComponentChanged}></UseState>
 
 <svelte:component
-  this={href == null || disabled ? Button : A}
+  this={component}
   bind:dom
   props={{ ...props, ...actionProps, disabled, target, href }}
   {id}
-  class="mdc-button {className}
+  class="mdc-button {className || ''}
     {variant ? `mdc-button--${variant}` : ''}
     {color === 'secondary' ? 'smui-button--color-secondary' : ''}
     {behaviour === 'card:action' ? 'mdc-card__action' : ''}
@@ -79,13 +84,15 @@
     {behaviour === 'dialog:action' ? 'mdc-dialog__button' : ''}
     {behaviour === 'top-app-bar:navigation' ? 'mdc-top-app-bar__navigation-icon' : ''}
     {behaviour === 'top-app-bar:action' ? 'mdc-top-app-bar__action-item' : ''}
-    {density != null ? `smui-button--dense--${density}` : ''}"
+    {density != null ? `smui-button--dense--${density}` : ''}
+    {rippleClasses}"
   {style}
   on:domEvent={forwardDOMEvents}>
   {#if ripple}
     <Ripple3
       bind:this={rippleInstance}
       rippleElement="mdc-button__ripple"
+      bind:rippleClasses
       target={dom} />
   {/if}
   <slot />

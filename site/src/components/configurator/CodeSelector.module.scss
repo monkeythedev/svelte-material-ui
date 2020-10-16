@@ -1,19 +1,39 @@
 @use "@material/theme";
+@use "@material/ripple";
+@use "@material/list";
 
 .code-selector {
   display: flex;
-  
+
   .source {
     flex-grow: 1;
     display: flex;
   }
-  
+
   .selection-list {
     background: #1e1e1e;
-  
+
     > .list {
-      background-color: theme.$surface;
+      background-color: #1e1e1e;
       padding: 0px;
+
+      @include list.item-primary-text-ink-color(#d4d4d4);
+
+      :global(.mdc-list-item) {
+        &:not(:global(.mdc-list-item--selected)) {
+          :global(.mdc-list-item__ripple) {
+            @include ripple.states-base-color(white);
+          }
+        }
+
+        &:hover, &:focus {
+          :global(.mdc-list-item__ripple) {
+            &:before {
+              opacity: 0.2;
+            }
+          }
+        }
+      }
     }
   }
 }

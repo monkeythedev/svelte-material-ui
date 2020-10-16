@@ -5,6 +5,8 @@
     MDCRippleFoundation,
   } from "@material/ripple";
 
+  let count = 0;
+
   interface SMUIRippleProps {
     classForward?: (classList: string[]) => void;
     keyboardEvents?: boolean;
@@ -38,8 +40,9 @@
           if (idx === -1) {
             this.root.classList.add(className);
             classList.push(className);
+
             if (classForward) {
-              classForward(classList);
+              classForward([...classList]);
             }
           }
         },
@@ -48,6 +51,7 @@
           if (idx !== -1) {
             this.root.classList.remove(className);
             classList.splice(idx, 1);
+
             if (classForward) {
               classForward(classList);
             }
@@ -76,11 +80,16 @@
       this.ripple.unbounded = unbounded;
       this.#unbounded = unbounded;
     }
+
+    destroy() {
+      console.warn("destroy");
+      this.ripple?.destroy();
+    }
   }
 
   function isSubmitKey(event: KeyboardEvent) {
-    const isEnter = event.key === "Enter" || event.keyCode === 13;
-    const isSpace = event.key === "Space" || event.keyCode === 32;
+    const isEnter = event.key === "Enter";
+    const isSpace = event.key === "Space";
     return isEnter || isSpace;
   }
 </script>
@@ -88,6 +97,7 @@
 <script lang="ts">
   import { RippleProps } from "./Ripple";
   import { Use } from "@smui/common/hooks";
+  import { onDestroy } from "svelte";
 
   export let target: HTMLElement;
   export let unbounded: RippleProps["unbounded"] = null;
@@ -98,6 +108,7 @@
   export { className as class };
 
   let ripple: SMUIRipple;
+  const id = count++;
 
   $: if (target) {
     // Fix ripple on selectable items
@@ -109,9 +120,13 @@
     // }
 
     if (color) target.classList.add("mdc-ripple-surface");
-    if (color == 'primary') target.classList.add("mdc-ripple-surface--primary");
-    if (color == 'secondary') target.classList.add("mdc-ripple-surface--accent");
-    if (className) className.split(" ").forEach(classToken => target.classList.add(classToken))
+    if (color == "primary") target.classList.add("mdc-ripple-surface--primary");
+    if (color == "secondary")
+      target.classList.add("mdc-ripple-surface--accent");
+    if (className)
+      className
+        .split(" ")
+        .forEach((classToken) => target.classList.add(classToken));
   }
 
   function classForward(classList: string[]) {
@@ -130,8 +145,13 @@
   }
 
   export function reinstantiate() {
+    ripple?.destroy();
     init();
   }
+
+  onDestroy(() => {
+    ripple?.destroy();
+  });
 </script>
 
-<Use once effect hook={init} when={!!target}></Use>
+<Use once effect hook={init} when={!!target} />
