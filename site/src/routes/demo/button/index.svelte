@@ -9,8 +9,7 @@
   import SelectionGroup from "@smui/menu/src/SelectionGroup.svelte";
   import SelectionGroupIcon from "@smui/menu/src/SelectionGroupIcon.svelte";
   import ButtonConfigurator from "./_ButtonConfigurator.svelte";
-  import {DataTable, Head, Body, Row, Cell} from '@smui/data-table';
-import ApiList from "src/components/api-list/APIList.svelte";
+  import ApiList from "src/components/api-list/APIList.svelte";
 
   let clicked = 0;
   let menu: Menu;
@@ -24,7 +23,7 @@ import ApiList from "src/components/api-list/APIList.svelte";
 
   <Typography variant="headline3">Events</Typography>
 
-  <ApiList></ApiList>
+  <ApiList />
 
   <div>
     Button groups:
@@ -109,10 +108,7 @@ import ApiList from "src/components/api-list/APIList.svelte";
       <Button on:click={() => clicked++} variant="raised">
         <Label>Do the thing</Label>
       </Button>
-      <MenuButton
-        variant="raised"
-        style="padding: 0; min-width: 36px;"
-        {menu}>
+      <MenuButton variant="raised" style="padding: 0; min-width: 36px;" {menu}>
         <Icon class="material-icons" style="margin: 0;">arrow_drop_down</Icon>
       </MenuButton>
 

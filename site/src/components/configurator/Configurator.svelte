@@ -15,7 +15,9 @@
     display: grid;
     grid-template:
       "preview options-sidebar"
+      "code options-sidebar"
       / 1fr minmax(200px, min-content);
+    white-space: normal;
     border: $border;
 
     .preview {
@@ -24,25 +26,55 @@
       background-color: #efefef;
       border-right: $border;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
+
+      .preview-slot {
+        flex-grow: 1;
+        align-items: center;
+        display: flex;
+      }
+
+      .values {
+        display: flex;
+        align-self: flex-end;
+      }
     }
 
     .options-sidebar {
       grid-area: options-sidebar;
       padding: $padding;
     }
+
+    .code {
+      grid-area: code;
+      min-width: 0;
+      min-height: 0;
+      overflow: auto;
+
+      :global(pre) {
+        white-space: break-spaces;
+      }
+    }
   }
 </style>
 
 <div class="configurator">
   <div class="preview">
-    <slot name="preview" />
+    <div class="preview-slot">
+      <slot name="preview" />
+    </div>
+    {#if $$slots.values}
+      <div class="values">
+        <slot name="values" />
+      </div>
+    {/if}
   </div>
   <div class="options-sidebar">
     <slot name="options-sidebar" />
   </div>
   <div class="code">
-    <CodeSelector {svelte} {scss}></CodeSelector>
+    <CodeSelector {svelte} {scss} />
   </div>
 </div>

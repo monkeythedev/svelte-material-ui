@@ -16,7 +16,7 @@
   export let style: string = undefined;
   export let id: string = undefined;
 
-  export let dom: HTMLAnchorElement = null;
+  export let dom: HTMLAnchorElement = undefined;
 
   export let props: AProps = {};
   //#endregion

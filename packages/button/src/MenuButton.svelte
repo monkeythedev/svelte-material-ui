@@ -18,7 +18,7 @@
   export let ripple: boolean = true;
   export let color: "primary" | "secondary" = "primary";
   export let variant: "raised" | "unelevated" | "outlined" = null;
-  export let dense: boolean = false;
+  export let density: number = undefined;
   export let disabled: boolean = false;
 
   export let menu: Menu;
@@ -60,7 +60,7 @@
   {ripple}
   {color}
   {variant}
-  {dense}
+  {density}
   {disabled}>
   <slot />
 </Button>

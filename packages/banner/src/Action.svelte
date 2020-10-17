@@ -14,10 +14,10 @@
   //#endregion
 
   // Action
-  import { Button, ButtonColors } from "@smui/button";
+  import { Button, ButtonColor } from "@smui/button";
 
   export let ripple: boolean = true;
-  export let type: ButtonColors = "primary";
+  export let type: ButtonColor = "primary";
 </script>
 
 <svelte:options immutable={true} />

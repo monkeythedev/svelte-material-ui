@@ -4,25 +4,31 @@
   const forwardDOMEvents = DOMEventsForwarder();
   let className = "";
   export { className as class };
-  export let style: string = "";
+  export let style: string = undefined;
 
-  export let dom: HTMLAnchorElement | HTMLButtonElement = null;
+  export let dom: HTMLAnchorElement | HTMLButtonElement = undefined;
   import { BaseProps } from "@smui/common/dom/Props";
   export let props: BaseProps = {};
   //#endregion
 
   // IconButton
+  //#region imports
   import { MDCIconButtonToggle } from "@material/icon-button";
   import { onDestroy, onMount } from "svelte";
   import IconButton from "./IconButton.svelte";
+  //#endregion
 
-  export let color: "primary" | "secondary" = null;
+  //#region exports
   export let ripple: boolean = true;
-  export let pressed: boolean = false;
-  export let href: string = null;
+  export let active: boolean = false;
   export let disabled: boolean = false;
-  export let target: string = "";
-  export let title: string = "";
+  export let title:
+    | string
+    | {
+        on: string;
+        off: string;
+      } = undefined;
+  //#endregion
 
   let toggleButton: MDCIconButtonToggle;
   onMount(() => {
@@ -34,18 +40,33 @@
     toggleButton.listen(
       "MDCIconButtonToggle:change",
       (event: CustomEvent<{ isOn: boolean }>) => {
-        pressed = event.detail.isOn;
+        active = event.detail.isOn;
       }
     );
   });
 
-  $: if (toggleButton && toggleButton.on !== pressed) {
-    toggleButton.on = pressed;
+  $: {
+    // On pressed change
+    if (toggleButton && toggleButton.on !== active) {
+      toggleButton.on = active;
+    }
   }
 
   onDestroy(() => {
     toggleButton && toggleButton.destroy();
   });
+
+  $: props = {
+    ...props,
+    "data-aria-label-on":
+      props["data-aria-label-on"] || typeof title === "string"
+        ? title
+        : title?.on,
+    "data-aria-label-off":
+      props["data-aria-label-off"] || typeof title === "string"
+        ? title
+        : title?.off,
+  };
 </script>
 
 <IconButton
@@ -55,11 +76,7 @@
   {style}
   on:domEvent={forwardDOMEvents}
   {disabled}
-  {href}
-  {target}
-  {title}
-  {pressed}
-  {color}
+  title={typeof title === 'string' ? title : active ? title && title.on : title && title.off}
   ripple={false}>
   <slot />
 </IconButton>

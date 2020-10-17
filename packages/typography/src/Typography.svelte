@@ -67,6 +67,7 @@
 <svelte:component
   this={component}
   bind:dom
+  {id}
   class="{className || ''} mdc-typography--{variant}"
   {style}
   on:domEvent={forwardDOMEvents}

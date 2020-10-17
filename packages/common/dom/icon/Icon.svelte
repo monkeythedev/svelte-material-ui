@@ -7,14 +7,13 @@
   export let style: string = undefined;
   export let id: string = undefined;
 
-  export let dom: HTMLSpanElement = null;
+  export let dom: HTMLSpanElement = undefined;
   import { BaseProps } from "../Props";
   export let props: BaseProps = {};
 
   // Icon
   import { getIconBehaviour } from "./IconContextProps";
 
-  export let on: boolean = false;
   export let leading: boolean = false;
   export let leadingHidden: boolean = false;
   export let trailing: boolean = false;
@@ -28,8 +27,6 @@
   {id}
   class="{className || 'material-icons'}
     {iconStyle === 'fab' ? 'mdc-fab__icon' : ''}
-    {iconStyle === 'icon-button' ? 'mdc-icon-button__icon' : ''}
-    {iconStyle === 'icon-button' && on ? 'mdc-icon-button__icon--on' : ''}
     {iconStyle === 'chip' ? 'mdc-chip__icon' : ''}
     {iconStyle === 'chip' && leading ? 'mdc-chip__icon--leading' : ''}
     {iconStyle === 'chip' && leadingHidden ? 'mdc-chip__icon--leading-hidden' : ''}

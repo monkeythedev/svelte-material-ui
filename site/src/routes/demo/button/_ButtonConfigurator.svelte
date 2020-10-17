@@ -174,9 +174,9 @@
       {ripple}
       {variant}
       density={getDensity(density)}
-      href={link ? 'javascript:void(0)' : null}
-      target={link ? '_blank' : null}
-      color={secondary ? 'secondary' : null}>
+      href={link ? 'javascript:void(0)' : undefined}
+      target={link ? '_blank' : undefined}
+      color={secondary ? 'secondary' : undefined}>
       {#if leadingIcon === 'material-icon'}
         <Icon>favorite</Icon>
       {:else if leadingIcon === 'svg'}

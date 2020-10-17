@@ -1,8 +1,11 @@
 <script lang="ts">
-  import ToggleButtons from "./_ToggleButtons.svelte";
-  import BaseIconButtons from "./_BaseIconButtons.svelte";
+  import { Label, Tab } from "@smui/tab";
 
-  let clicked = 0;
+  import { TabBar } from "@smui/tab-bar";
+  import BasicIconButtonConfigurator from "./_BasicIconButtonConfigurator.svelte";
+  import IconButtonToggleConfigurator from "./_IconButtonToggleConfigurator.svelte";
+
+  let currentTab;
 </script>
 
 <svelte:head>
@@ -12,8 +15,18 @@
 <section>
   <h2>Icon Button</h2>
 
-  <BaseIconButtons bind:clicked />
-  <ToggleButtons bind:clicked />
-
-  <pre class="status">Clicked: {clicked}</pre>
+  <TabBar bind:active={currentTab}>
+    <Tab key="basic">
+      <Label>Icon Button</Label>
+    </Tab>
+    <Tab key="toggle">
+      <Label>Icon Button Toggle</Label>
+    </Tab>
+  </TabBar>
+  {#if currentTab === 'basic'}
+    <BasicIconButtonConfigurator />
+  {:else}
+    <IconButtonToggleConfigurator />
+  {/if}
+  
 </section>

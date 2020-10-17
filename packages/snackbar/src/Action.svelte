@@ -14,12 +14,12 @@
   //#endregion
 
   // Action
-  import { Button, ButtonVariant, ButtonColors } from "@smui/button";
-import A from "@smui/common/dom/A.svelte";
+  import { Button, ButtonVariant, ButtonColor } from "@smui/button";
+  import A from "@smui/common/dom/A.svelte";
 
   //#region exports
   export let ripple: boolean = undefined;
-  export let color: ButtonColors = undefined;
+  export let color: ButtonColor = undefined;
   export let variant: ButtonVariant = undefined;
   export let disabled: boolean = undefined;
   export let density: number = undefined;
@@ -32,7 +32,7 @@ import A from "@smui/common/dom/A.svelte";
 
 <Button
   bind:dom
-  props={{...props, type: "button"}}
+  props={{ ...props, type: 'button' }}
   {id}
   class="{className || ''} mdc-button mdc-snackbar__action"
   {style}

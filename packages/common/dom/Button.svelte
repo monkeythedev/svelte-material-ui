@@ -15,7 +15,7 @@
   export let style: string = undefined;
   export let id: string = undefined;
 
-  export let dom: HTMLButtonElement = null;
+  export let dom: HTMLButtonElement = undefined;
 
   export let props: ButtonProps = {};
   //#endregion

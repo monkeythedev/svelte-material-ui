@@ -13,10 +13,12 @@
 
   // Section
   import { setIconButtonBehaviour } from "@smui/icon-button";
+  import { setButtonBehaviour } from "@smui/button";
 
   export let align = "start";
   export let toolbar = false;
 
+  setButtonBehaviour("top-app-bar:action");
   setIconButtonBehaviour(
     toolbar ? "top-app-bar:action" : "top-app-bar:navigation"
   );

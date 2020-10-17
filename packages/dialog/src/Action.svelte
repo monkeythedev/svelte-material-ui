@@ -14,25 +14,25 @@
   //#endregion
 
   // Action
-  import { Button, ButtonVariant, ButtonColors } from "@smui/button";
+  import { Button, ButtonVariant, ButtonColor } from "@smui/button";
 
   //#region exports
   export let ripple: boolean = undefined;
-  export let color: ButtonColors = undefined;
+  export let color: ButtonColor = undefined;
   export let variant: ButtonVariant = undefined;
   export let disabled: boolean = undefined;
   export let density: number = undefined;
   export let href: string = undefined;
   export let target: string = undefined;
-  
+
   export let action: string = "close";
   let defaultAction: boolean = false;
   export { defaultAction as default };
   //#endregion
 
   let actionProps: {
-    "data-mdc-dialog-button-default"?: "",
-    "data-mdc-dialog-action"?: string
+    "data-mdc-dialog-button-default"?: "";
+    "data-mdc-dialog-action"?: string;
   } = {};
   $: {
     actionProps = {};
@@ -51,7 +51,7 @@
 
 <Button
   bind:dom
-  props={{...props, ...actionProps}}
+  props={{ ...props, ...actionProps }}
   {id}
   class="{className || ''} mdc-dialog__button"
   {style}

@@ -15,9 +15,11 @@
 
   // Actions
   import { setIconButtonBehaviour } from "@smui/icon-button";
+  import { setButtonBehaviour } from "@smui/button";
 
   export let fullBleed: boolean = false;
 
+  setButtonBehaviour("card:action");
   setIconButtonBehaviour("card:action");
 </script>
 

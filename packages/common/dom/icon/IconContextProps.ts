@@ -1,7 +1,8 @@
 import { createContextPropBuilder } from "@smui/common/src";
 
-const [setIconBehaviour, getIconBehaviour] = createContextPropBuilder<IconBehaviour>();
+const [setIconBehaviour, getIconBehaviour] = createContextPropBuilder<
+  IconBehaviour
+>();
 export { setIconBehaviour, getIconBehaviour };
 
-type IconBehaviour = "fab" | "icon-button" | "chip" | "tab";
-
+type IconBehaviour = "fab" | "chip" | "tab";

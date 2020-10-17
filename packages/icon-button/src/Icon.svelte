@@ -1,5 +1,5 @@
 <script lang="ts">
-  // Base
+  //#region Base
   import { DOMEventsForwarder } from "@smui/common/events/DOMEventsForwarder";
   const forwardDOMEvents = DOMEventsForwarder();
   let className = undefined;
@@ -7,33 +7,32 @@
   export let style: string = undefined;
   export let id: string = undefined;
 
-  export let dom: GraphicElement = null;
+  export let dom: HTMLAnchorElement | HTMLButtonElement = undefined;
+
   import { BaseProps } from "@smui/common/dom/Props";
   export let props: BaseProps = {};
+  //#endregion
 
-  // Icon
-  import { Graphic, GraphicElement } from "@smui/common/components";
-  import { parseClassList } from "@smui/common/src/functions";
+  // IconButton
+  import { Graphic, GraphicType } from "@smui/common/components";
+  import { parseClassList } from "@smui/common/functions";
 
-  export let svg: boolean = false;
-
-  $: props = {
-    ...props,
-    "aria-hidden": true,
-    xmlns: svg ? "http://www.w3.org/2000/svg" : undefined,
-  };
+  export let on: boolean = false;
+  export let type: GraphicType = "icon";
 </script>
 
 <svelte:options immutable={true} />
 
 <Graphic
   bind:dom
-  {...props}
+  {props}
+  {type}
   {id}
   class={parseClassList([
     className,
-    'mdc-button__icon',
-    [!svg && className == undefined, 'material-icons'],
+    'mdc-icon-button__icon',
+    [type === 'icon' && className == undefined, 'material-icons'],
+    [on, 'mdc-icon-button__icon--on'],
   ])}
   {style}
   on:domEvent={forwardDOMEvents}>

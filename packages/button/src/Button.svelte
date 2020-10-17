@@ -2,7 +2,7 @@
   import { A, Button } from "@smui/common/dom";
   export type ButtonComponent = typeof Button | typeof A;
   export type ButtonVariant = "raised" | "unelevated" | "outlined";
-  export type ButtonColors = "primary" | "secondary";
+  export type ButtonColor = "primary" | "secondary";
 </script>
 
 <script lang="ts">
@@ -25,11 +25,13 @@
   import { Ripple3 } from "@smui/ripple";
   import { UseState } from "@smui/common/hooks";
   import { tick } from "svelte";
+  import { getButtonBehaviour } from "./";
+  import { parseClassList } from "@smui/common/src/functions";
   //#endregion
 
   //#region exports
   export let ripple: boolean = true;
-  export let color: ButtonColors = "primary";
+  export let color: ButtonColor = "primary";
   export let variant: ButtonVariant = undefined;
   export let disabled: boolean = false;
   export let density: number = undefined;
@@ -38,6 +40,7 @@
   //#endregion
 
   //#region Internal variables
+  const behaviour = getButtonBehaviour();
   let rippleInstance: Ripple3;
   let rippleClasses: string;
   let component: typeof Button | typeof A;
@@ -70,11 +73,16 @@
   bind:dom
   props={{ ...props, disabled, target, href }}
   {id}
-  class="{className || ''} mdc-button
-    {variant ? `mdc-button--${variant}` : ''}
-    {color === 'secondary' ? 'smui-button--color-secondary' : ''}
-    {density != null ? `smui-button--dense--${density}` : ''}
-    {rippleClasses}"
+  class={parseClassList([
+    className,
+    'mdc-button',
+    [variant, `mdc-button--${variant}`],
+    [color === 'secondary', 'smui-button--color-secondary'],
+    [density != null, `smui-button--dense--${density}`],
+    [behaviour === 'card:action', 'mdc-card__action mdc-card__action--button'],
+    [behaviour === 'top-app-bar:action', 'mdc-top-app-bar__action-item'],
+    rippleClasses,
+  ])}
   {style}
   on:domEvent={forwardDOMEvents}>
   {#if ripple}

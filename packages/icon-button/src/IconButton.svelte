@@ -1,34 +1,57 @@
+<script context="module" lang="ts">
+  export type IconButtonColor = "primary" | "secondary";
+</script>
+
 <script lang="ts">
   //#region Base
   import { DOMEventsForwarder } from "@smui/common/events/DOMEventsForwarder";
   const forwardDOMEvents = DOMEventsForwarder();
-  let className = "";
+  let className = undefined;
   export { className as class };
-  export let style: string = null;
-  export let id: string = null;
+  export let style: string = undefined;
+  export let id: string = undefined;
 
-  export let dom: HTMLAnchorElement | HTMLButtonElement = null;
+  export let dom: HTMLAnchorElement | HTMLButtonElement = undefined;
 
   import { BaseProps } from "@smui/common/dom/Props";
   export let props: BaseProps = {};
   //#endregion
 
   // IconButton
-  import { Button, A, setIconBehaviour } from "@smui/common/dom";
+  //#region imports
+  import { Button, A } from "@smui/common/dom";
   import { getIconButtonBehaviour } from "./IconButtonContextProps";
+  import { UseState } from "@smui/common/hooks";
   import { UseRipple } from "@smui/ripple";
+  import { tick } from "svelte";
+  import { parseClassList } from "@smui/common/functions";
+  //#endregion
 
+  //#region exports
   export let ripple: boolean = true;
-  export let color: "primary" | "secondary" = null;
-  export let pressed: boolean = false;
-  export let href: string = null;
+  export let color: IconButtonColor = undefined;
+  export let href: string = undefined;
   export let disabled: boolean = false;
-  export let target: string = "";
-  export let title: string = "";
+  export let target: string = undefined;
+  export let title: string = undefined;
+  //#endregion
 
+  //#region Internal variables
   const behaviour = getIconButtonBehaviour();
+  let rippleInstance: UseRipple;
+  let component: typeof Button | typeof A;
 
-  setIconBehaviour("icon-button");
+  $: {
+    // Set component
+    component = href == null || disabled ? Button : A;
+  }
+  //#endregion
+
+  function onComponentChanged() {
+    tick().then(() => {
+      rippleInstance.reinstantiate();
+    });
+  }
 
   $: props = {
     ...props,
@@ -36,30 +59,37 @@
     href,
     target,
     title,
-    "aria-pressed": pressed,
-    "aria-hidden": true,
     "aria-label": props["aria-label"] || title,
   };
 </script>
+
+<svelte:options immutable={true} />
+
+<UseState value={component} onUpdate={onComponentChanged} />
 
 <svelte:component
   this={href ? A : Button}
   bind:dom
   {props}
   {id}
-  class="mdc-icon-button {className}
-    {pressed ? 'mdc-icon-button--on' : ''}
-    {behaviour === 'card:action' ? 'mdc-card__action' : ''}
-    {behaviour === 'card:action' ? 'mdc-card__action--icon' : ''}
-    {behaviour === 'top-app-bar:navigation' ? 'mdc-top-app-bar__navigation-icon' : ''}
-    {behaviour === 'top-app-bar:action' ? 'mdc-top-app-bar__action-item' : ''}"
+  class={parseClassList([
+    className,
+    'mdc-icon-button',
+    [className === undefined, 'material-icons'],
+    [behaviour === 'card:action', 'mdc-card__action mdc-card__action--icon'],
+    [
+      behaviour === 'top-app-bar:navigation',
+      'mdc-top-app-bar__navigation-icon',
+    ],
+    [behaviour === 'top-app-bar:action', 'mdc-top-app-bar__action-item'],
+  ])}
   {style}
   on:domEvent={forwardDOMEvents}>
   <slot />
 </svelte:component>
 
 {#if ripple}
-  <UseRipple target={dom} {color} unbounded={true} />
+  <UseRipple bind:this={rippleInstance} target={dom} {color} unbounded={true} />
 {/if}
 
 <!-- {#if href}
