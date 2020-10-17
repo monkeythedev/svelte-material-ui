@@ -1,0 +1,36 @@
+@use "./smui/_variables";
+
+@mixin std(
+  $color-style: variables.$border-color 1px solid,
+  $inner-border: true
+) {
+  border: variables.$border-color 1px solid;
+
+  &:not(:last-child) {
+    border-right: 0;
+  }
+
+  @if $inner-border == false {
+    &:not(:first-child) {
+      border-left: 0;
+    }
+  }
+}
+
+@mixin grid(
+  $color-style: variables.$border-color 1px solid,
+  $columns
+) {
+  > * {
+    border-bottom: $color-style;
+    border-right: $color-style;
+
+    &:nth-child(#{$columns}n - 2) {
+      border-left: $color-style;
+    }
+
+    &:nth-child(-n + #{$columns}) {
+      border-top: $color-style;
+    }
+  }
+}

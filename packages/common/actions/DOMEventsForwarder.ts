@@ -51,7 +51,7 @@ const domEvents: DOMEvents[] = [
   "lostpointercapture",
 ];
 
-const essentialDomEvents: DOMEvents[] = [
+const essentialDomEvents: (keyof SMUIDOMEvents)[] = [
   "keydown",
   "keypress",
   "keyup",
@@ -60,20 +60,15 @@ const essentialDomEvents: DOMEvents[] = [
   "select",
   "focus",
   "focusout",
-  "focusin"
-]
+  "focusin",
+];
 
 export function DOMEventsForwarder() {
-  const dispatch = createEventDispatcher<{
-    domEvent: Event;
-    [event: string]: Event;
-  }>();
+  const dispatch = createEventDispatcher<SMUIDOMEvents>();
 
-  return function forwardAllDOMEvents(
-    node: Node
-  ) {
+  return function forwardAllDOMEvents(node: Node) {
     function listener(event: Event) {
-      dispatch(event.type, event);
+      dispatch(event.type as any, event);
       dispatch("domEvent", event);
     }
 
@@ -85,12 +80,9 @@ export function DOMEventsForwarder() {
   };
 }
 
-function listenAllDOMEvents(
-  node: Node,
-  listener: (event: Event) => void
-) {
+function listenAllDOMEvents(node: Node, listener: (event: Event) => void) {
   const domListeners = createDOMEventsListeners(listener);
-  const {update: parentUpdate, destroy} = listenDOMEvents(node, domListeners)
+  const { update: parentUpdate, destroy } = listenDOMEvents(node, domListeners);
 
   return {
     update(listener: (event: Event) => void) {
@@ -101,19 +93,34 @@ function listenAllDOMEvents(
   };
 }
 
-function listenDOMEvents(
-  node: Node,
-  opts: ListenerOpt<Event>[]
-) {
+function listenDOMEvents(node: Node, opts: ListenerOpt<Event>[]) {
   return listenEvents(node, opts);
 }
 
-function createDOMEventsListeners(listener: (event: Event) => void): ListenerOpt<Event>[] {
+function createDOMEventsListeners(
+  listener: (event: Event) => void
+): ListenerOpt<Event>[] {
   function domEventListener(event: Event) {
     listener(event);
   }
 
-  return essentialDomEvents.map(eventName => ({eventName, listener: domEventListener}));
+  return essentialDomEvents.map((eventName) => ({
+    eventName,
+    listener: domEventListener,
+  }));
 }
 
 export type DOMEvents = keyof DocumentEventMap;
+
+export interface SMUIDOMEvents {
+  domEvent: Event;
+  keydown: KeyboardEvent;
+  keypress: KeyboardEvent;
+  keyup: KeyboardEvent;
+  click: MouseEvent;
+  change: Event;
+  select: Event;
+  focus: Event;
+  focusout: Event;
+  focusin: Event;
+}

@@ -13,9 +13,6 @@
 
   // Actions
   import { Footer } from "@smui/common/dom";
-  import { setButtonBehaviour } from "@smui/button";
-
-  setButtonBehaviour("dialog:action");
 </script>
 
 <Footer

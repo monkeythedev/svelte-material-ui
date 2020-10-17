@@ -1,22 +1,21 @@
 @use "@material/button";
-@use "@material/elevation";
-@use "@material/feature-targeting/functions";
+@use "@material/feature-targeting";
 @use "@material/ripple";
 
-@mixin smui-button-core-styles($query: functions.all()) {
+@mixin smui-button-core-styles($query: feature-targeting.all()) {
   @include smui-button-without-ripple($query);
   @include smui-button-ripple($query);
   @include smui-button__density($query);
 }
 
-@mixin smui-button-without-ripple($query: functions.all()) {
+@mixin smui-button-without-ripple($query: feature-targeting.all()) {
   .smui-button--color-secondary {
     @include button.ink-color(secondary, $query);
 
     &.mdc-button--raised,
     &.mdc-button--unelevated {
-      @include button.container-fill-color(secondary, $query );
-      @include button.ink-color(on-secondary, $query );
+      @include button.container-fill-color(secondary, $query);
+      @include button.ink-color(on-secondary, $query);
     }
 
     &.mdc-button--outlined {
@@ -25,84 +24,30 @@
   }
 }
 
-@mixin smui-button-ripple($query: functions.all()) {
+@mixin smui-button-ripple($query: feature-targeting.all()) {
   .smui-button--color-secondary {
-    &, & .mdc-button__ripple {
+    &,
+    & .mdc-button__ripple {
       @include ripple.states(secondary, false, $query);
-
     }
 
-    &.mdc-button--raised, &.mdc-button--unelevated {
-      &, & .mdc-button__ripple {
+    &.mdc-button--raised,
+    &.mdc-button--unelevated {
+      &,
+      & .mdc-button__ripple {
         @include ripple.states(on-secondary, false, $query);
       }
     }
   }
 }
 
-@mixin smui-button__group-core-styles($query: functions.all()) {
-  .smui-button__group {
-    display: inline-flex;
-
-    & > .mdc-button,
-    & > .smui-button__group-item > .mdc-button {
-      margin-left: 0;
-      margin-right: 0;
-    }
-
-    & > .mdc-button:not(:last-child),
-    & > .smui-button__group-item:not(:last-child) > .mdc-button {
-      border-top-right-radius: 0;
-      border-bottom-right-radius: 0;
-    }
-
-    & > .mdc-button:not(:first-child),
-    & > .smui-button__group-item:not(:first-child) > .mdc-button {
-      border-top-left-radius: 0;
-      border-bottom-left-radius: 0;
-    }
-
-    &.smui-button__group--raised {
-      @include elevation.elevation(2, $query: $query);
-    }
-
-    & > .mdc-button--raised,
-    & > .smui-button__group-item > .mdc-button--raised {
-      @include smui-button__group-mdc-button--raised_($query);
-    }
-
-    & > .mdc-button--outlined:not(:last-child),
-    & > .smui-button__group-item:not(:last-child) > .mdc-button--outlined {
-      border-right-width: 0;
-    }
-  }
-}
-
-@mixin smui-button__group-mdc-button--raised_($query: functions.all()) {
-  @include button.shape-radius(small, $query);
-  @include elevation.elevation(0, $query: $query);
-
-  &:hover,
-  &:focus {
-    @include elevation.elevation(0, $query: $query);
-  }
-
-  &:active {
-    @include elevation.elevation(0, $query: $query);
-  }
-
-  &:disabled {
-    @include elevation.elevation(0, $query: $query);
-  }
-}
-
-@mixin smui-button__density($query: functions.all()) {
+@mixin smui-button__density($query: feature-targeting.all()) {
   @each $density in 0, 1, 2, 3 {
     .smui-button--dense--#{$density} {
-      @if ($density != 0){
-        $density: -$density
+      @if ($density != 0) {
+        $density: -$density;
       }
-      
+
       @include button.density($density, $query: $query);
     }
   }

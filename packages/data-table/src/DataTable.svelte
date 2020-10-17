@@ -4,10 +4,10 @@
   const forwardDOMEvents = DOMEventsForwarder();
   let className = "";
   export { className as class };
-  export let style: string = "";
-  export let id: string = "";
+  export let style: string = undefined;
+  export let id: string = undefined;
 
-  export let dom: HTMLDivElement = null;
+  export let dom: HTMLDivElement = undefined;
 
   import { BaseProps } from "@smui/common/dom/Props";
   export let props: BaseProps = {};
@@ -24,9 +24,8 @@
   import { getDialogContext } from "@smui/dialog";
 
   // TODO: create table from input data, sortable table, radio single selection table.
-
-  export let table$class = "";
-  export let value: any = null;
+  export let value: any = undefined;
+  let ariaLabel: string = undefined;
 
   let selectableGroup: SelectableGroup;
 
@@ -47,9 +46,9 @@
 
   onDestroy(() => {
     if (dataTable) {
-      (dataTable as any).headerRowCheckbox = {destroy(){}}; // Workaround for MDCDataTable bug on destroy
+      (dataTable as any).headerRowCheckbox = { destroy() {} }; // Workaround for MDCDataTable bug on destroy
       (dataTable as any).rowCheckboxList = []; // Workaround for MDCDataTable bug on destroy
-  
+
       dataTable.destroy();
     }
   });
@@ -72,15 +71,19 @@
   }
 </script>
 
+<svelte:options immutable={true} />
+
 <SelectableGroup bind:this={selectableGroup} bind:value>
   <div
     bind:this={dom}
     {...props}
-    class="mdc-data-table {className}"
+    class="{className} mdc-data-table"
     {style}
-    {id}
-    use:forwardDOMEvents>
-    <table class="mdc-data-table__table {table$class}">
+    {id}>
+    <table
+      class="mdc-data-table__table"
+      aria-label={ariaLabel}
+      use:forwardDOMEvents>
       <slot />
     </table>
   </div>

@@ -1,6 +1,5 @@
 <script lang="ts">
   import "./button.scss";
-  import * as classes from "./button.module.scss";
   import { Button, Icon, Label, MenuButton } from "@smui/button";
   import { Group, GroupItem } from "@smui/button/group";
   import { Menu } from "@smui/menu";
@@ -10,6 +9,8 @@
   import SelectionGroup from "@smui/menu/src/SelectionGroup.svelte";
   import SelectionGroupIcon from "@smui/menu/src/SelectionGroupIcon.svelte";
   import ButtonConfigurator from "./_ButtonConfigurator.svelte";
+  import {DataTable, Head, Body, Row, Cell} from '@smui/data-table';
+import ApiList from "src/components/api-list/APIList.svelte";
 
   let clicked = 0;
   let menu: Menu;
@@ -21,106 +22,9 @@
 
   <ButtonConfigurator />
 
-  <div>
-    <Button on:click={() => clicked++}>
-      <Label>Default</Label>
-    </Button>
-    <Button on:click={() => clicked++} disabled>
-      <Label>Disabled</Label>
-    </Button>
-    <Button on:click={() => clicked++} ripple={false}>
-      <Label>No Ripple</Label>
-    </Button>
-    <Button on:click={() => clicked++} variant="raised">
-      <Label>Raised</Label>
-    </Button>
-    <Button on:click={() => clicked++} variant="unelevated">
-      <Label>Unelevated</Label>
-    </Button>
-    <Button on:click={() => clicked++} variant="outlined">
-      <Label>Outlined</Label>
-    </Button>
-    <Button on:click={() => clicked++} class={classes.dense}>
-      <Label>Dense</Label>
-    </Button>
-    <Button on:click={() => clicked++} class={classes.myClass}>
-      <Label>With a Class</Label>
-    </Button>
-    <Button
-      on:click={() => clicked++}
-      href="http://example.com"
-      target="_blank">
-      <Label>Link Button</Label>
-    </Button>
-    <Button
-      on:click={() => clicked++}
-      href="http://example.com"
-      target="_blank"
-      disabled>
-      <Label>Link Button Disabled</Label>
-    </Button>
-  </div>
+  <Typography variant="headline3">Events</Typography>
 
-  <div>
-    <Button on:click={() => clicked++}>
-      <Icon class="material-icons">favorite</Icon>
-      <Label>Icon</Label>
-    </Button>
-    <Button on:click={() => clicked++}>
-      <Label>Trailing Icon</Label>
-      <Icon class="material-icons">favorite</Icon>
-    </Button>
-  </div>
-
-  <div>
-    Secondary color:
-    <br />
-    <Button color="secondary" on:click={() => clicked++}>
-      <Label>Default</Label>
-    </Button>
-    <Button color="secondary" on:click={() => clicked++} disabled>
-      <Label>Disabled</Label>
-    </Button>
-    <Button color="secondary" on:click={() => clicked++} ripple={false}>
-      <Label>No Ripple</Label>
-    </Button>
-    <Button color="secondary" on:click={() => clicked++} variant="raised">
-      <Label>Raised</Label>
-    </Button>
-    <Button color="secondary" on:click={() => clicked++} variant="unelevated">
-      <Label>Unelevated</Label>
-    </Button>
-    <Button color="secondary" on:click={() => clicked++} variant="outlined">
-      <Label>Outlined</Label>
-    </Button>
-    <Button color="secondary" on:click={() => clicked++} class={classes.dense}>
-      <Label>Dense</Label>
-    </Button>
-    <Button
-      color="secondary"
-      on:click={() => clicked++}
-      class={classes.myClass}>
-      <Label>With a Class</Label>
-    </Button>
-    <Button
-      color="secondary"
-      on:click={() => clicked++}
-      href="http://example.com"
-      target="_blank">
-      <Label>Link Button</Label>
-    </Button>
-  </div>
-
-  <div>
-    <Button color="secondary" on:click={() => clicked++}>
-      <Icon class="material-icons">favorite</Icon>
-      <Label>Icon</Label>
-    </Button>
-    <Button color="secondary" on:click={() => clicked++}>
-      <Label>Trailing Icon</Label>
-      <Icon class="material-icons">favorite</Icon>
-    </Button>
-  </div>
+  <ApiList></ApiList>
 
   <div>
     Button groups:
@@ -205,38 +109,36 @@
       <Button on:click={() => clicked++} variant="raised">
         <Label>Do the thing</Label>
       </Button>
-      <div use:GroupItem>
-        <MenuButton
-          variant="raised"
-          style="padding: 0; min-width: 36px;"
-          {menu}>
-          <Icon class="material-icons" style="margin: 0;">arrow_drop_down</Icon>
-        </MenuButton>
+      <MenuButton
+        variant="raised"
+        style="padding: 0; min-width: 36px;"
+        {menu}>
+        <Icon class="material-icons" style="margin: 0;">arrow_drop_down</Icon>
+      </MenuButton>
 
-        <Menu
-          bind:this={menu}
-          anchorCorner={Corner.TOP_LEFT}
-          on:selected={() => clicked++}>
-          <List>
+      <Menu
+        bind:this={menu}
+        anchorCorner={Corner.TOP_LEFT}
+        on:selected={() => clicked++}>
+        <List>
+          <Item>
+            <Text>Thing 1</Text>
+          </Item>
+          <Item>
+            <Text>Thing 2</Text>
+          </Item>
+          <Separator />
+          <Item>
+            <Text>Thing 3</Text>
+          </Item>
+          <SelectionGroup>
             <Item>
-              <Text>Thing 1</Text>
+              <SelectionGroupIcon>check</SelectionGroupIcon>
+              <Text>Thing 4</Text>
             </Item>
-            <Item>
-              <Text>Thing 2</Text>
-            </Item>
-            <Separator />
-            <Item>
-              <Text>Thing 3</Text>
-            </Item>
-            <SelectionGroup>
-              <Item>
-                <SelectionGroupIcon>check</SelectionGroupIcon>
-                <Text>Thing 4</Text>
-              </Item>
-            </SelectionGroup>
-          </List>
-        </Menu>
-      </div>
+          </SelectionGroup>
+        </List>
+      </Menu>
     </Group>
 
     <Group variant="outlined">
@@ -268,72 +170,5 @@
     </Group>
   </div>
 
-  <div>
-    Creating rounded buttons with Sass mixins:
-    <br />
-    <Button
-      on:click={() => clicked++}
-      variant="raised"
-      class={classes.buttonShapedRound}>
-      <Label>Raised</Label>
-    </Button>
-    <Button
-      on:click={() => clicked++}
-      variant="unelevated"
-      class={classes.buttonShapedRound}>
-      <Label>Unelevated</Label>
-    </Button>
-    <Button
-      on:click={() => clicked++}
-      variant="outlined"
-      class={classes.buttonShapedRound}>
-      <Label>Outlined</Label>
-    </Button>
-    <Button
-      on:click={() => clicked++}
-      variant="unelevated"
-      class={classes.buttonShapedRound}>
-      <Icon class="material-icons">favorite</Icon>
-      <Label>Icon</Label>
-    </Button>
-    <Button
-      on:click={() => clicked++}
-      variant="outlined"
-      class={classes.buttonShapedRound}>
-      <Label>Trailing Icon</Label>
-      <Icon class="material-icons">favorite</Icon>
-    </Button>
-  </div>
-
-  <div>
-    Creating notched buttons with vanilla Sass:
-    <br />
-    <Button
-      on:click={() => clicked++}
-      variant="raised"
-      class={classes.buttonShapedNotch}>
-      <Label>Raised</Label>
-    </Button>
-    <Button
-      on:click={() => clicked++}
-      variant="unelevated"
-      class={classes.buttonShapedNotch}>
-      <Label>Unelevated</Label>
-    </Button>
-    <Button
-      on:click={() => clicked++}
-      variant="unelevated"
-      class={classes.buttonShapedNotch}>
-      <Icon class="material-icons">favorite</Icon>
-      <Label>Icon</Label>
-    </Button>
-    <Button
-      on:click={() => clicked++}
-      variant="unelevated"
-      class={classes.buttonShapedNotch}>
-      <Label>Trailing Icon</Label>
-      <Icon class="material-icons">favorite</Icon>
-    </Button>
-  </div>
   <pre class="status">Clicked: {clicked}</pre>
 </section>

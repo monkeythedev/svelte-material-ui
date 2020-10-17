@@ -1,0 +1,10 @@
+@use "src/styles/_border";
+
+.api-list {
+  $columns: 3;
+
+  display: grid;
+  grid-template-columns: repeat($columns, auto);
+  align-items: center;
+  @include border.grid($columns: $columns);
+}

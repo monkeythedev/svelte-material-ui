@@ -14,14 +14,14 @@
   //#endregion
 
   // Actions
-  import { setButtonBehaviour } from "@smui/button";
   import { setIconButtonBehaviour } from "@smui/icon-button";
 
   export let fullBleed: boolean = false;
 
-  setButtonBehaviour("card:action");
   setIconButtonBehaviour("card:action");
 </script>
+
+<svelte:options immutable={true} />
 
 <div
   bind:this={dom}

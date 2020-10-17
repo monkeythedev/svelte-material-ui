@@ -35,7 +35,7 @@
     bind:this={dom}
     {...props}
     {id}
-    class="mdc-button__icon {className || 'material-icons'}"
+    class="{className || 'material-icons'} mdc-button__icon"
     {style}
     use:forwardDOMEvents>
     <slot />

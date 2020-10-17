@@ -12,6 +12,7 @@
   let variant: ButtonVariant = undefined;
   let density: number = 0;
   let link: boolean = false;
+  let secondary: boolean = false;
   let leadingIcon: "material-icon" | "svg" | "" = "";
   let trailingIcon: "material-icon" | "svg" | "" = "";
   let customStyle: "mdc-mixins" | "custom-css" | "" = "";
@@ -42,13 +43,13 @@
     scssCode = `
       @use "@material/button";
        
-      .buttonShapedRound {
+      .${getCustomStyleClass(customStyle)} {
         @include button.shape-radius(999px);
       }
     `;
   } else if (customStyle === "custom-css") {
     scssCode = `
-      .buttonShapedNotch {
+      .${getCustomStyleClass(customStyle)} {
         --notchSize: #{shape.$small-component-radius * 2};
 
         // source: https://css-tricks.com/notched-boxes/
@@ -79,8 +80,8 @@
   }
 
   function getCustomStyleClass(selectedCustomStyle: typeof customStyle) {
-    if (customStyle === "mdc-mixins") return "buttonShapedRound";
-    else if (customStyle === "custom-css") return "buttonShapedNotch";
+    if (selectedCustomStyle === "mdc-mixins") return "button-shaped-round";
+    else if (selectedCustomStyle === "custom-css") return "button-shaped-notch";
     else return null;
   }
 
@@ -100,7 +101,13 @@
     if (ripple) props.push("ripple");
     if (selectedVariant) props.push(`variant="${selectedVariant}"`);
     if (density) props.push(`density={${getDensity(density)}}`);
-    if (link) props.push(`href="javascript:void(0)"`);
+    if (link) {
+      props.push(`href="javascript:void(0)"`);
+      props.push(`target="_blank"`);
+    }
+    if (secondary) {
+      props.push(`props="javascript:void(0)"`);
+    }
     let result = props.join(" \n" + space);
     if (result.length > 0) result = " " + result;
     return result;
@@ -143,29 +150,19 @@
   .options-sidebar {
     display: grid;
     grid-template:
-      "left right"
+      ". checkboxes"
+      ". checkboxes"
+      ". checkboxes"
+      ". ."
       / auto auto;
     gap: 0.6em;
-
-    > div {
-      display: flex;
-      flex-direction: column;
-      gap: 0.6em;
-    }
   }
 
-  .left {
-    grid-area: left;
-  }
-
-  .right {
-    grid-area: right;
-  }
-
-  .slider-with-value {
+  .checkboxes {
+    grid-area: checkboxes;
     display: flex;
-    align-items: center;
-    gap: 1em;
+    flex-direction: column;
+    justify-content: center;
   }
 </style>
 
@@ -177,7 +174,9 @@
       {ripple}
       {variant}
       density={getDensity(density)}
-      href={link ? 'javascript:void(0)' : null}>
+      href={link ? 'javascript:void(0)' : null}
+      target={link ? '_blank' : null}
+      color={secondary ? 'secondary' : null}>
       {#if leadingIcon === 'material-icon'}
         <Icon>favorite</Icon>
       {:else if leadingIcon === 'svg'}
@@ -196,7 +195,7 @@
     </Button>
   </div>
   <div slot="options-sidebar" class="options-sidebar">
-    <div class="left">
+    <div>
       <FormField>
         <Select bind:value={variant} style="width: 100%">
           <span slot="label">Variant</span>
@@ -206,13 +205,14 @@
           <Option value="outlined">Outlined</Option>
         </Select>
       </FormField>
+    </div>
+    <div>
       <FormField align="end" vertical>
-        <div class="slider-with-value">
-          <span> {density} </span>
-          <Slider bind:value={density} min={0} max={3} step={1} />
-        </div>
-        <span slot="label">Density</span>
+        <Slider bind:value={density} min={0} max={3} step={1} />
+        <span slot="label">Density: {density}</span>
       </FormField>
+    </div>
+    <div>
       <FormField>
         <Select bind:value={leadingIcon} style="width: 100%">
           <span slot="label">Leading icon</span>
@@ -221,6 +221,8 @@
           <Option value="svg">SVG</Option>
         </Select>
       </FormField>
+    </div>
+    <div>
       <FormField>
         <Select bind:value={customStyle} style="width: 100%">
           <span slot="label">Custom style</span>
@@ -230,7 +232,7 @@
         </Select>
       </FormField>
     </div>
-    <div class="right">
+    <div class="checkboxes">
       <FormField>
         <Checkbox bind:checked={disabled} />
         <span slot="label">Disabled</span>
@@ -243,6 +245,12 @@
         <Checkbox bind:checked={link} />
         <span slot="label">Link</span>
       </FormField>
+      <FormField>
+        <Checkbox bind:checked={secondary} />
+        <span slot="label">Secondary color</span>
+      </FormField>
+    </div>
+    <div>
       <FormField>
         <Select bind:value={trailingIcon} style="width: 100%">
           <span slot="label">Trailing icon</span>

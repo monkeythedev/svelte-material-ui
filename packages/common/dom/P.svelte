@@ -7,7 +7,7 @@
   export let style: string = undefined;
   export let id: string = undefined;
 
-  export let dom: HTMLParagraphElement = null;
+  export let dom: HTMLParagraphElement = undefined;
 
   import { BaseProps } from "./Props";
   export let props: BaseProps = {};

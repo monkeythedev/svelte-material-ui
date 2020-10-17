@@ -14,10 +14,17 @@
   //#endregion
 
   // Action
-  import { Button, ButtonColors } from "@smui/button";
+  import { Button, ButtonVariant, ButtonColors } from "@smui/button";
 
-  export let ripple: boolean = true;
-  export let type: ButtonColors = "primary";
+  //#region exports
+  export let ripple: boolean = undefined;
+  export let color: ButtonColors = undefined;
+  export let variant: ButtonVariant = undefined;
+  export let disabled: boolean = undefined;
+  export let density: number = undefined;
+  export let href: string = undefined;
+  export let target: string = undefined;
+  //#endregion
 </script>
 
 <svelte:options immutable={true} />
@@ -26,9 +33,15 @@
   bind:dom
   {props}
   {id}
-  class="{className || ''} {type === 'primary' ? 'mdc-banner__primary-action' : 'mdc-banner__secondary-action'}"
+  class="{className || ''} mdc-top-app-bar__action-item"
   {style}
   {ripple}
+  {color}
+  {variant}
+  {href}
+  {disabled}
+  {target}
+  {density}
   on:domEvent={forwardDOMEvents}>
   <slot />
 </Button>

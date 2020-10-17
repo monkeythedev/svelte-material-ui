@@ -1,19 +1,11 @@
 @use "@material/button";
 @use "@material/shape";
 
-.myClass {
-  text-decoration: underline !important;
-}
-
-.dense {
-  @include button.density(-3);
-}
-
-.buttonShapedRound {
+.button-shaped-round {
   @include button.shape-radius(999px);
 }
 
-.buttonShapedNotch {
+.button-shaped-notch {
   --notchSize: #{shape.$small-component-radius * 2};
 
   // source: https://css-tricks.com/notched-boxes/

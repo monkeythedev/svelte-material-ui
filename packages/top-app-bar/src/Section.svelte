@@ -13,8 +13,6 @@
 
   // Section
   import { setIconButtonBehaviour } from "@smui/icon-button";
-  import { setContext } from "svelte";
-  import { setButtonBehaviour } from "@smui/button/src";
 
   export let align = "start";
   export let toolbar = false;
@@ -22,7 +20,6 @@
   setIconButtonBehaviour(
     toolbar ? "top-app-bar:action" : "top-app-bar:navigation"
   );
-  setButtonBehaviour(toolbar ? "top-app-bar:action" : "top-app-bar:navigation");
 </script>
 
 <section

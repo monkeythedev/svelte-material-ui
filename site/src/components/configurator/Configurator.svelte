@@ -6,8 +6,10 @@
 </script>
 
 <style lang="scss">
+  @use "src/styles/smui/_variables";
+
   .configurator {
-    $border: #989898 1px solid;
+    $border: variables.$border-color 1px solid;
     $padding: 1em;
     max-width: 80em;
     display: grid;

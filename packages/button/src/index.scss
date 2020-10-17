@@ -1,6 +1,5 @@
 @use "@material/button";
-@use "./mixins" as smui-button-mixins;
-@use "@material/ripple";
+@use "./mixins";
 
 @include button.core-styles;
-@include smui-button-mixins.smui-button-core-styles;
+@include mixins.smui-button-core-styles;

@@ -45,14 +45,19 @@
 </script>
 
 <script lang="ts">
-  // Base component
+  //#region Base
   import { DOMEventsForwarder } from "@smui/common/events/DOMEventsForwarder";
   const forwardDOMEvents = DOMEventsForwarder();
-  export let dom: HTMLElement = null;
   let className = "";
   export { className as class };
-  export let style: string = "";
-  export let props: any = {};
+  export let style: string = undefined;
+  export let id: string = undefined;
+
+  export let dom: HTMLElement = undefined;
+
+  import { BaseProps } from "@smui/common/dom/Props";
+  export let props: BaseProps = {};
+  //#endregion
 
   // Typography
   export let variant: TypographyVariant = "body1";
@@ -62,7 +67,7 @@
 <svelte:component
   this={component}
   bind:dom
-  class="mdc-typography--{variant} {className}"
+  class="{className || ''} mdc-typography--{variant}"
   {style}
   on:domEvent={forwardDOMEvents}
   {...props}>

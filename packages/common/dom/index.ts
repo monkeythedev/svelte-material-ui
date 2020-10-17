@@ -21,6 +21,8 @@ import Th from "./Th.svelte";
 import Td from "./Td.svelte";
 import Footer from "./Footer.svelte";
 import Option from "./Option.svelte";
+import Pre from "./Pre.svelte";
+import Code from "./Code.svelte";
 
 export * from "./LabelContext";
 
@@ -46,4 +48,6 @@ export {
   Td,
   Footer,
   Option,
+  Pre,
+  Code,
 };

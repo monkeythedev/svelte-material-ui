@@ -47,7 +47,6 @@
   import { createEventDispatcher } from "svelte";
   import { MDCSelectEvent, MDCSelectEventDetail } from "@material/select";
   import { UseState } from "@smui/common/hooks";
-  import { setButtonBehaviour } from "@smui/button";
 
   export let stacked: boolean = false;
   export let leading: boolean = false;
@@ -79,7 +78,6 @@
 
   $: Object.assign(context, { ...context, isOpen: open });
 
-  setButtonBehaviour("snackbar");
   setIconButtonBehaviour("snackbar");
 
   let snackbar: MDCSnackbar;
