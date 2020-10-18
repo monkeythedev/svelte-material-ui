@@ -72,7 +72,7 @@
     {/if}
   </div>
   <div class="options-sidebar">
-    <slot name="options-sidebar" />
+    <slot name="optionsSidebar" />
   </div>
   <div class="code">
     <CodeSelector {svelte} {scss} />

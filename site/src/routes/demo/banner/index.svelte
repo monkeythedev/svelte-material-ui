@@ -27,5 +27,5 @@
       </Actions>
     </Banner>
   </div>
-  <div slot="options-sidebar">dsa</div>
+  <div slot="optionsSidebar">dsa</div>
 </Configurator>

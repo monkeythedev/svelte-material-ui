@@ -82,7 +82,6 @@
     }
 
     destroy() {
-      console.warn("destroy");
       this.ripple?.destroy();
     }
   }

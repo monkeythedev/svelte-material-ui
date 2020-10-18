@@ -34,6 +34,7 @@
   export let disabled: boolean = false;
   export let target: string = undefined;
   export let title: string = undefined;
+  // export let variant: TODO: allow support of variants, using Button underneath
   //#endregion
 
   //#region Internal variables

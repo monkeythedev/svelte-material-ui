@@ -12,15 +12,18 @@
   export let props: BaseProps = {};
 
   // Icon
-  import { Graphic, GraphicElement } from "@smui/common/components";
+  import {
+    Graphic,
+    GraphicElement,
+    GraphicType,
+  } from "@smui/common/components";
   import { parseClassList } from "@smui/common/src/functions";
 
-  export let svg: boolean = false;
+  export let type: GraphicType = "icon";
 
   $: props = {
     ...props,
     "aria-hidden": true,
-    xmlns: svg ? "http://www.w3.org/2000/svg" : undefined,
   };
 </script>
 
@@ -28,14 +31,15 @@
 
 <Graphic
   bind:dom
-  {...props}
+  {props}
   {id}
   class={parseClassList([
     className,
     'mdc-button__icon',
-    [!svg && className == undefined, 'material-icons'],
+    [type === 'icon' && className == undefined, 'material-icons'],
   ])}
   {style}
+  {type}
   on:domEvent={forwardDOMEvents}>
   <slot />
 </Graphic>

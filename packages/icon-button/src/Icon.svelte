@@ -26,7 +26,6 @@
 <Graphic
   bind:dom
   {props}
-  {type}
   {id}
   class={parseClassList([
     className,
@@ -35,6 +34,7 @@
     [on, 'mdc-icon-button__icon--on'],
   ])}
   {style}
+  {type}
   on:domEvent={forwardDOMEvents}>
   <slot />
 </Graphic>

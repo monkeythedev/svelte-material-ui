@@ -12,45 +12,83 @@
 
   const items = new Set<SelectableContext>();
   let valueState: UseState;
+  let initialized = false;
 
   const dispatch = createEventDispatcher<{
     change: {
       value: typeof value;
       selectedItemsIndex: number | number[];
     };
+    optionsUpdated: typeof items;
   }>();
 
   function init() {
     // tick().then(() => { Probably it's not needed anymore since now Selectable and SelectableGroup use Hooks
-      if (shouldUseIndexHasValues()) {
-        let index = 0;
-        items.forEach((item) => item.setValue(index++));
-      }
+    if (shouldUseIndexHasValues()) {
+      let index = 0;
+      items.forEach((item) => item.setValue(index++));
+    }
 
-      fixValue(); 
+    fixValue();
 
-      if (value === undefined) {
-        updateValueFromChildren();
-      } else {
-        updateChildrenWithValue(
-          undefined /* TODO: or is better undefined since we haven't initilized it yet? */
-        );
-      }
+    if (value === undefined) {
+      updateValueFromChildren();
+    } else {
+      if (!checkAndFixInvalidValue(undefined)) valueState.setValue(value);
+      updateChildrenWithValue(undefined);
+    }
 
-      initTabIndex(selectionType, items);
+    initTabIndex(selectionType, items);
+    initialized = true;
     // });
+  }
+
+  function checkAndFixInvalidValue(oldValue) {
+    const itemsArray = Array.from(items);
+
+    if (itemsArray.length === 0) {
+      setValue(undefined);
+      return false;
+    }
+
+    if (selectionType === "single") {
+      if (!itemsArray.some((item) => item.value === value)) {
+        if (itemsArray.some((item) => item.value === oldValue)) {
+          setValue(oldValue);
+          return false;
+        } else {
+          setValue(itemsArray[0].value);
+          return false;
+        }
+      }
+    } else if (selectionType === "multi") {
+      fixValue();
+      const itemsList = itemsArray;
+      const validValues = value.filter((value) =>
+        itemsList.some((item) => item.value === value)
+      );
+
+      if (validValues.length !== value.length) {
+        // TODO: use better comparison
+        // Invalid value has been setted
+        setValue(validValues);
+        return false;
+      }
+    }
+
+    return true;
   }
 
   function handleValueChange(oldValue: typeof value) {
     if (selectionType) {
-      fixValue();
+      if (!checkAndFixInvalidValue(oldValue)) {
+        return;
+      }
 
       if (isResetValue()) {
         items.forEach((item) => item.setSelected(false));
-      } else {
-        if (!isValueSynched()) {
-          updateChildrenWithValue(oldValue);
-        }
+      } else if (!isValueSynched()) {
+        updateChildrenWithValue(oldValue);
       }
 
       const selectedItemsIndex = Array.from(items)
@@ -106,35 +144,19 @@
   }
 
   function updateChildrenWithValue(oldValue: typeof value) {
+    const itemsArray = Array.from(items);
+
     if (selectionType === "single") {
-      const itemToSelect = Array.from(items).find(
-        (item) => item.value === value
-      );
-
-      if (!itemToSelect) {
-        // Invalid value has been setted
-        setValue(oldValue);
-      } else {
-        itemToSelect.setSelected(true);
-      }
+      const itemToSelect = itemsArray.find((item) => item.value === value);
+      itemToSelect.setSelected(true);
     } else if (selectionType === "multi") {
-      const itemsList = Array.from(items);
-      const validValues = value.filter((value) =>
-        itemsList.some((item) => item.value === value)
-      );
-
-      if (validValues.length !== value.length) {
-        // Invalid value has been setted
-        setValue(validValues);
-      } else {
-        items.forEach((item) => {
-          if (value.includes(item.value)) {
-            item.setSelected(true);
-          } else {
-            item.setSelected(item.selected);
-          }
-        });
-      }
+      items.forEach((item) => {
+        if (value.includes(item.value)) {
+          item.setSelected(true);
+        } else {
+          item.setSelected(item.selected);
+        }
+      });
     }
   }
 
@@ -183,10 +205,19 @@
 
   export function registerItem(item: SelectableContext) {
     items.add(item);
+
+    if (initialized) {
+      dispatch("optionsUpdated", items);
+    }
   }
 
   export function unregisterItem(item: SelectableContext) {
     items.delete(item);
+    handleValueChange(undefined);
+
+    if (initialized) {
+      dispatch("optionsUpdated", items);
+    }
   }
 
   export function notifyUnselected(itemDeselected: SelectableContext) {

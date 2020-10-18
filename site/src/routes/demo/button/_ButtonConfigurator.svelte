@@ -13,8 +13,9 @@
   let density: number = 0;
   let link: boolean = false;
   let secondary: boolean = false;
-  let leadingIcon: "material-icon" | "svg" | "" = "";
-  let trailingIcon: "material-icon" | "svg" | "" = "";
+  let iconOnly: boolean = false;
+  let leadingIcon: "material-icon" | "svg" | "img" | "" = "";
+  let trailingIcon: "material-icon" | "svg" | "img" | "" = "";
   let customStyle: "mdc-mixins" | "custom-css" | "" = "";
 
   function getDensity(density: number): number {
@@ -30,10 +31,11 @@
         variant,
         density,
         link,
+        iconOnly,
         "        "
       )}>
-        ${getLeadingIconCode(leadingIcon)}
-        <Label>Button</Label>
+        ${getLeadingIconCode(leadingIcon, iconOnly)}
+        ${iconOnly ? "" : `<Label>Button</Label>`}
         ${getTrailingIconCode(trailingIcon)}
       </Button>
     `;
@@ -92,9 +94,13 @@
     selectedVariant: typeof variant,
     density: number,
     link: boolean,
+    iconOnlyValue: typeof iconOnly,
     space: string
   ) {
     let props = [];
+    if (iconOnlyValue) {
+      props.push(`style="padding: 0;"`);
+    }
     if (selectedCustomStyle)
       props.push(`class="${getCustomStyleClass(selectedCustomStyle)}"`);
     if (disabled) props.push("disabled");
@@ -114,15 +120,27 @@
   }
 
   function getLeadingIconCode(
-    leadingIcon: "material-icon" | "svg" | ""
+    selectedLeadingIcon: typeof leadingIcon,
+    iconOnlyValue: boolean
   ): string {
-    if (leadingIcon === "material-icon") {
-      return "<Icon>favorite</Icon>";
-    } else if (leadingIcon === "svg") {
+    if (selectedLeadingIcon === "material-icon") {
+      return `<Icon${
+        iconOnlyValue ? ` style="margin: 0"` : ""
+      }>favorite</Icon>`;
+    } else if (selectedLeadingIcon === "svg") {
       return `
-        <Icon svg props={{viewBox: "0 0 24 24"}}>
+        <Icon${
+          iconOnlyValue ? ` style="margin: 0"` : ""
+        } svg props={{viewBox: "0 0 24 24"}}>
           <circle cx="12" cy="12" r="12">
         </Icon>
+      `;
+    } else if (selectedLeadingIcon === "img") {
+      return `
+        <Icon${iconOnlyValue ? ` style="margin: 0"` : ""}
+            type="img"
+            props={{ src: '/icons/emojis/grinning-face.png', alt: 'on' }}
+            on />
       `;
     } else {
       return "";
@@ -130,15 +148,26 @@
   }
 
   function getTrailingIconCode(
-    leadingIcon: "material-icon" | "svg" | ""
+    selectedTrailingIcon: typeof trailingIcon
   ): string {
-    if (leadingIcon === "material-icon") {
+    if (iconOnly) {
+      return "";
+    }
+
+    if (selectedTrailingIcon === "material-icon") {
       return "<Icon>play_circle_filled</Icon>";
-    } else if (leadingIcon === "svg") {
+    } else if (selectedTrailingIcon === "svg") {
       return `
         <Icon svg props={{viewBox: "0 0 24 24"}}>
           <polygon points="0,24 12,0 24,24" />
         </Icon>
+      `;
+    } else if (selectedTrailingIcon === "img") {
+      return `
+        <Icon
+            type="img"
+            props={{ src: '/icons/emojis/upside-down-face.png', alt: 'on' }}
+            on />
       `;
     } else {
       return "";
@@ -169,6 +198,7 @@
 <Configurator svelte={svelteCode} scss={scssCode}>
   <div slot="preview">
     <Button
+      style={iconOnly ? 'padding: 0;' : undefined}
       class={classes[getCustomStyleClass(customStyle)]}
       {disabled}
       {ripple}
@@ -178,23 +208,37 @@
       target={link ? '_blank' : undefined}
       color={secondary ? 'secondary' : undefined}>
       {#if leadingIcon === 'material-icon'}
-        <Icon>favorite</Icon>
+        <Icon style={iconOnly ? 'margin: 0;' : undefined}>favorite</Icon>
       {:else if leadingIcon === 'svg'}
-        <Icon svg props={{ viewBox: '0 0 24 24' }}>
+        <Icon
+          style={iconOnly ? 'margin: 0;' : undefined}
+          type="svg"
+          props={{ viewBox: '0 0 24 24' }}>
           <circle cx="12" cy="12" r="12" />
         </Icon>
+      {:else if leadingIcon === 'img'}
+        <Icon
+          style={iconOnly ? 'margin: 0;' : undefined}
+          type="img"
+          props={{ src: '/icons/emojis/upside-down-face.png', alt: 'upside-down-face' }} />
       {/if}
-      <Label>Button</Label>
+      {#if !iconOnly}
+        <Label>Button</Label>
+      {/if}
       {#if trailingIcon === 'material-icon'}
         <Icon>play_circle_filled</Icon>
       {:else if trailingIcon === 'svg'}
-        <Icon svg props={{ viewBox: '0 0 24 24' }}>
+        <Icon type="svg" props={{ viewBox: '0 0 24 24' }}>
           <polygon points="0,24 12,0 24,24" />
         </Icon>
+      {:else if trailingIcon === 'img'}
+        <Icon
+          type="img"
+          props={{ src: '/icons/emojis/grinning-face.png', alt: 'grinning-face' }} />
       {/if}
     </Button>
   </div>
-  <div slot="options-sidebar" class="options-sidebar">
+  <div slot="optionsSidebar" class="options-sidebar">
     <div>
       <FormField>
         <Select bind:value={variant} style="width: 100%">
@@ -216,19 +260,26 @@
       <FormField>
         <Select bind:value={leadingIcon} style="width: 100%">
           <span slot="label">Leading icon</span>
-          <Option value="" />
+          {#if !iconOnly}
+            <Option value="" />
+          {/if}
           <Option value="material-icon">Material icon</Option>
           <Option value="svg">SVG</Option>
+          <Option value="img">Image</Option>
         </Select>
       </FormField>
     </div>
     <div>
       <FormField>
-        <Select bind:value={customStyle} style="width: 100%">
-          <span slot="label">Custom style</span>
+        <Select
+          bind:value={trailingIcon}
+          disabled={iconOnly}
+          style="width: 100%">
+          <span slot="label">Trailing icon</span>
           <Option value="" />
-          <Option value="mdc-mixins">MDC Mixins</Option>
-          <Option value="custom-css">Custom CSS</Option>
+          <Option value="material-icon">Material icon</Option>
+          <Option value="svg">SVG</Option>
+          <Option value="img">Image</Option>
         </Select>
       </FormField>
     </div>
@@ -249,14 +300,18 @@
         <Checkbox bind:checked={secondary} />
         <span slot="label">Secondary color</span>
       </FormField>
+      <FormField>
+        <Checkbox bind:checked={iconOnly} />
+        <span slot="label">Icon only</span>
+      </FormField>
     </div>
     <div>
       <FormField>
-        <Select bind:value={trailingIcon} style="width: 100%">
-          <span slot="label">Trailing icon</span>
+        <Select bind:value={customStyle} style="width: 100%">
+          <span slot="label">Custom style</span>
           <Option value="" />
-          <Option value="material-icon">Material icon</Option>
-          <Option value="svg">SVG</Option>
+          <Option value="mdc-mixins">MDC Mixins</Option>
+          <Option value="custom-css">Custom CSS</Option>
         </Select>
       </FormField>
     </div>

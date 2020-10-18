@@ -49,8 +49,6 @@
   let rippleClasses: string = "";
   let selectable: Selectable;
 
-  const isSelectionGroup = getIsSelectionGroup();
-
   const listContext$ = getListContext();
   const menuSurfaceContext$ = getMenuSurfaceContext();
   const context$ = createItemContext({

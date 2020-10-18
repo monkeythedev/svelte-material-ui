@@ -18,6 +18,10 @@
     valueMemo.val = newValue;
     value = newValue;
   }
+
+  export function getValue() {
+    return value;
+  }
 </script>
 
 <Use hook={() => onValueUpdate(value)} />

@@ -10,7 +10,7 @@
     getSelectableGroupContext,
     SelectableGroupContext,
   } from "../selectable-group";
-  import { onMount, onDestroy } from "svelte";
+  import { onMount, onDestroy, tick } from "svelte";
   import UseSelectable from "./UseSelectable.svelte";
 
   export let selected: boolean = undefined;
@@ -98,7 +98,9 @@
   });
 
   onDestroy(() => {
-    $selectableGroupContext$?.unregisterItem(context);
+    tick().then(() => {
+      $selectableGroupContext$?.unregisterItem(context);
+    });
   });
   //#endregion
 

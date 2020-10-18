@@ -69,6 +69,8 @@
   };
 </script>
 
+<svelte:options immutable={true} />
+
 <IconButton
   bind:dom
   {props}

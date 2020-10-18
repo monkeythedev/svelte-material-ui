@@ -60,7 +60,7 @@
       build
     </IconButton>
   </div>
-  <div slot="options-sidebar" class="options-sidebar">
+  <div slot="optionsSidebar" class="options-sidebar">
     <div>
       <FormField>
         <Select bind:value={color} style="width: 100%">

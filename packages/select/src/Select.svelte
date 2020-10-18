@@ -38,13 +38,13 @@
   import { SelectVariant } from "./types";
   import { UseState } from "@smui/common/hooks";
   import SelectableGroup from "@smui/common/src/hoc/selectable-group/SelectableGroup.svelte";
-  import { OnSelectableGroupChange } from "@smui/common/hoc";
+  import { OnSelectableGroupChange, SelectableContext } from "@smui/common/hoc";
   import A from "@smui/common/dom/A.svelte";
 
   export let ripple: boolean = true;
   export let disabled: boolean = false;
   export let variant: SelectVariant = "filled";
-  export let value: any = null;
+  export let value: any = undefined;
   export let dirty = false;
   export let customValidation: (value: any, init?: true) => boolean = undefined;
   export let required: boolean = false;
@@ -112,6 +112,10 @@
     });
   }
 
+  function handleOptionsUpdated() {
+    select.layoutOptions();
+  }
+
   function onValueChange(oldValue: any) {
     if (value !== oldValue && customValidation) {
       invalid = !customValidation(value);
@@ -121,7 +125,11 @@
 
 <UseState {value} onUpdate={onValueChange} />
 
-<SelectableGroup bind:value selectionType="single" on:change={handleChange}>
+<SelectableGroup
+  bind:value
+  selectionType="single"
+  on:change={handleChange}
+  on:optionsUpdated={handleOptionsUpdated}>
   <div
     bind:this={dom}
     {...props}

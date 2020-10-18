@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { IconButtonColor, IconButtonToggle, Icon } from "@smui/icon-button";
+  import { IconButtonToggle, Icon } from "@smui/icon-button";
   import { Checkbox } from "@smui/checkbox";
   import { FormField } from "@smui/form-field";
   import { Option, Select } from "@smui/select";
@@ -16,6 +16,7 @@
   $: svelteCode = `
       <IconButtonToggle${getCodeProps(disabled, ripple, "        ")}>
         ${getOnIconCode(iconType)}
+        ${getOffIconCode(iconType)}
       </IconButtonToggle>
     `;
 
@@ -47,7 +48,26 @@
       return `
         <Icon
           type="img"
-          props={{ src: 'https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/160/google/263/grinning-face_1f600.png', alt: 'on' }}
+          props={{ src: '/icons/emojis/grinning-face.png', alt: 'on' }}
+          on />
+      `
+    }
+  }
+
+  function getOffIconCode(selectedIconType: typeof iconType) {
+    if (selectedIconType === "material-icon") {
+      return `<Icon on>star</Icon>`
+    } else if (selectedIconType === "svg") {
+      return `
+        <Icon type="svg" props={{ viewBox: '0 0 24 24' }} on>
+          <polygon points="0,24 12,0 24,24" />
+        </Icon>
+      `
+    } else {
+      return `
+        <Icon
+          type="img"
+          props={{ src: '/icons/emojis/upside-down-face.png', alt: 'off' }}
           on />
       `
     }
@@ -79,7 +99,7 @@
       {:else if iconType === 'img'}
         <Icon
           type="img"
-          props={{ src: 'https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/160/google/263/grinning-face_1f600.png', alt: 'on' }}
+          props={{ src: '/icons/emojis/grinning-face.png', alt: 'on' }}
           on />
       {/if}
       {#if iconType === 'material-icon'}
@@ -91,12 +111,12 @@
       {:else if iconType === 'img'}
         <Icon
           type="img"
-          props={{ src: 'https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/160/google/263/upside-down-face_1f643.png', alt: 'off' }} />
+          props={{ src: '/icons/emojis/upside-down-face.png', alt: 'off' }} />
       {/if}
     </IconButtonToggle>
   </div>
   <div slot="values">active: {active}</div>
-  <div slot="options-sidebar" class="options-sidebar">
+  <div slot="optionsSidebar" class="options-sidebar">
     <div>
       <FormField>
         <Select bind:value={iconType} style="width: 100%">

@@ -4,11 +4,11 @@
 
 <script lang="ts">
   import { SelectableContext, SelectionType } from "../";
-  import {UseSelectableGroup} from "./";
+  import { UseSelectableGroup } from "./";
   import {
     getSelectableGroupContext,
     SelectableGroupContext,
-    setSelectableGroupContext
+    setSelectableGroupContext,
   } from "./SelectableGroupContext";
   import { Writable } from "svelte/store";
   import { Use, UseState } from "../../hooks";
@@ -17,7 +17,7 @@
   export let selectionType: SelectionType = "multi";
   export let indexHasValues: boolean = undefined;
   export let contextOverride$: Writable<SelectableGroupContext> = undefined;
-  
+
   let id = "SelectableGroup-" + count++;
   let selectableGroup: UseSelectableGroup;
 
@@ -117,6 +117,10 @@
     $context$.setValue(newValue);
   }
 
+  export function getValue() {
+    return $context$?.value;
+  }
+
   export function setItemSelected(index: number, selected: boolean) {
     $context$.setItemSelected(index, selected);
   }
@@ -147,7 +151,8 @@
     bind:value
     bind:selectionType
     bind:indexHasValues
-    on:change />
+    on:change
+    on:optionsUpdated />
 {/if}
 
 <slot />
