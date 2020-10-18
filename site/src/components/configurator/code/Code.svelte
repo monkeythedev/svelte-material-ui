@@ -8,7 +8,6 @@
   export let language: "html" | "scss";
 
   function transformSource(src: string) {
-    src = global.Prism.plugins.NormalizeWhitespace.normalize(src)
     src = src.split("\n").filter(e => e.match(/[^ \t]/)).join("\n");
     return src;
   }

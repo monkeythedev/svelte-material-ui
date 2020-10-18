@@ -22,7 +22,7 @@
   bind:this={dom}
   {...props}
   {id}
-  class="{className || ''} mdc-button__label"
+  class="{className || ''} mdc-fab__label"
   {style}
   use:forwardDOMEvents>
   <slot />

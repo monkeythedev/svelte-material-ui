@@ -1,12 +1,8 @@
 import { createContextPropBuilder } from "../src";
 
 const [setLabelBehaviour, getLabelBehaviour] = createContextPropBuilder<
-  LabelBehaviour
+	LabelBehaviour
 >();
 export { setLabelBehaviour, getLabelBehaviour };
 
-export type LabelBehaviour =
-  | "fab"
-  | "chip"
-  | "tab"
-  | "image-list";
+export type LabelBehaviour = "chip" | "tab" | "image-list";

@@ -5,6 +5,7 @@
   import { Option, Select } from "@smui/select";
   import { Slider } from "@smui/slider";
   import { Configurator } from "src/components/configurator";
+	import IconTypeOption, {IconType} from "src/components/configurator/common-options/IconTypeOption.svelte";
   import classes from "./button.module.scss";
 
   let disabled: boolean = false;
@@ -14,109 +15,111 @@
   let link: boolean = false;
   let secondary: boolean = false;
   let iconOnly: boolean = false;
-  let leadingIcon: "material-icon" | "svg" | "img" | "" = "";
-  let trailingIcon: "material-icon" | "svg" | "img" | "" = "";
+  let leadingIcon: IconType = undefined;
+  let trailingIcon: IconType = undefined;
   let customStyle: "mdc-mixins" | "custom-css" | "" = "";
 
-  function getDensity(density: number): number {
-    return density ? density : null;
-  }
+  let configurator: Configurator;
 
-  let svelteCode: string = "";
-  $: svelteCode = `
-      <Button${getCodeProps(
+  $: configurator?.svelte(() => {
+    return {
+      tag: "Button",
+      props: props(
         customStyle,
         disabled,
         ripple,
         variant,
         density,
         link,
-        iconOnly,
-        "        "
-      )}>
-        ${getLeadingIconCode(leadingIcon, iconOnly)}
-        ${iconOnly ? "" : `<Label>Button</Label>`}
-        ${getTrailingIconCode(trailingIcon)}
-      </Button>
-    `;
+        iconOnly
+      ),
+      content: `
+				${getLeadingIconCode(leadingIcon, iconOnly)}
+				${iconOnly ? "" : `<Label>Button</Label>`}
+				${getTrailingIconCode(trailingIcon)}
+			`,
+    };
+  });
 
-  let scssCode: string = "";
-  $: if (customStyle === "mdc-mixins") {
-    scssCode = `
-      @use "@material/button";
-       
-      .${getCustomStyleClass(customStyle)} {
-        @include button.shape-radius(999px);
-      }
-    `;
-  } else if (customStyle === "custom-css") {
-    scssCode = `
-      .${getCustomStyleClass(customStyle)} {
-        --notchSize: #{shape.$small-component-radius * 2};
+  $: configurator?.scss(() => {
+    let content: string = "";
 
-        // source: https://css-tricks.com/notched-boxes/
-        -webkit-clip-path: polygon(
-          0% var(--notchSize),
-          var(--notchSize) 0%,
-          calc(100% - var(--notchSize)) 0%,
-          100% var(--notchSize),
-          100% calc(100% - var(--notchSize)),
-          calc(100% - var(--notchSize)) 100%,
-          var(--notchSize) 100%,
-          0% calc(100% - var(--notchSize))
-        );
-        clip-path: polygon(
-          0% var(--notchSize),
-          var(--notchSize) 0%,
-          calc(100% - var(--notchSize)) 0%,
-          100% var(--notchSize),
-          100% calc(100% - var(--notchSize)),
-          calc(100% - var(--notchSize)) 100%,
-          var(--notchSize) 100%,
-          0% calc(100% - var(--notchSize))
-        );
-      }
-    `;
-  } else {
-    scssCode = "";
+    if (customStyle === "mdc-mixins") {
+      content = `
+				@use "@material/button";
+				
+				.${getCustomStyleClass(customStyle)} {
+					@include button.shape-radius(999px);
+				}
+			`;
+    } else if (customStyle === "custom-css") {
+      content = `
+				.${getCustomStyleClass(customStyle)} {
+					--notchSize: #{shape.$small-component-radius * 2};
+
+					// source: https://css-tricks.com/notched-boxes/
+					-webkit-clip-path: polygon(
+						0% var(--notchSize),
+						var(--notchSize) 0%,
+						calc(100% - var(--notchSize)) 0%,
+						100% var(--notchSize),
+						100% calc(100% - var(--notchSize)),
+						calc(100% - var(--notchSize)) 100%,
+						var(--notchSize) 100%,
+						0% calc(100% - var(--notchSize))
+					);
+					clip-path: polygon(
+						0% var(--notchSize),
+						var(--notchSize) 0%,
+						calc(100% - var(--notchSize)) 0%,
+						100% var(--notchSize),
+						100% calc(100% - var(--notchSize)),
+						calc(100% - var(--notchSize)) 100%,
+						var(--notchSize) 100%,
+						0% calc(100% - var(--notchSize))
+					);
+				}
+			`;
+    }
+
+    return {
+      content,
+    };
+  });
+
+  function props(
+    selectedCustomStyle: typeof customStyle,
+    disabledValue: typeof disabled,
+    rippleValue: typeof ripple,
+    selectedVariant: typeof variant,
+    densityValue: typeof density,
+    linkValue: typeof link,
+    iconOnlyValue: typeof iconOnly
+  ) {
+    return [
+      [iconOnlyValue, `style="padding: 0;"`],
+      [
+        selectedCustomStyle,
+        `class="${getCustomStyleClass(selectedCustomStyle)}"`,
+      ],
+      [disabledValue, `disabled`],
+      [rippleValue, `ripple`],
+      [selectedVariant, `variant="${selectedVariant}"`],
+      [densityValue, `density={${getDensity(densityValue)}}`],
+      [linkValue, `href="javascript:void(0)"`],
+      [linkValue, `target="_blank"`],
+      [secondary, `props="javascript:void(0)"`],
+    ];
+  }
+
+  function getDensity(density: number): number {
+    return density ? density : null;
   }
 
   function getCustomStyleClass(selectedCustomStyle: typeof customStyle) {
     if (selectedCustomStyle === "mdc-mixins") return "button-shaped-round";
     else if (selectedCustomStyle === "custom-css") return "button-shaped-notch";
     else return null;
-  }
-
-  function getCodeProps(
-    selectedCustomStyle: typeof customStyle,
-    disabled: boolean,
-    ripple: boolean,
-    selectedVariant: typeof variant,
-    density: number,
-    link: boolean,
-    iconOnlyValue: typeof iconOnly,
-    space: string
-  ) {
-    let props = [];
-    if (iconOnlyValue) {
-      props.push(`style="padding: 0;"`);
-    }
-    if (selectedCustomStyle)
-      props.push(`class="${getCustomStyleClass(selectedCustomStyle)}"`);
-    if (disabled) props.push("disabled");
-    if (ripple) props.push("ripple");
-    if (selectedVariant) props.push(`variant="${selectedVariant}"`);
-    if (density) props.push(`density={${getDensity(density)}}`);
-    if (link) {
-      props.push(`href="javascript:void(0)"`);
-      props.push(`target="_blank"`);
-    }
-    if (secondary) {
-      props.push(`props="javascript:void(0)"`);
-    }
-    let result = props.join(" \n" + space);
-    if (result.length > 0) result = " " + result;
-    return result;
   }
 
   function getLeadingIconCode(
@@ -129,19 +132,18 @@
       }>favorite</Icon>`;
     } else if (selectedLeadingIcon === "svg") {
       return `
-        <Icon${
+				<Icon${
           iconOnlyValue ? ` style="margin: 0"` : ""
-        } svg props={{viewBox: "0 0 24 24"}}>
-          <circle cx="12" cy="12" r="12">
-        </Icon>
-      `;
+        } type="svg" props={{viewBox: "0 0 24 24"}}>
+					<circle cx="12" cy="12" r="12">
+				</Icon>
+			`;
     } else if (selectedLeadingIcon === "img") {
       return `
-        <Icon${iconOnlyValue ? ` style="margin: 0"` : ""}
-            type="img"
-            props={{ src: '/icons/emojis/grinning-face.png', alt: 'on' }}
-            on />
-      `;
+				<Icon${iconOnlyValue ? ` style="margin: 0"` : ""}
+						type="img"
+						props={{ src: '/icons/emojis/grinning-face.png', alt: 'Grinning face' }}/>
+			`;
     } else {
       return "";
     }
@@ -158,17 +160,17 @@
       return "<Icon>play_circle_filled</Icon>";
     } else if (selectedTrailingIcon === "svg") {
       return `
-        <Icon svg props={{viewBox: "0 0 24 24"}}>
-          <polygon points="0,24 12,0 24,24" />
-        </Icon>
-      `;
+				<Icon svg props={{viewBox: "0 0 24 24"}}>
+					<polygon points="0,24 12,0 24,24" />
+				</Icon>
+			`;
     } else if (selectedTrailingIcon === "img") {
       return `
-        <Icon
-            type="img"
-            props={{ src: '/icons/emojis/upside-down-face.png', alt: 'on' }}
-            on />
-      `;
+				<Icon
+						type="img"
+						props={{ src: '/icons/emojis/upside-down-face.png', alt: 'on' }}
+						on />
+			`;
     } else {
       return "";
     }
@@ -177,25 +179,20 @@
 
 <style lang="scss">
   .options-sidebar {
-    display: grid;
     grid-template:
       ". checkboxes"
       ". checkboxes"
       ". checkboxes"
       ". ."
       / auto auto;
-    gap: 0.6em;
   }
 
   .checkboxes {
     grid-area: checkboxes;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
   }
 </style>
 
-<Configurator svelte={svelteCode} scss={scssCode}>
+<Configurator bind:this={configurator}>
   <div slot="preview">
     <Button
       style={iconOnly ? 'padding: 0;' : undefined}
@@ -220,7 +217,7 @@
         <Icon
           style={iconOnly ? 'margin: 0;' : undefined}
           type="img"
-          props={{ src: '/icons/emojis/upside-down-face.png', alt: 'upside-down-face' }} />
+          props={{ src: '/icons/emojis/upside-down-face.png', alt: 'Upside down face' }} />
       {/if}
       {#if !iconOnly}
         <Label>Button</Label>
@@ -257,31 +254,10 @@
       </FormField>
     </div>
     <div>
-      <FormField>
-        <Select bind:value={leadingIcon} style="width: 100%">
-          <span slot="label">Leading icon</span>
-          {#if !iconOnly}
-            <Option value="" />
-          {/if}
-          <Option value="material-icon">Material icon</Option>
-          <Option value="svg">SVG</Option>
-          <Option value="img">Image</Option>
-        </Select>
-      </FormField>
+			<IconTypeOption allowEmpty={!iconOnly} bind:value={leadingIcon} label="Leading icon" />
     </div>
     <div>
-      <FormField>
-        <Select
-          bind:value={trailingIcon}
-          disabled={iconOnly}
-          style="width: 100%">
-          <span slot="label">Trailing icon</span>
-          <Option value="" />
-          <Option value="material-icon">Material icon</Option>
-          <Option value="svg">SVG</Option>
-          <Option value="img">Image</Option>
-        </Select>
-      </FormField>
+			<IconTypeOption allowEmpty={!iconOnly} disabled={iconOnly} bind:value={trailingIcon} label="Trailing icon" />
     </div>
     <div class="checkboxes">
       <FormField>

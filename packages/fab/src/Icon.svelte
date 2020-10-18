@@ -20,11 +20,6 @@
   import { parseClassList } from "@smui/common/src/functions";
 
   export let type: GraphicType = "icon";
-
-  $: props = {
-    ...props,
-    "aria-hidden": true,
-  };
 </script>
 
 <svelte:options immutable={true} />
@@ -35,7 +30,7 @@
   {id}
   class={parseClassList([
     className,
-    'mdc-button__icon',
+    'mdc-fab__icon',
     [type === 'icon' && className == undefined, 'material-icons'],
   ])}
   {style}

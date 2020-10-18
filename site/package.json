@@ -14,6 +14,7 @@
   "dependencies": {
     "@material/list": "^7.0.0",
     "@types/prismjs": "^1.16.1",
+    "common-tags": "^1.8.0",
     "compression": "^1.7.4",
     "polka": "next",
     "prismjs": "^1.22.0",

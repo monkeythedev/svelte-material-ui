@@ -1,21 +1,17 @@
+import { filterStringList, StringListToFilter } from "./filterStringList";
+
 export function parseClassList(toParse: ClassListToParse): string {
-  let parsed: string;
+	let parsed: string;
 
-  const parsedArray = toParse
-    .map((item) => {
-      if (Array.isArray(item))
-        return item[0] ? item[1] : item[0] === undefined ? undefined : "";
-      else return item;
-    })
-    .filter((item) => item || item === undefined);
+	const parsedArray = filterStringList(toParse);
 
-  if (parsedArray.some((item) => item !== undefined)) {
-    parsed = parsedArray.filter((item) => item).join(" ");
-  } else {
-    parsed = undefined;
-  }
+	if (parsedArray) {
+		parsed = parsedArray.join(" ");
+	} else {
+		parsed = undefined;
+	}
 
-  return parsed;
+	return parsed;
 }
 
-type ClassListToParse = (string | [any, string])[];
+type ClassListToParse = StringListToFilter;

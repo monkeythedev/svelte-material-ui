@@ -1,8 +1,42 @@
 <script lang="ts">
   import CodeSelector from "./CodeSelector.svelte";
+  import { StringListToFilter, filterStringList } from "@smui/common/functions";
+  import { stripIndent } from "common-tags";
 
-  export let svelte: string;
-  export let scss: string;
+  let svelteCode: string;
+  let scssCode: string;
+
+  export function svelte(
+    renderer: () => {
+      tag: string;
+      props: StringListToFilter;
+      content: string;
+    }
+  ) {
+    const { tag, props, content } = renderer();
+    const filteredProps = filterStringList(props) || [];
+
+    const propsIntend = `
+				`.substr(1);
+    let parsedProps = filteredProps.join(" \n" + propsIntend);
+    if (parsedProps.length > 0) parsedProps = " " + parsedProps;
+
+    svelteCode = stripIndent`
+			<${tag}${parsedProps}>
+				${content}
+			</${tag}>
+		`;
+    return svelteCode;
+  }
+
+  export function scss(
+    renderer: () => {
+      content: string;
+    }
+  ) {
+    const { content } = renderer();
+    scssCode = stripIndent(content);
+  }
 </script>
 
 <style lang="scss">
@@ -45,6 +79,18 @@
     .options-sidebar {
       grid-area: options-sidebar;
       padding: $padding;
+
+      > :global(.options-sidebar) {
+        display: grid;
+        grid-template: auto;
+        gap: 0.6em;
+
+        > :global(div) {
+          display: flex;
+					flex-direction: column;
+					justify-content: center;
+				}
+      }
     }
 
     .code {
@@ -75,6 +121,6 @@
     <slot name="optionsSidebar" />
   </div>
   <div class="code">
-    <CodeSelector {svelte} {scss} />
+    <CodeSelector svelte={svelteCode} scss={scssCode} />
   </div>
 </div>

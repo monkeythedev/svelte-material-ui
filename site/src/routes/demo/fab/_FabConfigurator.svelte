@@ -1,17 +1,17 @@
 <script lang="ts">
-  import { IconButton, IconButtonColor, Icon } from "@smui/icon-button";
+  import { Fab, Icon, Label, FabVariant } from "@smui/fab";
   import { Checkbox } from "@smui/checkbox";
   import { FormField } from "@smui/form-field";
-  import { Option, Select } from "@smui/select";
   import { Configurator } from "src/components/configurator";
-  import IconTypeOption, {
+	import { Option, Select } from "@smui/select";
+	import IconTypeOption, {
     IconType,
   } from "src/components/configurator/common-options/IconTypeOption.svelte";
 
-  let disabled: boolean = false;
-  let ripple: boolean = true;
-  let color: IconButtonColor = undefined;
-  let link: boolean = false;
+  let show: boolean = true;
+  let primary: boolean = false;
+  let variant: FabVariant = "";
+	let ripple: boolean = true;
   let iconType: IconType = "material-icon";
 
   let configurator: Configurator;
@@ -19,30 +19,33 @@
   $: configurator?.svelte(() => {
     return {
       tag: "IconButton",
-      props: props(color, disabled, ripple, link),
-      content: `${getIconCode(iconType)}`,
+      props: props(show, ripple, primary, variant),
+      content: `
+				${getIconCode(iconType)}
+				${variant === "extended" ? "<Label>Label</Label>" : ""}
+			`,
     };
   });
 
   function props(
-    selectedColor: typeof color,
-    disabledValue: typeof disabled,
+    showValue: typeof show,
     rippleValue: typeof ripple,
-    linkValue: typeof link
+    primaryValue: typeof primary,
+    variantValue: typeof variant
   ) {
     return [
-      `title="button"`,
-      [selectedColor, `color="${selectedColor}"`],
-      [disabledValue, `disabled`],
+      `aria-label="fab"`,
       [rippleValue, `ripple`],
-      [linkValue, `href="javascript:void(0)"`],
-      [linkValue, `target="_blank"`],
+      [!showValue, `show={false}`],
+      [primaryValue, `color="primary"`],
+      [variantValue === "extended", `variant="extended"`],
+      [variantValue === "mini", `variant="mini"`],
     ];
-	}
-	
-	function getIconCode(selectedIconType: typeof iconType) {
+  }
+
+  function getIconCode(selectedIconType: typeof iconType) {
     if (selectedIconType === "material-icon") {
-      return `<Icon>build</Icon>`;
+      return `<Icon>favorite</Icon>`;
     } else if (selectedIconType === "svg") {
       return `
 				<Icon type="svg" props={{ viewBox: '0 0 24 24' }}>
@@ -67,15 +70,9 @@
 
 <Configurator bind:this={configurator}>
   <div slot="preview">
-    <IconButton
-      title="button"
-      {color}
-      {disabled}
-      {ripple}
-      href={link ? 'javascript:void(0)' : undefined}
-      target={link ? '_blank' : undefined}>
-      {#if iconType === 'material-icon'}
-        <Icon>build</Icon>
+    <Fab color={primary ? 'primary' : undefined} {variant} {show} {ripple}>
+			{#if iconType === 'material-icon'}
+        <Icon>favorite</Icon>
       {:else if iconType === 'svg'}
         <Icon type="svg" props={{ viewBox: '0 0 24 24' }}>
           <circle cx="12" cy="12" r="12" />
@@ -85,38 +82,39 @@
           type="img"
           props={{ src: '/icons/emojis/grinning-face.png', alt: 'Grinning face' }} />
       {/if}
-    </IconButton>
+      {#if variant === 'extended'}
+        <Label>Label</Label>
+      {/if}
+    </Fab>
   </div>
   <div slot="optionsSidebar" class="options-sidebar">
     <div>
       <FormField>
-        <Select bind:value={color} style="width: 100%">
-          <span slot="label">Color</span>
+        <Select bind:value={variant}>
+          <span slot="label">Variant</span>
           <Option value="" />
-          <Option value="primary">Primary</Option>
-          <Option value="secondary">Secondary</Option>
+          <Option value="extended">Extended</Option>
+          <Option value="mini">Mini</Option>
         </Select>
       </FormField>
-    </div>
-    <div>
-      <IconTypeOption bind:value={iconType} />
-    </div>
+		</div>
+		<div>
+			<IconTypeOption bind:value={iconType} />
+		</div>
     <div>
       <FormField>
-        <Checkbox bind:checked={disabled} />
-        <span slot="label">Disabled</span>
+        <Checkbox bind:checked={show} />
+        <span slot="label">Show</span>
       </FormField>
-    </div>
-    <div>
       <FormField>
         <Checkbox bind:checked={ripple} />
         <span slot="label">Ripple</span>
       </FormField>
     </div>
-    <div>
+    <div style="justify-content: initial;">
       <FormField>
-        <Checkbox bind:checked={link} />
-        <span slot="label">Link</span>
+        <Checkbox bind:checked={primary} />
+        <span slot="label">Primary</span>
       </FormField>
     </div>
   </div>

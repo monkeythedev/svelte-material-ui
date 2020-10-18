@@ -1,10 +1,6 @@
 <script lang="ts">
-  import { Fab, Label, Icon } from "@smui/fab";
-  import { FormField } from "@smui/form-field";
-  import { Checkbox } from "@smui/checkbox";
-  import Fabs from "./_Fabs.svelte";
-
-  let clicked = 0;
+  import { Typography } from "@smui/typography";
+  import FabConfigurator from "./_FabConfigurator.svelte";
 </script>
 
 <svelte:head>
@@ -12,13 +8,7 @@
 </svelte:head>
 
 <section>
-  <h2>Floating Action Button</h2>
+  <Typography variant="headline2">Floating Action Button</Typography>
 
-  <Fabs on:click={() => clicked++} />
-
-  Primary color: <br />
-
-  <Fabs color="primary" on:click={() => clicked++} />
-
-  <pre class="status">Clicked: {clicked}</pre>
+  <FabConfigurator />
 </section>

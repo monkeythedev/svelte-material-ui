@@ -76,7 +76,6 @@
   class={parseClassList([
     className,
     'mdc-icon-button',
-    [className === undefined, 'material-icons'],
     [behaviour === 'card:action', 'mdc-card__action mdc-card__action--icon'],
     [
       behaviour === 'top-app-bar:navigation',
