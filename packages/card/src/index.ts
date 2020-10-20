@@ -8,12 +8,13 @@ import ActionButtons from "./ActionButtons.svelte";
 import ActionIcons from "./ActionIcons.svelte";
 
 export {
-  Card,
-  Content,
-  PrimaryAction,
-  Media,
-  MediaContent,
-  Actions,
-  ActionButtons,
-  ActionIcons,
+	Card,
+	Content,
+	PrimaryAction,
+	Media,
+	MediaContent,
+	Actions,
+	ActionButtons,
+	ActionIcons,
 };
+export * from "./media.svelte";

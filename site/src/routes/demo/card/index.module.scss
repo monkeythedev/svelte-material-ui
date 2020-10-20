@@ -1,0 +1,16 @@
+.card-media-16x9 {
+	background-image: url(https://via.placeholder.com/320x180.png?text=16x9);
+}
+
+.card-media-square {
+	background-image: url(https://via.placeholder.com/320x320.png?text=square);
+}
+
+.horizontal-layout {
+	display: flex;
+	flex-direction: row;
+
+	.card-media-16x9, .card-media-square {
+		width: 250px;
+	}
+}

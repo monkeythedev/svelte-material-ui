@@ -7,6 +7,7 @@
 	import IconTypeOption, {
     IconType,
   } from "src/components/configurator/common-options/IconTypeOption.svelte";
+import { StringListToFilter } from "@smui/common/functions";
 
   let show: boolean = true;
   let primary: boolean = false;
@@ -32,7 +33,7 @@
     rippleValue: typeof ripple,
     primaryValue: typeof primary,
     variantValue: typeof variant
-  ) {
+  ): StringListToFilter {
     return [
       `aria-label="fab"`,
       [rippleValue, `ripple`],

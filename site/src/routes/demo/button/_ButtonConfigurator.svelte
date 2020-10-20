@@ -1,6 +1,7 @@
 <script lang="ts">
   import { Button, Label, ButtonVariant, Icon } from "@smui/button";
   import { Checkbox } from "@smui/checkbox";
+import { StringListToFilter } from "@smui/common/functions";
   import { FormField } from "@smui/form-field";
   import { Option, Select } from "@smui/select";
   import { Slider } from "@smui/slider";
@@ -95,7 +96,7 @@
     densityValue: typeof density,
     linkValue: typeof link,
     iconOnlyValue: typeof iconOnly
-  ) {
+  ): StringListToFilter {
     return [
       [iconOnlyValue, `style="padding: 0;"`],
       [

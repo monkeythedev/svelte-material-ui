@@ -2,6 +2,7 @@
 
 @include card.core-styles;
 
-.smui-card--padded, .smui-card__content, .smui-card__primary-action--padded {
-  padding: 16px;
+.smui-card__content,
+.smui-card__primary-action--padded {
+	padding: 1em;
 }

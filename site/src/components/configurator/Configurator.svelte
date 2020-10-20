@@ -82,8 +82,10 @@
 
       > :global(.options-sidebar) {
         display: grid;
-        grid-template: auto;
+        grid-template: auto / minmax(150px, auto) minmax(150px, auto);
         gap: 0.6em;
+				white-space: nowrap;
+				width: max-content;
 
         > :global(div) {
           display: flex;
