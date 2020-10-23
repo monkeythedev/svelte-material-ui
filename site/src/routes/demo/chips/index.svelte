@@ -1,4 +1,6 @@
 <script lang="ts">
+import ChipConfigurator from "./ChipConfigurator.svelte";
+
   import ChoiceChips from "./_ChoiceChips.svelte";
   import FilterChips from "./_FilterChips.svelte";
   import InputChips from "./_InputChips.svelte";
@@ -10,7 +12,9 @@
 </svelte:head>
 
 <section>
-  <h2>Chips</h2>
+	<h2>Chips</h2>
+	
+	<ChipConfigurator></ChipConfigurator>
 
   <SimpleChips />
   <ChoiceChips />

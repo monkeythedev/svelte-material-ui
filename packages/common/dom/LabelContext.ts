@@ -5,4 +5,4 @@ const [setLabelBehaviour, getLabelBehaviour] = createContextPropBuilder<
 >();
 export { setLabelBehaviour, getLabelBehaviour };
 
-export type LabelBehaviour = "chip" | "tab" | "image-list";
+export type LabelBehaviour = "tab" | "image-list";

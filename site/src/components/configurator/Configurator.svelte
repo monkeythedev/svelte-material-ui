@@ -1,128 +1,128 @@
 <script lang="ts">
-  import CodeSelector from "./CodeSelector.svelte";
-  import { StringListToFilter, filterStringList } from "@smui/common/functions";
-  import { stripIndent } from "common-tags";
+	import CodeSelector from "./CodeSelector.svelte";
+	import { StringListToFilter, filterStringList } from "@smui/common/functions";
+	import { stripIndent } from "common-tags";
 
-  let svelteCode: string;
-  let scssCode: string;
+	let svelteCode: string;
+	let scssCode: string;
 
-  export function svelte(
-    renderer: () => {
-      tag: string;
-      props: StringListToFilter;
-      content: string;
-    }
-  ) {
-    const { tag, props, content } = renderer();
-    const filteredProps = filterStringList(props) || [];
+	export function svelte(
+		renderer: () => {
+			tag: string;
+			props: StringListToFilter;
+			content: string;
+		}
+	) {
+		const { tag, props, content } = renderer();
+		const filteredProps = filterStringList(props) || [];
 
-    const propsIntend = `
+		const propsIntend = `
 				`.substr(1);
-    let parsedProps = filteredProps.join(" \n" + propsIntend);
-    if (parsedProps.length > 0) parsedProps = " " + parsedProps;
+		let parsedProps = filteredProps.join(" \n" + propsIntend);
+		if (parsedProps.length > 0) parsedProps = " " + parsedProps;
 
-    svelteCode = stripIndent`
+		svelteCode = stripIndent`
 			<${tag}${parsedProps}>
 				${content}
 			</${tag}>
 		`;
-    return svelteCode;
-  }
+		return svelteCode;
+	}
 
-  export function scss(
-    renderer: () => {
-      content: string;
-    }
-  ) {
-    const { content } = renderer();
-    scssCode = stripIndent(content);
-  }
+	export function scss(
+		renderer: () => {
+			content: string;
+		}
+	) {
+		const { content } = renderer();
+		scssCode = stripIndent(content);
+	}
 </script>
 
 <style lang="scss">
-  @use "src/styles/smui/_variables";
+	@use "src/styles/smui/_variables";
+	$padding: 1em;
+	$border: variables.$border-color 1px solid;
 
-  .configurator {
-    $border: variables.$border-color 1px solid;
-    $padding: 1em;
-    max-width: 80em;
-    display: grid;
-    grid-template:
-      "preview options-sidebar"
-      "code options-sidebar"
-      / 1fr minmax(200px, min-content);
-    white-space: normal;
-    border: $border;
+	.configurator {
+		max-width: 80em;
+		display: grid;
+		grid-template:
+			"preview options-sidebar"
+			"code options-sidebar"
+			/ 1fr minmax(200px, min-content);
+		white-space: normal;
+		border: $border;
+	}
 
-    .preview {
-      grid-area: preview;
-      padding: $padding;
-      background-color: #efefef;
-      border-right: $border;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+	.preview {
+		grid-area: preview;
+		padding: $padding;
+		background-color: #efefef;
+		border-right: $border;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
 
-      .preview-slot {
-        flex-grow: 1;
-        align-items: center;
-        display: flex;
-      }
+		.preview-slot {
+			flex-grow: 1;
+			align-items: center;
+			display: flex;
+		}
 
-      .values {
-        display: flex;
-        align-self: flex-end;
-      }
-    }
+		.values {
+			display: flex;
+			align-self: flex-end;
+		}
+	}
 
-    .options-sidebar {
-      grid-area: options-sidebar;
-      padding: $padding;
+	.code {
+		grid-area: code;
+		min-width: 0;
+		min-height: 0;
+		overflow: auto;
 
-      > :global(.options-sidebar) {
-        display: grid;
-        grid-template: auto / minmax(150px, auto) minmax(150px, auto);
-        gap: 0.6em;
-				white-space: nowrap;
-				width: max-content;
+		:global(pre) {
+			white-space: break-spaces;
+		}
+	}
 
-        > :global(div) {
-          display: flex;
-					flex-direction: column;
-					justify-content: center;
-				}
-      }
-    }
+	.options-sidebar {
+		grid-area: options-sidebar;
+		padding: $padding;
 
-    .code {
-      grid-area: code;
-      min-width: 0;
-      min-height: 0;
-      overflow: auto;
+		> :global(.options-sidebar) {
+			display: grid;
+			grid-template: auto / minmax(150px, auto) minmax(150px, auto);
+			gap: 0.6em;
+			white-space: nowrap;
+			width: max-content;
 
-      :global(pre) {
-        white-space: break-spaces;
-      }
-    }
-  }
+			> :global(div) {
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+			}
+		}
+	}
 </style>
 
 <div class="configurator">
-  <div class="preview">
-    <div class="preview-slot">
-      <slot name="preview" />
-    </div>
-    {#if $$slots.values}
-      <div class="values">
-        <slot name="values" />
-      </div>
-    {/if}
-  </div>
-  <div class="options-sidebar">
-    <slot name="optionsSidebar" />
-  </div>
-  <div class="code">
-    <CodeSelector svelte={svelteCode} scss={scssCode} />
-  </div>
+	<div class="preview">
+		<div class="preview-slot">
+			<slot name="preview" />
+		</div>
+		{#if $$slots.values}
+			<div class="values">
+				<slot name="values" />
+			</div>
+		{/if}
+	</div>
+	<div class="options-sidebar">
+		<slot name="optionsSidebar" />
+	</div>
+	<div class="code">
+		<CodeSelector svelte={svelteCode} scss={scssCode} />
+	</div>
 </div>

@@ -1,40 +1,32 @@
 <script lang="ts">
-  // Base
-  import { DOMEventsForwarder } from "@smui/common/actions/DOMEventsForwarder";
-  const forwardDOMEvents = DOMEventsForwarder();
-  let className = "";
-  export { className as class };
-  export let style: string = undefined;
-  export let id: string = undefined;
+	// Base
+	import { DOMEventsForwarder } from "@smui/common/actions/DOMEventsForwarder";
+	const forwardDOMEvents = DOMEventsForwarder();
+	let className = "";
+	export { className as class };
+	export let style: string = undefined;
+	export let id: string = undefined;
 
-  export let dom: HTMLSpanElement = undefined;
-  import { BaseProps } from "../Props";
-  export let props: BaseProps = {};
+	export let dom: HTMLSpanElement = undefined;
+	import { BaseProps } from "../Props";
+	export let props: BaseProps = {};
 
-  // Icon
-  import { getIconBehaviour } from "./IconContextProps";
+	// Icon
+	import { getIconBehaviour } from "./IconContextProps";
 
-  export let leading: boolean = false;
-  export let leadingHidden: boolean = false;
-  export let trailing: boolean = false;
-
-  const iconStyle = getIconBehaviour();
+	const iconStyle = getIconBehaviour();
 </script>
 
 <i
-  bind:this={dom}
-  {...props}
-  {id}
-  class="{className || 'material-icons'}
+	bind:this={dom}
+	{...props}
+	{id}
+	class="{className || 'material-icons'}
     {iconStyle === 'fab' ? 'mdc-fab__icon' : ''}
-    {iconStyle === 'chip' ? 'mdc-chip__icon' : ''}
-    {iconStyle === 'chip' && leading ? 'mdc-chip__icon--leading' : ''}
-    {iconStyle === 'chip' && leadingHidden ? 'mdc-chip__icon--leading-hidden' : ''}
-    {iconStyle === 'chip' && trailing ? 'mdc-chip__icon--trailing mdc-chip-trailing-action' : ''}
     {iconStyle === 'tab' ? 'mdc-tab__icon' : ''}"
-  {style}
-  use:forwardDOMEvents>
-  <slot />
+	{style}
+	use:forwardDOMEvents>
+	<slot />
 </i>
 
 <!-- <i

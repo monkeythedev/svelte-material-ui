@@ -2,7 +2,8 @@
   import { Chip, ChipSet, Icon, Checkmark, Text } from "@smui/chips";
   import { Button, Label } from "@smui/button";
 
-  let chips = [1, 2, 3, 4];
+	let chips = [1, 2, 3, 4];
+	let value;
 
   function addInputChip() {
     chips = [...chips, chips.length + 1];
@@ -10,8 +11,9 @@
 </script>
 
 <div>
-  Input Chips
-  <ChipSet input>
+	Input Chips
+	{value}
+  <ChipSet filter bind:value>
     {#each chips as chip}
       <Chip value={chip}>
         <Text>{chip}</Text>
