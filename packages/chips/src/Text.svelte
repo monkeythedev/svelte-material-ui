@@ -14,7 +14,7 @@
 	// Icon
 	import { getSelectableContext } from "@smui/common/hoc";
 
-	const selectable$ = getSelectableContext();
+	const selectableContext$ = getSelectableContext();
 </script>
 
 <svelte:options immutable={true} />
@@ -29,9 +29,9 @@
 	use:forwardDOMEvents>
 	<span
 		role="button"
-		tabindex={$selectable$.tabindex}
+		tabindex={$selectableContext$.tabindex}
 		class="mdc-chip__primary-action"
-		aria-checked={$selectable$.selected}>
+		aria-checked={$selectableContext$.selected}>
 		<span class="mdc-chip__text"><slot /></span>
 	</span>
 </span>

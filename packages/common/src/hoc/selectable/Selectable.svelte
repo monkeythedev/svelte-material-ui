@@ -77,7 +77,7 @@
 	Object.assign(context, $context$);
 
 	$: if (contextOverride$) {
-		$context$ = Object.assign(context, {
+		$context$ = Object.assign({}, context, {
 			...$context$,
 			selected: $contextOverride$.selected,
 			value: $contextOverride$.value,
@@ -85,7 +85,9 @@
 			disabled: $contextOverride$.disabled,
 		});
 	} else {
-		$context$ = Object.assign(context, {
+		console.warn(selected);
+
+		$context$ = Object.assign({}, context, {
 			...$context$,
 			selected,
 			value,
@@ -160,6 +162,8 @@
 	}
 	//#endregion
 </script>
+
+<svelte:options immutable={true} />
 
 {#if contextOverride$}
 	<UseState value={[selected, value]} onUpdate={onSelfUpdated} />

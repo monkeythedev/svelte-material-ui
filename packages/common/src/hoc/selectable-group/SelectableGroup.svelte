@@ -22,7 +22,9 @@
 	export let id: string = `@smui/common/hoc/SelectableGroup-${count++}`;
 	export let initialized: boolean = false;
 
-	let dispatch = createEventDispatcher();
+	let dispatch = createEventDispatcher<{
+		init: undefined;
+	}>();
 	let selectableGroup: UseSelectableGroup;
 	let valueState: UseState;
 

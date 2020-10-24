@@ -13,7 +13,7 @@
 </script>
 
 <FormField>
-  <Select bind:value style="width: 100%" {disabled}>
+  <Select bind:value style="width: 100%" {disabled} on:change>
     <span slot="label">{label}</span>
     {#if allowEmpty}
       <Option value={null} />

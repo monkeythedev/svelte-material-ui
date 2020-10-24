@@ -18,14 +18,17 @@
 		GraphicType,
 	} from "@smui/common/components";
 	import { parseClassList } from "@smui/common/src/functions";
-	import { onMount } from "svelte";
-	import { getSelectableContext } from "@smui/common/hoc";
+	import { onMount, tick } from "svelte";
+	import { getChipContext } from "./ChipContext";
+	import { getChipSetContext } from "./ChipSetContext";
 
 	export let type: GraphicType = "icon";
+	export let removeOnClick: boolean = false;
 
-	const selectableContext$ = getSelectableContext();
+	const chipContext$ = getChipContext();
+	const chipSetContext$ = getChipSetContext();
 
-	let leadingHidden: boolean = $selectableContext$.selected;
+	let leadingHidden: boolean = $chipContext$.selected;
 	let leading: boolean = false;
 	let trailing: boolean = false;
 
@@ -43,7 +46,14 @@
 		} else {
 			trailing = true;
 		}
+
+		tick().then(() => {
+			$chipContext$?.reinitializeMDC();
+		});
 	});
+
+	$: leadingHidden =
+		$chipContext$.selected && $chipSetContext$.variant === "filter";
 </script>
 
 <svelte:options immutable={true} />

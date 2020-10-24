@@ -4,4 +4,4 @@ import ExtractNamedSlot from "./ExtractNamedSlot.svelte";
 import Graphic from "./Graphic.svelte";
 
 export { Portal, Fragment, ExtractNamedSlot, Graphic };
-export * from "./Graphic.svelte";
+export * from "./types";

@@ -70,7 +70,7 @@
 	$: if (disabled && selected) selected = false;
 
 	const context = {} as ItemContext;
-	$: $context$ = Object.assign(context, {
+	$: $context$ = Object.assign({}, context, {
 		...$context$,
 		disabled,
 		selected,
@@ -92,7 +92,7 @@
 	onMount(() => {
 		$listContext$.registerItem(context);
 
-		$context$ = Object.assign(context, {
+		$context$ = Object.assign({}, context, {
 			...$context$,
 			setSelected: selectable?.setSelected,
 			setValue: selectable?.setValue,

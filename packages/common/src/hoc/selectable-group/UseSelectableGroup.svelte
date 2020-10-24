@@ -26,6 +26,7 @@
 			selectedItemsIndex: number | number[];
 		};
 		optionsUpdated: typeof items;
+		init: undefined;
 	}>();
 
 	function init() {
@@ -47,6 +48,7 @@
 
 		initTabIndex(selectionType, items);
 		initialized = true;
+		dispatch("init");
 		// });
 	}
 
@@ -70,6 +72,8 @@
 			setValue(null);
 			return false;
 		}
+
+		fixValue();
 
 		if (selectionType === "single") {
 			if (oldSelectionType === "multi") {
@@ -95,7 +99,6 @@
 				}
 			}
 		} else if (selectionType === "multi") {
-			fixValue();
 			const itemsList = itemsArray;
 			const validValues = value.filter((value) =>
 				itemsList.some((item) => item.value === value)
@@ -155,12 +158,14 @@
 	}
 
 	function fixValue() {
-		// If multiselection, value must be an array
-		if (selectionType === "multi") {
-			if (value == null) {
-				setResetValue();
-			} else if (!Array.isArray(value)) {
-				setValue([value]);
+		if (value == null) {
+			setResetValue();
+		} else {
+			if (selectionType === "multi") {
+				// If multiselection, value must be an array
+				if (!Array.isArray(value)) {
+					setValue([value]);
+				}
 			}
 		}
 	}

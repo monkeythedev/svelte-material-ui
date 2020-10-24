@@ -43,10 +43,11 @@
 	export let ripple: boolean = true;
 	export let disabled: boolean = false;
 	export let variant: SelectVariant = "filled";
-	export let value: any = undefined;
+	export let value: string = undefined;
 	export let dirty = false;
 	export let customValidation: (value: any, init?: true) => boolean = undefined;
 	export let required: boolean = false;
+	export let nullable: boolean = true;
 
 	let helperTextId: string;
 	let labelId: string;
@@ -80,14 +81,14 @@
 		select = new MDCSelect(dom);
 
 		select.listen("MDCSelect:change", (event: MDCSelectEvent) => {
-			value = event.detail.value;
+			setValue(event.detail.value);
 			dirty = true;
 		});
 	});
 
 	$: if (select && selectableGroupInitialized) {
 		if (select.value !== value) {
-			select.value = value;
+			setSelectValue(value);
 		}
 
 		if (select.disabled !== disabled) {
@@ -105,13 +106,22 @@
 
 	function handleChange(event: CustomEvent<OnSelectableGroupChange>) {
 		if (select) {
-			select.value = value;
+			setSelectValue(value);
 		}
 
 		dispatch("change", {
 			value,
 			dom: dom,
 		});
+	}
+
+	function setSelectValue(newValue: string) {
+		if (select) select.value = newValue || ""; // For MDC null, undefined get always translated to "".
+	}
+
+	function setValue(newValue: string) {
+		if (!value && !newValue) return; // For MDC null, undefined get always translated to "".
+		value = newValue;
 	}
 
 	function handleOptionsUpdated() {
@@ -134,7 +144,7 @@
 	selectionType="single"
 	on:change={handleChange}
 	on:optionsUpdated={handleOptionsUpdated}
-	nullable
+	{nullable}
 	bind:initialized={selectableGroupInitialized}>
 	<div
 		bind:this={dom}

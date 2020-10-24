@@ -1,5 +1,5 @@
 <script context="module" lang="ts">
-	export type ChipSetVariant = "choice" | "filter" | "input";
+	export type ChipSetVariant = "choice" | "filter";
 </script>
 
 <script lang="ts">
@@ -29,10 +29,11 @@
 
 	export let value: any = undefined;
 	export let variant: ChipSetVariant = null;
+	export let entryAnimation: boolean = true;
 
 	let items: ChipContext[] = [];
 	let selectableGroup: SelectableGroup;
-	createChipSetContext({
+	const context$ = createChipSetContext({
 		registerItem(chip: ChipContext) {
 			if (chipSet && !arrHas(items, chip)) {
 				chipSet.addChip(chip.dom);
@@ -43,6 +44,11 @@
 		unregisterItem(chip: ChipContext) {
 			items = arrRemove(items, chip);
 		},
+		variant,
+	});
+
+	$: $context$ = Object.assign({}, $context$, {
+		variant,
 	});
 
 	// Update chips instances
@@ -79,6 +85,8 @@
 	});
 </script>
 
+<svelte:options immutable={true} />
+
 <UseState value={variant} onUpdate={reinitialize} />
 
 <SelectableGroup
@@ -94,9 +102,9 @@
 		class={parseClassList([
 			className,
 			'mdc-chip-set',
+			[entryAnimation, 'mdc-chip-set--input'],
 			[variant === 'choice', 'mdc-chip-set--choice'],
 			[variant === 'filter', 'mdc-chip-set--filter'],
-			[variant === 'input', 'mdc-chip-set--input'],
 		])}
 		{style}
 		use:forwardDOMEvents>

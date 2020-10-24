@@ -1,31 +1,56 @@
+<script context="module" lang="ts">
+	let count: number = 0;
+
+	export interface SMUIChipRemoveEventDetail extends MDCChipRemovalEventDetail {
+		dom: HTMLDivElement;
+		value: any;
+	}
+
+	export interface SMUIChipSelectedEventDetail
+		extends MDCChipSelectionEventDetail {
+		dom: HTMLDivElement;
+		value: any;
+	}
+</script>
+
 <script lang="ts">
 	//#region Base
 	import { DOMEventsForwarder } from "@smui/common/actions/DOMEventsForwarder";
 	const forwardDOMEvents = DOMEventsForwarder();
 	let className = "";
 	export { className as class };
-	export let style: string = null;
-	export let id: string = null;
+	export let style: string = undefined;
+	export let id: string = `@smui/chips/Chip:${count++}`;
 
-	export let dom: HTMLDivElement = null;
+	export let dom: HTMLDivElement = undefined;
 
 	import { BaseProps } from "@smui/common/dom/Props";
 	export let props: BaseProps = {};
 	//#endregion
 
 	// Chip
-	import { MDCChip } from "@material/chips";
-	import { onDestroy } from "svelte";
+	import {
+		MDCChip,
+		MDCChipRemovalEvent,
+		MDCChipRemovalEventDetail,
+		MDCChipSelectionEventDetail,
+		MDCChipSelectionEvent,
+	} from "@material/chips";
+	import { createEventDispatcher, onDestroy } from "svelte";
 	import { getChipSetContext } from "./ChipSetContext";
-	import { ChipContext } from "./ChipContext";
+	import { ChipContext, createChipContext } from "./ChipContext";
 	import { Selectable } from "@smui/common/hoc";
-	import { setLabelBehaviour } from "@smui/common/dom/LabelContext";
-	import { Use } from "@smui/common/hooks";
+	import { Use, UseState } from "@smui/common/hooks";
 
 	export let value: any = null;
 	export let ripple: boolean = true;
 	export let selected: boolean = false;
-	export let shouldRemoveOnTrailingIconClick: boolean = true;
+	export let removeOnTrailingIconClick: boolean = true;
+
+	const dispatch = createEventDispatcher<{
+		remove: SMUIChipRemoveEventDetail;
+		selected: SMUIChipSelectedEventDetail;
+	}>();
 
 	let selectable: Selectable;
 
@@ -36,27 +61,41 @@
 			if (chip !== _chip) {
 				chip = _chip;
 				if (!ripple) {
-					chip.ripple && chip.ripple.destroy();
+					destroyRipple();
 				}
+
+				// Workaround... MDC shouldn't remove element from DOM as stated in their own documentation https://github.com/material-components/material-components-web/tree/master/packages/mdc-chips#removing-chips-from-the-dom
+				chip.remove = () => {};
+				chip.listen("MDCChip:removal", handleRemoval);
 
 				chip.listen("MDCChip:selection", handleSelection);
 			}
 		},
+		reinitializeMDC() {
+			// Needed because MDC doesn't listen child node updates
+			reinitializeMDC();
+		},
 	} as ChipContext;
 
+	const context$ = createChipContext({ ...context });
+
 	let chip: MDCChip;
-	$: Object.assign(context, { ...context, chip, dom, selected });
+	$: $context$ = Object.assign({}, context, {
+		...context,
+		chip,
+		dom,
+		selected,
+	});
 
-	$: if (chip && chip.selected !== selected) {
-		// Add class mdc-chip--selected
-		chip.selected = selected;
-	}
+	$: if (chip) {
+		if (chip.selected !== selected) {
+			// Add class mdc-chip--selected
+			chip.selected = selected;
+		}
 
-	$: if (
-		chip &&
-		chip.shouldRemoveOnTrailingIconClick !== shouldRemoveOnTrailingIconClick
-	) {
-		chip.shouldRemoveOnTrailingIconClick = shouldRemoveOnTrailingIconClick;
+		if (chip.shouldRemoveOnTrailingIconClick !== removeOnTrailingIconClick) {
+			chip.shouldRemoveOnTrailingIconClick = removeOnTrailingIconClick;
+		}
 	}
 
 	onDestroy(() => {
@@ -64,18 +103,45 @@
 		$chipSetContext$?.unregisterItem(context);
 	});
 
+	function syncRipple() {
+		if (!ripple) {
+			destroyRipple();
+		} else {
+			reinitializeMDC();
+		}
+	}
+
+	function destroyRipple() {
+		chip.ripple && chip.ripple.destroy();
+	}
+
+	function reinitializeMDC() {
+		chip?.destroy();
+		chip?.initialize();
+		chip?.initialSyncWithDOM();
+	}
+
 	function registerChip() {
 		if (chipSetContext$) {
 			$chipSetContext$.registerItem(context);
 		}
 	}
 
-	function handleSelection(
-		event: CustomEvent<{ chipId: string; selected: boolean }>
-	) {
+	function handleSelection(event: MDCChipSelectionEvent) {
 		selectable.setSelected(event.detail.selected);
+		dispatch("selected", {
+			...event.detail,
+			value,
+			dom,
+		});
+	}
+
+	function handleRemoval(event: MDCChipRemovalEvent) {
+		dispatch("remove", { ...event.detail, dom, value });
 	}
 </script>
+
+<svelte:options immutable={true} />
 
 <Selectable bind:this={selectable} bind:selected bind:value>
 	<div
@@ -94,3 +160,4 @@
 </Selectable>
 
 <Use effect hook={registerChip} />
+<UseState value={ripple} onUpdate={syncRipple} />
