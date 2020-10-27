@@ -3,42 +3,52 @@
 	import { Checkbox } from "@smui/checkbox";
 	import {
 		ChipSet,
-		Text,
 		ChipSetVariant,
 		SMUIChipRemoveEventDetail,
-		SMUIChipSelectedEventDetail,
-		Checkmark
 	} from "@smui/chips";
 	import Chip from "./_Chip.svelte";
 	import { StringListToFilter } from "@smui/common/functions";
 	import { FormField } from "@smui/form-field";
 	import { Select, Option } from "@smui/select";
-	import { Configurator } from "src/components/configurator";
+	import {
+		Configurator,
+		generateSvelteCode,
+		indentCode,
+	} from "src/components/configurator";
 	import IconTypeOption, {
 		IconType,
 	} from "src/components/configurator/common-options/IconTypeOption.svelte";
+	import { tick } from "svelte";
 
-	let variant: ChipSetVariant = undefined;
-	let entryAnimation: boolean = true;
+	let variant: ChipSetVariant;
+	let entryAnimation: boolean;
+	let value: any[];
 
 	let chips: ChipConf[] = [];
-	for (let i = 0; i < 3; i++) addChip();
 
-	let configurator: Configurator;
-	let selectedChipValue: string = "0";
-	$: selectedChip = getSelectedChip(chips, selectedChipValue);
+	let selectedChipValue: string;
+	$: selectedChip = {...getSelectedChip(chips, selectedChipValue)};
 
-	// $: configurator?.svelte(() => {
-	// 	return {
-	// 		tag: "Button",
-	// 		props: props(ripple),
-	// 		content: `
-	// 			${getLeadingIconCode(leadingIcon)}
-	// 			<Text>Chip</Text>
-	// 			${getTrailingIconCode(trailingIcon)}
-	// 		`,
-	// 	};
-	// });
+	initialData();
+
+	let svelteCode: string;
+	let chipSvelteCode: string;
+	let scssCode: string;
+	$: {
+		svelteCode = generateSvelteCode({
+			tag: "ChipSet",
+			props: props(variant, entryAnimation),
+			content: indentCode({ code: chipSvelteCode || "" }),
+		});
+	}
+
+	$: {
+		tick().then(() => {
+			chipSvelteCode = chips
+				.map((chip) => chip.instance?.getSvelteCode())
+				.join("\n");
+		});
+	}
 
 	function addChip() {
 		chips = [
@@ -64,60 +74,24 @@
 		chips = chips.slice(0, index).concat(chips.slice(index + 1, chips.length));
 	}
 
-	function props(rippleValue: typeof ripple): StringListToFilter {
-		return [`value="value"`, [rippleValue, `ripple`]];
+	function initialData() {
+		variant = undefined;
+		entryAnimation = true;
+
+		chips = [];
+		for (let i = 0; i < 3; i++) addChip();
+		selectedChipValue = chips[0].value;
 	}
 
-	function getDensity(density: number): number {
-		return density ? density : null;
-	}
-
-	function getCustomStyleClass(selectedCustomStyle: typeof customStyle) {
-		if (selectedCustomStyle === "mdc-mixins") return "button-shaped-round";
-		else if (selectedCustomStyle === "custom-css") return "button-shaped-notch";
-		else return null;
-	}
-
-	function getLeadingIconCode(selectedLeadingIcon: typeof leadingIcon): string {
-		if (selectedLeadingIcon === "material-icon") {
-			return `<Icon>favorite</Icon>`;
-		} else if (selectedLeadingIcon === "svg") {
-			return `
-				<Icon type="svg" props={{viewBox: "0 0 24 24"}}>
-					<circle cx="12" cy="12" r="12">
-				</Icon>
-			`;
-		} else if (selectedLeadingIcon === "img") {
-			return `
-				<Icon	type="img"
-						props={{ src: '/icons/emojis/grinning-face.png', alt: 'Grinning face' }}/>
-			`;
-		} else {
-			return "";
-		}
-	}
-
-	function getTrailingIconCode(
-		selectedTrailingIcon: typeof trailingIcon
-	): string {
-		if (selectedTrailingIcon === "material-icon") {
-			return "<Icon>play_circle_filled</Icon>";
-		} else if (selectedTrailingIcon === "svg") {
-			return `
-				<Icon svg props={{viewBox: "0 0 24 24"}}>
-					<polygon points="0,24 12,0 24,24" />
-				</Icon>
-			`;
-		} else if (selectedTrailingIcon === "img") {
-			return `
-				<Icon
-						type="img"
-						props={{ src: '/icons/emojis/upside-down-face.png', alt: 'on' }}
-						on />
-			`;
-		} else {
-			return "";
-		}
+	function props(
+		variantValue: typeof variant,
+		entryAnimationValue: typeof entryAnimation
+	): StringListToFilter {
+		return [
+			[variantValue, "bind:value"],
+			[variantValue, `variant="${variantValue}"`],
+			[!entryAnimationValue, "entryAnimation={false}"],
+		];
 	}
 
 	function getSelectedChip(
@@ -135,6 +109,11 @@
 		chips = [...chips];
 	}
 
+	function handleChipSelect(chip: ChipConf, selected: boolean) {
+		chip.selected = selected;
+		chips = [...chips];
+	}
+
 	interface ChipConf {
 		value: string;
 		ripple: boolean;
@@ -143,19 +122,29 @@
 		selected: boolean;
 		removeOnTrailingIconClick: boolean;
 		useCheckmark: boolean;
+		instance?: Chip;
 	}
 </script>
 
-<Configurator bind:this={configurator}>
+<svelte:options immutable={true} />
+
+<Configurator {svelteCode} {scssCode}>
 	<div slot="preview">
-		<ChipSet {variant} {entryAnimation}>
+		<ChipSet {variant} {entryAnimation} bind:value>
 			{#each chips as chip, index (chip.value)}
 				<Chip
 					{...chip}
+					bind:this={chip.instance}
 					on:remove={(event) => handleChipRemove(event.detail)}
-					on:selected={(event) => (chip.selected = event.detail.selected)} />
+					on:selected={(event) => handleChipSelect(chip, event.detail.selected)} />
 			{/each}
 		</ChipSet>
+	</div>
+	<div slot="values">
+		{#if variant}
+			value:
+			{Array.isArray(value) ? `[${value.join(', ')}]` : `"${value}"`}
+		{/if}
 	</div>
 	<div slot="optionsSidebar" class="options-sidebar">
 		<div style="grid-column: span 2;">ChipSet</div>
@@ -166,7 +155,6 @@
 					<Option />
 					<Option value="choice">Choice</Option>
 					<Option value="filter">Filter</Option>
-					<Option value="input">Input</Option>
 				</Select>
 			</FormField>
 		</div>
@@ -234,6 +222,9 @@
 		</div>
 		<div style="grid-column: span 2;">
 			<div style="display: flex; justify-content: flex-end;">
+				<Button on:click={initialData}>
+					<Label>Reset</Label>
+				</Button>
 				<Button on:click={addChip}>
 					<Label>Add chip</Label>
 					<Icon>add</Icon>

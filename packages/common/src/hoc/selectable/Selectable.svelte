@@ -77,23 +77,25 @@
 	Object.assign(context, $context$);
 
 	$: if (contextOverride$) {
-		$context$ = Object.assign({}, context, {
-			...$context$,
-			selected: $contextOverride$.selected,
-			value: $contextOverride$.value,
-			tabindex: $contextOverride$.tabindex,
-			disabled: $contextOverride$.disabled,
-		});
+		$context$ = {
+			...Object.assign(context, {
+				...$context$,
+				selected: $contextOverride$.selected,
+				value: $contextOverride$.value,
+				tabindex: $contextOverride$.tabindex,
+				disabled: $contextOverride$.disabled,
+			}),
+		};
 	} else {
-		console.warn(selected);
-
-		$context$ = Object.assign({}, context, {
-			...$context$,
-			selected,
-			value,
-			tabindex,
-			disabled,
-		});
+		$context$ = {
+			...Object.assign(context, {
+				...$context$,
+				selected,
+				value,
+				tabindex,
+				disabled,
+			}),
+		};
 	}
 
 	onMount(() => {
@@ -105,9 +107,9 @@
 	});
 
 	onDestroy(() => {
-		tick().then(() => {
-			$selectableGroupContext$?.unregisterItem(context);
-		});
+		//tick().then(() => { Causes problem with each blocks
+		$selectableGroupContext$?.unregisterItem(context);
+		//});
 	});
 	//#endregion
 

@@ -47,7 +47,7 @@
 		variant,
 	});
 
-	$: $context$ = Object.assign({}, $context$, {
+	$: $context$ = Object.assign($context$, {
 		variant,
 	});
 

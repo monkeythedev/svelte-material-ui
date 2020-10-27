@@ -70,14 +70,16 @@
 	$: if (disabled && selected) selected = false;
 
 	const context = {} as ItemContext;
-	$: $context$ = Object.assign({}, context, {
-		...$context$,
-		disabled,
-		selected,
-		tabindex,
-		dom,
-		value,
-	});
+	$: $context$ = {
+		...Object.assign(context, {
+			...$context$,
+			disabled,
+			selected,
+			tabindex,
+			dom,
+			value,
+		}),
+	};
 
 	function handleChange(event: CustomEvent<OnSelectableChange>) {
 		if (event.detail.selected) {
@@ -92,11 +94,13 @@
 	onMount(() => {
 		$listContext$.registerItem(context);
 
-		$context$ = Object.assign({}, context, {
-			...$context$,
-			setSelected: selectable?.setSelected,
-			setValue: selectable?.setValue,
-		});
+		$context$ = {
+			...Object.assign(context, {
+				...$context$,
+				setSelected: selectable?.setSelected,
+				setValue: selectable?.setValue,
+			}),
+		};
 	});
 
 	onDestroy(() => {

@@ -1,73 +1,73 @@
 {
-  "name": "svelte-material-ui",
-  "version": "1.0.0",
-  "description": "Svelte Material UI Components",
-  "keywords": [
-    "svelte",
-    "svelte3",
-    "material-ui",
-    "material-design",
-    "material",
-    "svelte-components",
-    "sveltejs"
-  ],
-  "scripts": {
-    "pages": "git checkout site -- && git rebase master && cd site && npm install && npm run export && cd .. && git add . && git commit -m 'chore: update built files' && git push origin $(git subtree split --prefix site/dist site):gh-pages --force && git reset --hard HEAD^ && git push --force origin site && git checkout master",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "tsc": "tsc"
-  },
-  "commitlint": {
-    "extends": [
-      "@commitlint/config-conventional"
-    ]
-  },
-  "files": [],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/hperrin/svelte-material-ui.git"
-  },
-  "author": "Hunter Perrin <hperrin@gmail.com>",
-  "bugs": {
-    "url": "https://github.com/hperrin/svelte-material-ui/issues"
-  },
-  "license": "Apache-2.0",
-  "dependencies": {
-    "@smui/button": "1.0.0",
-    "@smui/card": "1.0.0",
-    "@smui/checkbox": "1.0.0",
-    "@smui/chips": "1.0.0",
-    "@smui/data-table": "1.0.0",
-    "@smui/dialog": "1.0.0",
-    "@smui/drawer": "1.0.0",
-    "@smui/fab": "1.0.0",
-    "@smui/floating-label": "1.0.0",
-    "@smui/form-field": "1.0.0",
-    "@smui/icon-button": "1.0.0",
-    "@smui/image-list": "1.0.0",
-    "@smui/line-ripple": "1.0.0",
-    "@smui/linear-progress": "1.0.0",
-    "@smui/list": "1.0.0",
-    "@smui/menu": "1.0.0",
-    "@smui/menu-surface": "1.0.0",
-    "@smui/notched-outline": "1.0.0",
-    "@smui/paper": "1.0.0",
-    "@smui/radio": "1.0.0",
-    "@smui/ripple": "1.0.0",
-    "@smui/select": "1.0.0",
-    "@smui/slider": "1.0.0",
-    "@smui/snackbar": "1.0.0",
-    "@smui/switch": "1.0.0",
-    "@smui/tab": "1.0.0",
-    "@smui/tab-bar": "1.0.0",
-    "@smui/tab-indicator": "1.0.0",
-    "@smui/tab-scroller": "1.0.0",
-    "@smui/textfield": "1.0.0",
-    "@smui/top-app-bar": "1.0.0"
-  },
-  "devDependencies": {
-    "lerna": "^3.22.1",
-    "svelte": "^3.29.0",
-    "svelte-preprocess": "^4.3.2",
-    "typescript": "^4.0.3"
-  }
+	"name": "svelte-material-ui",
+	"version": "1.0.0",
+	"description": "Svelte Material UI Components",
+	"keywords": [
+		"svelte",
+		"svelte3",
+		"material-ui",
+		"material-design",
+		"material",
+		"svelte-components",
+		"sveltejs"
+	],
+	"scripts": {
+		"pages": "git checkout site -- && git rebase master && cd site && npm install && npm run export && cd .. && git add . && git commit -m 'chore: update built files' && git push origin $(git subtree split --prefix site/dist site):gh-pages --force && git reset --hard HEAD^ && git push --force origin site && git checkout master",
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"tsc": "tsc"
+	},
+	"commitlint": {
+		"extends": [
+			"@commitlint/config-conventional"
+		]
+	},
+	"files": [],
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/hperrin/svelte-material-ui.git"
+	},
+	"author": "Hunter Perrin <hperrin@gmail.com>",
+	"bugs": {
+		"url": "https://github.com/hperrin/svelte-material-ui/issues"
+	},
+	"license": "Apache-2.0",
+	"dependencies": {
+		"@smui/button": "1.0.0",
+		"@smui/card": "1.0.0",
+		"@smui/checkbox": "1.0.0",
+		"@smui/chips": "1.0.0",
+		"@smui/data-table": "1.0.0",
+		"@smui/dialog": "1.0.0",
+		"@smui/drawer": "1.0.0",
+		"@smui/fab": "1.0.0",
+		"@smui/floating-label": "1.0.0",
+		"@smui/form-field": "1.0.0",
+		"@smui/icon-button": "1.0.0",
+		"@smui/image-list": "1.0.0",
+		"@smui/line-ripple": "1.0.0",
+		"@smui/linear-progress": "1.0.0",
+		"@smui/list": "1.0.0",
+		"@smui/menu": "1.0.0",
+		"@smui/menu-surface": "1.0.0",
+		"@smui/notched-outline": "1.0.0",
+		"@smui/paper": "1.0.0",
+		"@smui/radio": "1.0.0",
+		"@smui/ripple": "1.0.0",
+		"@smui/select": "1.0.0",
+		"@smui/slider": "1.0.0",
+		"@smui/snackbar": "1.0.0",
+		"@smui/switch": "1.0.0",
+		"@smui/tab": "1.0.0",
+		"@smui/tab-bar": "1.0.0",
+		"@smui/tab-indicator": "1.0.0",
+		"@smui/tab-scroller": "1.0.0",
+		"@smui/textfield": "1.0.0",
+		"@smui/top-app-bar": "1.0.0"
+	},
+	"devDependencies": {
+		"lerna": "^3.22.1",
+		"svelte": "^3.29.4",
+		"svelte-preprocess": "^4.5.2",
+		"typescript": "^4.0.5"
+	}
 }

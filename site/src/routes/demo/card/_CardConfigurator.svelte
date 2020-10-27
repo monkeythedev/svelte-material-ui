@@ -11,7 +11,11 @@
 	import classes from "./index.module.scss";
 	import { Checkbox } from "@smui/checkbox";
 	import { FormField } from "@smui/form-field";
-	import { Configurator } from "src/components/configurator";
+	import {
+		Configurator,
+		generateSCSSCode,
+		generateSvelteCode,
+	} from "src/components/configurator";
 	import { Option, Select } from "@smui/select";
 	import {
 		Card,
@@ -29,7 +33,7 @@
 	import { stripIndent } from "common-tags";
 	import UseCardCode from "./UseCardCode.svelte";
 	import UseCardStyleCode from "./UseCardStyleCode.svelte";
-import { StringListToFilter } from "@smui/common/functions";
+	import { StringListToFilter } from "@smui/common/functions";
 
 	let outlined: boolean = false;
 
@@ -46,8 +50,6 @@ import { StringListToFilter } from "@smui/common/functions";
 	let clickableBody: boolean = false;
 
 	let actionsLayout: ActionsLayout = undefined;
-
-	let configurator: Configurator;
 
 	let isHeadTextDisabled = true;
 	$: isHeadTextDisabled =
@@ -80,19 +82,15 @@ import { StringListToFilter } from "@smui/common/functions";
 	$: if (isHeadTextDisabled) showText = true;
 	$: if (isClickableBodyDisabled) clickableBody = false;
 
+	let svelteCode: string;
 	let svelteContentCode: string;
-	$: configurator?.svelte(() => {
-		return {
-			tag: "Card",
-			props: props(outlined, horizontalLayout),
-			content: svelteContentCode,
-		};
+	$: svelteCode = generateSvelteCode({
+		tag: "Card",
+		props: props(outlined, horizontalLayout),
+		content: svelteContentCode,
 	});
 
-	let styleCode: string;
-	$: configurator?.scss(() => {
-		return { content: styleCode };
-	});
+	let scssCode: string;
 
 	function props(
 		outlinedValue: typeof outlined,
@@ -143,9 +141,9 @@ import { StringListToFilter } from "@smui/common/functions";
 	{clickableBody}
 	{actionsLayout} />
 
-<UseCardStyleCode bind:styleCode {media} {horizontalLayout} />
+<UseCardStyleCode bind:styleCode={scssCode} {media} {horizontalLayout} />
 
-<Configurator bind:this={configurator}>
+<Configurator {svelteCode} {scssCode}>
 	<div slot="preview">
 		<Card
 			variant={outlined ? 'outlined' : undefined}

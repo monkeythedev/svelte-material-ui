@@ -5,7 +5,11 @@
 	import { FormField } from "@smui/form-field";
 	import { Option, Select } from "@smui/select";
 	import { Slider } from "@smui/slider";
-	import { Configurator } from "src/components/configurator";
+	import {
+		Configurator,
+		generateSvelteCode,
+		generateSCSSCode,
+	} from "src/components/configurator";
 	import IconTypeOption, {
 		IconType,
 	} from "src/components/configurator/common-options/IconTypeOption.svelte";
@@ -22,29 +26,28 @@
 	let trailingIcon: IconType = undefined;
 	let customStyle: "mdc-mixins" | "custom-css" | "" = "";
 
-	let configurator: Configurator;
+	let svelteCode: string;
+	let scssCode: string;
 
-	$: configurator?.svelte(() => {
-		return {
-			tag: "Button",
-			props: props(
-				customStyle,
-				disabled,
-				ripple,
-				variant,
-				density,
-				link,
-				iconOnly
-			),
-			content: `
-				${getLeadingIconCode(leadingIcon, iconOnly)}
-				${iconOnly ? "" : `<Label>Button</Label>`}
-				${getTrailingIconCode(trailingIcon)}
-			`,
-		};
+	$: svelteCode = generateSvelteCode({
+		tag: "Button",
+		props: props(
+			customStyle,
+			disabled,
+			ripple,
+			variant,
+			density,
+			link,
+			iconOnly
+		),
+		content: `
+			${getLeadingIconCode(leadingIcon, iconOnly)}
+			${iconOnly ? "" : `<Label>Button</Label>`}
+			${getTrailingIconCode(trailingIcon)}
+		`,
 	});
 
-	$: configurator?.scss(() => {
+	$: {
 		let content: string = "";
 
 		if (customStyle === "mdc-mixins") {
@@ -85,10 +88,8 @@
 			`;
 		}
 
-		return {
-			content,
-		};
-	});
+		scssCode = generateSCSSCode({ content });
+	}
 
 	function props(
 		selectedCustomStyle: typeof customStyle,
@@ -180,7 +181,7 @@
 	}
 </script>
 
-<Configurator bind:this={configurator}>
+<Configurator {svelteCode} {scssCode}>
 	<div slot="preview">
 		<Button
 			style={iconOnly ? 'padding: 0;' : undefined}

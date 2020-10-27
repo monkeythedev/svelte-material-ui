@@ -5,7 +5,9 @@ const path = require("path");
 
 module.exports = {
   preprocess: sveltePreprocess({
-    typescript: true,
+    typescript: {
+			tsconfigFile: "./tsconfig.json"
+		},
     scss: {
       includePaths: [path.resolve("src"), path.resolve("node_modules")]
     }

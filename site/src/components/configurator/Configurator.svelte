@@ -1,42 +1,8 @@
 <script lang="ts">
 	import CodeSelector from "./CodeSelector.svelte";
-	import { StringListToFilter, filterStringList } from "@smui/common/functions";
-	import { stripIndent } from "common-tags";
 
-	let svelteCode: string;
-	let scssCode: string;
-
-	export function svelte(
-		renderer: () => {
-			tag: string;
-			props: StringListToFilter;
-			content: string;
-		}
-	) {
-		const { tag, props, content } = renderer();
-		const filteredProps = filterStringList(props) || [];
-
-		const propsIntend = `
-				`.substr(1);
-		let parsedProps = filteredProps.join(" \n" + propsIntend);
-		if (parsedProps.length > 0) parsedProps = " " + parsedProps;
-
-		svelteCode = stripIndent`
-			<${tag}${parsedProps}>
-				${content}
-			</${tag}>
-		`;
-		return svelteCode;
-	}
-
-	export function scss(
-		renderer: () => {
-			content: string;
-		}
-	) {
-		const { content } = renderer();
-		scssCode = stripIndent(content);
-	}
+	export let svelteCode: string;
+	export let scssCode: string;
 </script>
 
 <style lang="scss">

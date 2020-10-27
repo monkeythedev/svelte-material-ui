@@ -25,10 +25,6 @@
 	export let selected: boolean = undefined;
 
 	$: if (value == null) value = "";
-
-	onDestroy(() => {
-		console.warn("option destroy", dom);
-	});
 </script>
 
 <Item

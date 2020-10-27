@@ -3,7 +3,10 @@
 	import { Checkbox } from "@smui/checkbox";
 	import { FormField } from "@smui/form-field";
 	import { Option, Select } from "@smui/select";
-	import { Configurator } from "src/components/configurator";
+	import {
+		Configurator,
+		generateSvelteCode,
+	} from "src/components/configurator";
 	import IconTypeOption, {
 		IconType,
 	} from "src/components/configurator/common-options/IconTypeOption.svelte";
@@ -15,14 +18,11 @@
 	let link: boolean = false;
 	let iconType: IconType = "material-icon";
 
-	let configurator: Configurator;
-
-	$: configurator?.svelte(() => {
-		return {
-			tag: "IconButton",
-			props: props(color, disabled, ripple, link),
-			content: `${getIconCode(iconType)}`,
-		};
+	let svelteCode: string;
+	$: svelteCode = generateSvelteCode({
+		tag: "IconButton",
+		props: props(color, disabled, ripple, link),
+		content: getIconCode(iconType),
 	});
 
 	function props(
@@ -66,7 +66,7 @@
 	}
 </style>
 
-<Configurator bind:this={configurator}>
+<Configurator {svelteCode}>
 	<div slot="preview">
 		<IconButton
 			title="button"

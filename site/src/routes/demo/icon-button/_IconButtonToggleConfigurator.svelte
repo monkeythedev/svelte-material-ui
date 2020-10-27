@@ -2,7 +2,10 @@
 	import { IconButtonToggle, Icon } from "@smui/icon-button";
 	import { Checkbox } from "@smui/checkbox";
 	import { FormField } from "@smui/form-field";
-	import { Configurator } from "src/components/configurator";
+	import {
+		Configurator,
+		generateSvelteCode,
+	} from "src/components/configurator";
 	import IconTypeOption, {
 		IconType,
 	} from "src/components/configurator/common-options/IconTypeOption.svelte";
@@ -13,17 +16,15 @@
 	let iconType: IconType = "material-icon";
 	let active: boolean = false;
 
-	let configurator: Configurator;
+	let svelteCode: string;
 
-	$: configurator?.svelte(() => {
-		return {
-			tag: "IconButtonToggle",
-			props: props(disabled, ripple),
-			content: `
-				${getOnIconCode(iconType)}
-				${getOffIconCode(iconType)}
-			`,
-		};
+	$: svelteCode = generateSvelteCode({
+		tag: "IconButtonToggle",
+		props: props(disabled, ripple),
+		content: `
+			${getOnIconCode(iconType)}
+			${getOffIconCode(iconType)}
+		`,
 	});
 
 	function props(
@@ -81,7 +82,7 @@
 	}
 </style>
 
-<Configurator bind:this={configurator}>
+<Configurator {svelteCode}>
 	<div slot="preview">
 		<IconButtonToggle
 			bind:active

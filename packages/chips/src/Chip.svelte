@@ -80,12 +80,14 @@
 	const context$ = createChipContext({ ...context });
 
 	let chip: MDCChip;
-	$: $context$ = Object.assign({}, context, {
-		...context,
-		chip,
-		dom,
-		selected,
-	});
+	$: $context$ = {
+		...Object.assign(context, {
+			...context,
+			chip,
+			dom,
+			selected,
+		}),
+	};
 
 	$: if (chip) {
 		if (chip.selected !== selected) {
