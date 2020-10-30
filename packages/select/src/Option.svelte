@@ -19,9 +19,8 @@
 	//#endregion
 
 	import { Item } from "@smui/list";
-	import { onDestroy } from "svelte";
 
-	export let value: any = "";
+	export let value: string = "";
 	export let selected: boolean = undefined;
 
 	$: if (value == null) value = "";

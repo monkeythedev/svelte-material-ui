@@ -15,9 +15,10 @@
 
 <script lang="ts">
 	//#region Base
+	import { parseClassList } from "@smui/common/src/functions";
 	import { DOMEventsForwarder } from "@smui/common/actions/DOMEventsForwarder";
 	const forwardDOMEvents = DOMEventsForwarder();
-	let className = "";
+	let className = undefined;
 	export { className as class };
 	export let style: string = undefined;
 	export let id: string = `@smui/chips/Chip:${count++}`;
@@ -151,7 +152,7 @@
 		{...props}
 		{id}
 		role="row"
-		class="mdc-chip {className}"
+		class={parseClassList([className, 'mdc-chip'])}
 		{style}
 		use:forwardDOMEvents>
 		{#if ripple}

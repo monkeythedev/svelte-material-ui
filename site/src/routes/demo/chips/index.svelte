@@ -1,13 +1,14 @@
 <script lang="ts">
-import ChipConfigurator from "./ChipConfigurator.svelte";
+	import { Typography } from "@smui/typography";
+	import ChipConfigurator from "./ChipConfigurator.svelte";
 </script>
 
 <svelte:head>
-  <title>Chips - SMUI</title>
+	<title>Chips - SMUI</title>
 </svelte:head>
 
 <section>
-	<h2>Chips</h2>
-	
-	<ChipConfigurator></ChipConfigurator>
+	<Typography variant="headline2">Chips</Typography>
+
+	<ChipConfigurator />
 </section>

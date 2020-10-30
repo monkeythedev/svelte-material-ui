@@ -23,7 +23,6 @@
 	import { getChipSetContext } from "./ChipSetContext";
 
 	export let type: GraphicType = "icon";
-	export let removeOnClick: boolean = false;
 
 	const chipContext$ = getChipContext();
 	const chipSetContext$ = getChipSetContext();

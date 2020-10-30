@@ -2,9 +2,9 @@ import { StringListToFilter, filterStringList } from "@smui/common/functions";
 import { stripIndent } from "common-tags";
 
 export function generateSvelteCode({
-	tag,
-	props,
-	content,
+	tag = "",
+	props = [],
+	content = "",
 	indentSize,
 }: {
 	tag: string;
@@ -31,7 +31,7 @@ ${indentCode({ code: stripIndent(content), indentSize: 3 })}
 }
 
 export function generateSCSSCode({
-	content,
+	content = "",
 	indentSize,
 }: {
 	content: string;

@@ -19,7 +19,7 @@
 	export let indexHasValues: boolean = undefined;
 	export let nullable: boolean = false;
 	export let contextOverride$: Writable<SelectableGroupContext> = undefined;
-	export let id: string = `@smui/common/hoc/SelectableGroup-${count++}`;
+	export let id: string = `@smui/common/hoc/SelectableGroup:${count++}`;
 	export let initialized: boolean = false;
 
 	let dispatch = createEventDispatcher<{

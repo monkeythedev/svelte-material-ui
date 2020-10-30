@@ -1,14 +1,22 @@
 {
-  "compilerOptions": {
-    "module": "ES2015",
-    "target": "ES2015",
-    "declaration": true,
-    "types": ["svelte"],
-    "baseUrl": ".",
-    "moduleResolution": "node",
-    "paths": {
-      "@smui/*": ["./packages/*"]
-    }
-  },
-  "exclude": ["**/node_modules/**/*", "**/site_old/**/*", "**/site/**/*"]
+	"compilerOptions": {
+		"module": "ES2015",
+		"target": "ES2015",
+		"declaration": true,
+		"types": [
+			"svelte"
+		],
+		"baseUrl": ".",
+		"moduleResolution": "node",
+		"paths": {
+			"@smui/*": [
+				"./packages/*"
+			]
+		}
+	},
+	"exclude": [
+		"**/node_modules/**/*",
+		"**/site_old/**/*",
+		"**/site/**/*"
+	]
 }

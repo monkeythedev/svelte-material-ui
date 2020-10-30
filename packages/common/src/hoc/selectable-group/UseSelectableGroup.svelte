@@ -9,12 +9,13 @@
 	import { createEventDispatcher, tick } from "svelte";
 	import { arrEquals } from "../../utils";
 	import { SelectableContext, SelectionType } from "../";
+	import A from "@smui/common/dom/A.svelte";
 
 	export let value: any = undefined;
 	export let selectionType: SelectionType = "multi";
 	export let indexHasValues: boolean = undefined;
 	export let nullable: boolean = undefined;
-	export const id: string = `@smui/common/hoc/UseSelectableGroup-${count++}`;
+	export const id: string = `@smui/common/hoc/UseSelectableGroup:${count++}`;
 
 	const items = new Set<SelectableContext>();
 	let valueState: UseState;
@@ -38,11 +39,18 @@
 
 		//fixValue(); TODO: probably not needed
 
+		function fixValueOnInit() {
+			if (!checkAndFixInvalidValue(value, undefined)) {
+				valueState.setValue(value);
+				notifyValueChange();
+			}
+		}
+
 		if (value === undefined) {
 			updateValueFromChildren();
+			fixValueOnInit();
 		} else {
-			if (!checkAndFixInvalidValue(undefined, undefined))
-				valueState.setValue(value);
+			fixValueOnInit();
 			updateChildrenWithValue(undefined);
 		}
 
@@ -69,7 +77,8 @@
 		const itemsArray = Array.from(items);
 
 		if (itemsArray.length === 0) {
-			setValue(null);
+			//setValue(null);
+			setResetValue();
 			return false;
 		}
 
@@ -88,6 +97,7 @@
 					setResetValue();
 				} else if (itemsArray.some((item) => item.value === oldValue)) {
 					setValue(oldValue);
+
 					return false;
 				} else {
 					if (nullable) {
@@ -115,6 +125,33 @@
 		return true;
 	}
 
+	function notifyValueChange() {
+		const selectedItemsIndex = Array.from(items)
+			.map((item, index) => ({ item, index }))
+			.filter(({ item, index }) => {
+				if (selectionType === "single") {
+					return item.value === value;
+				} else if (selectionType === "multi") {
+					return value.includes(item.value);
+				}
+			})
+			.map(({ item, index }) => index);
+
+		let tabindexSetted = false;
+		Array.from(items).forEach((item, index) => {
+			if (!tabindexSetted && selectedItemsIndex.includes(index)) {
+				item.setTabIndex(0);
+			} else {
+				item.setTabIndex(-1);
+			}
+		});
+
+		dispatch("change", {
+			value,
+			selectedItemsIndex,
+		});
+	}
+
 	function handleValueChange(oldValue: typeof value) {
 		if (selectionType) {
 			if (!checkAndFixInvalidValue(oldValue, undefined)) {
@@ -127,30 +164,7 @@
 				updateChildrenWithValue(oldValue);
 			}
 
-			const selectedItemsIndex = Array.from(items)
-				.map((item, index) => ({ item, index }))
-				.filter(({ item, index }) => {
-					if (selectionType === "single") {
-						return item.value === value;
-					} else if (selectionType === "multi") {
-						return value.includes(item.value);
-					}
-				})
-				.map(({ item, index }) => index);
-
-			let tabindexSetted = false;
-			Array.from(items).forEach((item, index) => {
-				if (!tabindexSetted && selectedItemsIndex.includes(index)) {
-					item.setTabIndex(0);
-				} else {
-					item.setTabIndex(-1);
-				}
-			});
-
-			dispatch("change", {
-				value,
-				selectedItemsIndex,
-			} as OnSelectableGroupChange);
+			notifyValueChange();
 		} else {
 			unselectAll();
 			setValue(undefined);

@@ -1,17 +1,20 @@
 <script context="module" lang="ts">
+	let count = 0;
+
 	export type ChipSetVariant = "choice" | "filter";
 </script>
 
 <script lang="ts">
 	//#region Base
+	import { parseClassList } from "@smui/common/src/functions";
 	import { DOMEventsForwarder } from "@smui/common/actions/DOMEventsForwarder";
 	const forwardDOMEvents = DOMEventsForwarder();
-	let className = "";
+	let className = undefined;
 	export { className as class };
-	export let style: string = null;
-	export let id: string = null;
+	export let style: string = undefined;
+	export let id: string = `@smui/chips/ChipSet:${count++}`;
 
-	export let dom: HTMLDivElement = null;
+	export let dom: HTMLDivElement = undefined;
 
 	import { BaseProps } from "@smui/common/dom/Props";
 	export let props: BaseProps = {};
@@ -25,7 +28,6 @@
 	import { ChipContext } from "./ChipContext";
 	import { arrRemove, arrAdd, arrHas } from "@smui/common/utils";
 	import { Use, UseState } from "@smui/common/hooks";
-	import { parseClassList } from "@smui/common/src/functions";
 
 	export let value: any = undefined;
 	export let variant: ChipSetVariant = null;

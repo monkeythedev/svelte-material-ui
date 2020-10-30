@@ -35,7 +35,7 @@
 	import { Span } from "@smui/common/dom";
 	import { ExtractNamedSlot } from "@smui/common/components";
 	import { createInputFieldContext } from "@smui/textfield/src/TextFieldContext";
-	import { SelectVariant } from "./types";
+	import { OnSelectChangeEventDetail, SelectVariant } from "./types";
 	import { UseState } from "@smui/common/hooks";
 	import SelectableGroup from "@smui/common/src/hoc/selectable-group/SelectableGroup.svelte";
 	import { OnSelectableGroupChange } from "@smui/common/hoc";
@@ -58,10 +58,7 @@
 	const selectedTextId: string = `SMUI-Select-SelectedText-${_count}`;
 
 	const dispatch = createEventDispatcher<{
-		change: {
-			value: typeof value;
-			dom: typeof dom;
-		};
+		change: OnSelectChangeEventDetail;
 	}>();
 
 	createInputFieldContext({
@@ -111,7 +108,7 @@
 
 		dispatch("change", {
 			value,
-			dom: dom,
+			index: event.detail.selectedItemsIndex[0],
 		});
 	}
 

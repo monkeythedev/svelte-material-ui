@@ -18,26 +18,19 @@
 	export let props: BaseProps = {};
 	//#endregion
 
-	// Row
-	import { Selectable } from "@smui/common/hoc";
-
-	export let value: any = undefined;
-	export let selected: boolean = undefined;
+	// HeadRow
+	import { SelectableGroup } from "@smui/common/src/hoc";
 </script>
 
-<Selectable bind:selected bind:value>
+<SelectableGroup contextOverride$={null}>
+	<!-- Workaround to prevent header checkbox to dirty the table SelectableGroup -->
 	<tr
 		bind:this={dom}
 		{...props}
 		{id}
-		class={parseClassList([
-			className,
-			'mdc-data-table__row',
-			[selected, 'mdc-data-table__row--selected'],
-		])}
+		class={parseClassList([className, 'mdc-data-table__header-row'])}
 		{style}
-		aria-selected={selected ? 'true' : 'false'}
 		use:forwardDOMEvents>
 		<slot />
 	</tr>
-</Selectable>
+</SelectableGroup>

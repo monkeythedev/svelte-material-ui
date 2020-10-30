@@ -18,7 +18,7 @@ export function arrRemove<T>(arr: T[], toRemove: T) {
 	return arr;
 }
 
-export function memo<T = any>(val: T = {} as T) {
+export function memo<T = any>(val: T = undefined as T) {
 	return new Memo(val);
 }
 
