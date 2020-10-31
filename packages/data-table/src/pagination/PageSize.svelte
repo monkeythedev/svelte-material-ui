@@ -30,6 +30,9 @@
 	export let pageSizeOptions: number[] = [10, 20, 50];
 	export let pageSize: number = pageSizeOptions[0];
 
+	$: if (pageSizeOptions == null || pageSizeOptions.length === 0) pageSizeOptions = [10, 20, 50];
+	$: if (pageSize == null) pageSize = pageSizeOptions[0];
+
 	const dispatch = createEventDispatcher<{
 		change: OnPageSizeChangeEventDetail;
 	}>();

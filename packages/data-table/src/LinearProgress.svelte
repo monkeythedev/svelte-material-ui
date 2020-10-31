@@ -18,11 +18,13 @@
 	export let props: BaseProps = {};
 	//#endregion
 
-	// Cell
+	// LinearProgress
 	import {
 		LinearProgress,
 		setCreateMDCLinearProgressInstance,
 	} from "@smui/linear-progress";
+
+	export let ariaLabel: string = undefined;
 
 	setCreateMDCLinearProgressInstance(false);
 </script>
@@ -34,4 +36,5 @@
 	class={parseClassList([className, 'mdc-data-table__linear-progress'])}
 	{style}
 	indeterminate
+	{ariaLabel}
 	on:domEvent={forwardDOMEvents} />

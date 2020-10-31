@@ -31,7 +31,7 @@
 	import { createDataTableContext } from "./DataTableContext";
 	import { SortEventDetail } from "./";
 
-	// TODO: create table from input data, sortable table, radio single selection table.
+	// TODO: radio single selection table, figure out how to handle pagination and selection (maybe specific component?), allow sort deactivation.
 	export let value: any = undefined;
 	export let ariaLabel: string = undefined;
 
