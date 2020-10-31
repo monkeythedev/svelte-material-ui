@@ -28,7 +28,7 @@
 		}
 	},
 	"include": [
-		"src/"
+		"src"
 	],
 	"exclude": [
 		"__sapper__",

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { Typography } from "@smui/typography";
 	import DataTableConfigurator from "./_DataTableConfigurator.svelte";
 </script>
 
@@ -7,7 +8,7 @@
 </svelte:head>
 
 <section>
-	<h2>Data Table</h2>
+	<Typography variant="headline2">Data Table</Typography>
 
 	<DataTableConfigurator />
 </section>

@@ -39,18 +39,14 @@
 
 		//fixValue(); TODO: probably not needed
 
-		function fixValueOnInit() {
+		if (value === undefined) {
+			updateValueFromChildren();
+			checkAndFixInvalidValue(value, undefined);
+		} else {
 			if (!checkAndFixInvalidValue(value, undefined)) {
 				valueState.setValue(value);
 				notifyValueChange();
 			}
-		}
-
-		if (value === undefined) {
-			updateValueFromChildren();
-			fixValueOnInit();
-		} else {
-			fixValueOnInit();
 			updateChildrenWithValue(undefined);
 		}
 

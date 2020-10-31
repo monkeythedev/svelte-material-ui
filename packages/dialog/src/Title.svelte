@@ -1,27 +1,38 @@
-<script lang="ts">
-  //#region Base
-  import { DOMEventsForwarder } from "@smui/common/events/DOMEventsForwarder";
-  const forwardDOMEvents = DOMEventsForwarder();
-  let className = "";
-  export { className as class };
-  export let style: string = "";
-  export let id: string = "";
-
-  export let dom: HTMLDivElement = null;
-  import { BaseProps } from "@smui/common/dom/Props";
-  export let props: BaseProps = {};
-  //#endregion
-
-  // Title
-  import {H2} from "@smui/common/dom";
+<script context="module" lang="ts">
+	let count: number = 0;
 </script>
 
-<H2
-  bind:dom
-  {...props}
-  {id}
-  class="mdc-dialog__title {className}"
-  {style}
-  on:domEvent={forwardDOMEvents}>
-  <slot />
-</H2>
+<script lang="ts">
+	//#region Base
+	import { parseClassList } from "@smui/common/src/functions";
+	import { DOMEventsForwarder } from "@smui/common/actions/DOMEventsForwarder";
+	const forwardDOMEvents = DOMEventsForwarder();
+	let className = undefined;
+	export { className as class };
+	export let style: string = undefined;
+	export let id: string = `@smui/dialog/Title:${count++}`;
+
+	export let dom: HTMLDivElement = undefined;
+	import { BaseProps } from "@smui/common/dom/Props";
+	export let props: BaseProps = {};
+	//#endregion
+
+	// Title
+	import { getDialogContext } from "./DialogContext";
+
+	const dialogContext$ = getDialogContext();
+
+	$: $dialogContext$.setTitleId(id);
+</script>
+
+<svelte:options immutable={true} />
+
+<h2
+	bind:this={dom}
+	{...props}
+	{id}
+	class={parseClassList([className, 'mdc-dialog__title'])}
+	{style}
+	use:forwardDOMEvents>
+	<slot />
+</h2>

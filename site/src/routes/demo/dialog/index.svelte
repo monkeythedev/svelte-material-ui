@@ -1,21 +1,14 @@
 <script lang="ts">
-  import SimpleDialog from "./_SimpleDialog.svelte";
-  import ButtonActionDialog from "./_ButtonActionDialog.svelte";
-  import ListDialog from "./_ListDialog.svelte";
-  import SelectionDialog from "./_SelectionDialog.svelte";
-  import SlidersDialog from "./_SlidersDialog.svelte";
+	import DialogConfigurator from "./_DialogConfigurator.svelte";
+	import { Typography } from "@smui/typography";
 </script>
 
 <svelte:head>
-  <title>Dialogs - SMUI</title>
+	<title>Dialogs - SMUI</title>
 </svelte:head>
 
 <section>
-  <h2>Dialogs</h2>
+	<Typography variant="headline2">Dialogs</Typography>
 
-  <SimpleDialog />
-  <ButtonActionDialog />
-  <ListDialog />
-  <SelectionDialog />
-  <SlidersDialog />
+	<DialogConfigurator />
 </section>

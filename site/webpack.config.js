@@ -216,14 +216,14 @@ module.exports = {
         filename: "[name].css",
         chunkFilename: "[name].[id].css",
       }),
-      new OptimizeCssAssetsPlugin({
-        assetNameRegExp: /\.css$/g,
-        cssProcessor: require("cssnano"),
-        cssProcessorPluginOptions: {
-          preset: ["default", { discardComments: { removeAll: true } }],
-        },
-        canPrint: true,
-      }),
+      // new OptimizeCssAssetsPlugin({
+      //   assetNameRegExp: /\.css$/g,
+      //   cssProcessor: require("cssnano"),
+      //   cssProcessorPluginOptions: {
+      //     preset: ["default", { discardComments: { removeAll: true } }],
+      //   },
+      //   canPrint: true,
+      // }),
     ].filter(Boolean),
     performance: {
       hints: false, // it doesn't matter if server.js is large

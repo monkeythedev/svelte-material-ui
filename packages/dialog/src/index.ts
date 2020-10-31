@@ -6,5 +6,6 @@ import Actions from "./Actions.svelte";
 import Action from "./Action.svelte";
 import { initialFocus } from "./InitialFocus";
 
-export { Dialog, Title, Content, Actions, Action, initialFocus as InitialFocus };
+export { Dialog, Title, Content, Actions, Action, initialFocus };
 export * from "./DialogContext";
+export * from "./types";

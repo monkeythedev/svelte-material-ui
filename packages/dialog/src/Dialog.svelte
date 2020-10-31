@@ -1,153 +1,164 @@
 <script lang="ts">
-  //#region Base
-  import { DOMEventsForwarder } from "@smui/common/actions/DOMEventsForwarder";
-  const forwardDOMEvents = DOMEventsForwarder();
-  let className = "";
-  export { className as class };
-  export let style: string = "";
-  export let id: string = "";
+	//#region Base
+	import { parseClassList } from "@smui/common/src/functions";
+	import { DOMEventsForwarder } from "@smui/common/actions/DOMEventsForwarder";
+	const forwardDOMEvents = DOMEventsForwarder();
+	let className = undefined;
+	export { className as class };
+	export let style: string = undefined;
+	export let id: string = "";
 
-  export let dom: HTMLDivElement = null;
-  import { BaseProps } from "@smui/common/dom/Props";
-  export let props: BaseProps = {};
-  //#endregion
+	export let dom: HTMLDivElement = undefined;
+	import { BaseProps } from "@smui/common/dom/Props";
+	export let props: BaseProps = {};
+	//#endregion
 
-  // Dialog
-  import {
-    onMount,
-    onDestroy,
-    getContext,
-    setContext,
-    createEventDispatcher,
-  } from "svelte";
-  import { createDialogContext } from "./DialogContext";
-  import { memo } from "@smui/common/utils";
-  import { MDCDialog, MDCDialogCloseEvent } from "@material/dialog";
+	// Dialog
+	import { onMount, createEventDispatcher } from "svelte";
+	import { createDialogContext } from "./DialogContext";
+	import { memo } from "@smui/common/utils";
+	import { MDCDialog, MDCDialogCloseEvent } from "@material/dialog";
+	import { OnCloseEventDetail } from "./";
 
-  export let escapeKeyAction = "close";
-  export let scrimClickAction = "close";
-  export let autoStackButtons = true;
-  export let initialFocus: HTMLElement = null;
-  export let open: boolean = false;
+	export let escapeKeyAction = "close";
+	export let scrimClickAction = "close";
+	export let autoStackButtons = true;
+	export let initialFocus: HTMLElement = null;
+	export let open: boolean = false;
+	export let ariaLabelledBy: string = undefined;
+	export let ariaDescribedby: string = undefined;
 
-  const dispatch = createEventDispatcher<{
-    opened: undefined,
-    closed: MDCDialogCloseEvent
-  }>();
-  let mounted: boolean = false;
+	const dispatch = createEventDispatcher<{
+		opened: undefined;
+		closed: OnCloseEventDetail;
+	}>();
+	let mounted: boolean = false;
 
-  let context$ = createDialogContext();
-  $: $context$ = { ...$context$, _open: isOpen };
+	let context$ = createDialogContext({
+		isOpen: open,
+		setTitleId(titleId) {
+			ariaLabelledBy = titleId;
+		},
+		setContentId(contentTextId) {
+			ariaDescribedby = contentTextId;
+		},
+	});
 
-  const openMemo = memo();
-  $: if (mounted && openMemo.val !== open) {
-    if (open) doOpen();
-    else doClose();
-  }
+	$: $context$ = { ...$context$, isOpen: open };
 
-  onMount(() => {
-    mounted = true;
-  });
+	const openMemo = memo();
+	$: if (mounted && openMemo.val !== open) {
+		if (open) doOpen();
+		else doClose();
+	}
 
-  let dialog: MDCDialog;
+	onMount(() => {
+		mounted = true;
+	});
 
-  $: dialog && (dialog.escapeKeyAction = escapeKeyAction);
-  $: dialog && (dialog.scrimClickAction = scrimClickAction);
-  $: dialog && (dialog.autoStackButtons = autoStackButtons);
+	let dialog: MDCDialog;
 
-  function setInitialFocusElement() {
-    const currentInitalFocusElement = dom.querySelector(
-      "[data-mdc-dialog-initial-focus]"
-    );
+	$: dialog && (dialog.escapeKeyAction = escapeKeyAction);
+	$: dialog && (dialog.scrimClickAction = scrimClickAction);
+	$: dialog && (dialog.autoStackButtons = autoStackButtons);
 
-    if (initialFocus && currentInitalFocusElement !== initialFocus) {
-      removeInitialFocusAttr(currentInitalFocusElement);
-      setInitialFocusAttr(initialFocus);
-    }
+	function setInitialFocusElement() {
+		const currentInitalFocusElement = dom.querySelector(
+			"[data-mdc-dialog-initial-focus]"
+		);
 
-    if (
-      !initialFocus &&
-      (!currentInitalFocusElement || !dom.contains(currentInitalFocusElement))
-    ) {
-      const defaultAction = dom.querySelector(
-        "[data-mdc-dialog-button-default]"
-      );
-      if (defaultAction) {
-        removeInitialFocusAttr(currentInitalFocusElement);
-        setInitialFocusAttr(defaultAction);
-      }
-    }
-  }
+		if (initialFocus && currentInitalFocusElement !== initialFocus) {
+			removeInitialFocusAttr(currentInitalFocusElement);
+			setInitialFocusAttr(initialFocus);
+		}
 
-  function setInitialFocusAttr(element: Element) {
-    if (element) element.setAttribute("data-mdc-dialog-initial-focus", "");
-  }
+		if (
+			!initialFocus &&
+			(!currentInitalFocusElement || !dom.contains(currentInitalFocusElement))
+		) {
+			const defaultAction = dom.querySelector(
+				"[data-mdc-dialog-button-default]"
+			);
+			if (defaultAction) {
+				removeInitialFocusAttr(currentInitalFocusElement);
+				setInitialFocusAttr(defaultAction);
+			}
+		}
+	}
 
-  function removeInitialFocusAttr(element: Element) {
-    if (element) element.removeAttribute("data-mdc-dialog-initial-focus");
-  }
+	function setInitialFocusAttr(element: Element) {
+		if (element) element.setAttribute("data-mdc-dialog-initial-focus", "");
+	}
 
-  function handleDialogOpened() {
-    if (!open) open = true;
+	function removeInitialFocusAttr(element: Element) {
+		if (element) element.removeAttribute("data-mdc-dialog-initial-focus");
+	}
 
-    dispatch("opened");
-  }
+	function handleDialogOpened() {
+		if (!open) open = true;
 
-  function handleDialogClosed(event: MDCDialogCloseEvent) {
-    if (open) open = false;
+		dispatch("opened");
+	}
 
-    dialog.destroy();
-    dialog = null;
+	function handleDialogClosed(event: MDCDialogCloseEvent) {
+		if (open) open = false;
 
-    dispatch("closed", event.detail);
-  }
+		dialog.destroy();
+		dialog = null;
 
-  export function doOpen() {
-    if (dialog) return;
+		dispatch("closed", event.detail);
+	}
 
-    open = true;
-    openMemo.val = open;
+	export function doOpen() {
+		if (dialog) return;
 
-    setInitialFocusElement();
-    
-    // I have to reinit dialog at every open because MDC doesn't listen for initialFocus element change
-    dialog = new MDCDialog(dom);
+		open = true;
+		openMemo.val = open;
 
-    dialog.listen("MDCDialog:opened", handleDialogOpened);
-    dialog.listen("MDCDialog:closed", handleDialogClosed);
+		setInitialFocusElement();
 
-    dialog.open();
-  }
+		// I have to reinit dialog at every open because MDC doesn't listen for initialFocus element change
+		dialog = new MDCDialog(dom);
 
-  export function doClose() {
-    open = false;
-    openMemo.val = open;
+		dialog.listen("MDCDialog:opened", handleDialogOpened);
+		dialog.listen("MDCDialog:closed", handleDialogClosed);
 
-    dialog?.close();
-  }
+		dialog.open();
+	}
 
-  export function isOpen() {
-    return dialog?.isOpen;
-  }
+	export function doClose() {
+		open = false;
+		openMemo.val = open;
 
-  export function layout() {
-    return dialog?.layout();
-  }
+		dialog?.close();
+	}
+
+	export function isOpen() {
+		return dialog?.isOpen;
+	}
+
+	export function layout() {
+		return dialog?.layout();
+	}
 </script>
 
+<svelte:options immutable={true} />
+
 <div
-  bind:this={dom}
-  {...props}
-  {id}
-  class="mdc-dialog {className}"
-  {style}
-  use:forwardDOMEvents
-  role="alertdialog"
-  aria-modal="true">
-  <div class="mdc-dialog__container">
-    <div class="mdc-dialog__surface">
-      <slot />
-    </div>
-  </div>
-  <div class="mdc-dialog__scrim" />
+	bind:this={dom}
+	{...props}
+	{id}
+	class={parseClassList([className, 'mdc-dialog'])}
+	{style}
+	role="alertdialog"
+	aria-modal="true"
+	aria-labelledby={ariaLabelledBy}
+	aria-describedby={ariaDescribedby}
+	use:forwardDOMEvents>
+	<div class="mdc-dialog__container">
+		<div class="mdc-dialog__surface">
+			<slot />
+		</div>
+	</div>
+	<div class="mdc-dialog__scrim" />
 </div>
