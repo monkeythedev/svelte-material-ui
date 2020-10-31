@@ -6,6 +6,7 @@ const DefinePlugin = require("webpack/lib/DefinePlugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const mode = process.env.NODE_ENV;
 const dev = mode === "development";
@@ -108,6 +109,7 @@ module.exports = {
     },
     mode,
     plugins: [
+			// new BundleAnalyzerPlugin(),
       // pending https://github.com/sveltejs/svelte/issues/2377
       // dev && new webpack.HotModuleReplacementPlugin(),
       new DefinePlugin({
@@ -216,14 +218,14 @@ module.exports = {
         filename: "[name].css",
         chunkFilename: "[name].[id].css",
       }),
-      // new OptimizeCssAssetsPlugin({
-      //   assetNameRegExp: /\.css$/g,
-      //   cssProcessor: require("cssnano"),
-      //   cssProcessorPluginOptions: {
-      //     preset: ["default", { discardComments: { removeAll: true } }],
-      //   },
-      //   canPrint: true,
-      // }),
+      new OptimizeCssAssetsPlugin({
+        assetNameRegExp: /\.css$/g,
+        cssProcessor: require("cssnano"),
+        cssProcessorPluginOptions: {
+          preset: ["default", { discardComments: { removeAll: true } }],
+        },
+        canPrint: true,
+      }),
     ].filter(Boolean),
     performance: {
       hints: false, // it doesn't matter if server.js is large
