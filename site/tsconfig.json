@@ -20,12 +20,7 @@
 		"keyofStringsOnly": true,
 		"esModuleInterop": true,
 		"experimentalDecorators": true,
-		"baseUrl": ".",
-		"paths": {
-			"@smui/*": [
-				"../packages/*"
-			]
-		}
+		"baseUrl": "."
 	},
 	"include": [
 		"src"

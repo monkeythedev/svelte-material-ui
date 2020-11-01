@@ -1,45 +1,45 @@
 <script lang="ts">
-  import "./index.scss";
-  import PlayableLinearProgress from "./_PlayableLinearProgress.svelte";
-  import { LinearProgress } from "@smui/linear-progress";
+	import "./index.scss";
+	import PlayableLinearProgress from "./_PlayableLinearProgress.svelte";
+	import { LinearProgress } from "@smui/core/linear-progress";
 </script>
 
 <svelte:head>
-  <title>Linear Progress - SMUI</title>
+	<title>Linear Progress - SMUI</title>
 </svelte:head>
 
 <section>
-  <h2>Linear Progress</h2>
+	<h2>Linear Progress</h2>
 
-  <PlayableLinearProgress />
+	<PlayableLinearProgress />
 
-  <div>
-    Buffered:
+	<div>
+		Buffered:
 
-    <LinearProgress progress={0.5} buffer={0.75} />
-  </div>
+		<LinearProgress progress={0.5} buffer={0.75} />
+	</div>
 
-  <div>
-    Indeterminate:
+	<div>
+		Indeterminate:
 
-    <LinearProgress indeterminate />
-  </div>
+		<LinearProgress indeterminate />
+	</div>
 
-  <div>
-    Reversed:
+	<div>
+		Reversed:
 
-    <LinearProgress progress={0.5} reversed />
-  </div>
+		<LinearProgress progress={0.5} reversed />
+	</div>
 
-  <div>
-    Reversed Buffered:
+	<div>
+		Reversed Buffered:
 
-    <LinearProgress progress={0.5} buffer={0.75} reversed />
-  </div>
+		<LinearProgress progress={0.5} buffer={0.75} reversed />
+	</div>
 
-  <div>
-    Colored (using Sass mixins):
+	<div>
+		Colored (using Sass mixins):
 
-    <LinearProgress class="my-colored-bar" progress={0.5} buffer={0.75} />
-  </div>
+		<LinearProgress class="my-colored-bar" progress={0.5} buffer={0.75} />
+	</div>
 </section>

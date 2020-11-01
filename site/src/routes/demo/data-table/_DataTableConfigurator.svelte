@@ -11,10 +11,10 @@
 		Label,
 		SortButton,
 		SortEventDetail,
-	} from "@smui/data-table";
-	import { Pagination, PageSize } from "@smui/data-table/pagination";
-	import { Checkbox } from "@smui/checkbox";
-	import { FormField } from "@smui/form-field";
+	} from "@smui/core/data-table";
+	import { Pagination, PageSize } from "@smui/core/data-table/pagination";
+	import { Checkbox } from "@smui/core/checkbox";
+	import { FormField } from "@smui/core/form-field";
 	import {
 		Configurator,
 		generateSvelteCode,
@@ -102,8 +102,21 @@
 			[allowSelection, `bind:value`],
 		],
 		content: `
-			${getHeadCode(allowSelection, showSelectAll, allowSorting, nameColNumeric, descColNumeric, priceColNumeric)}
-			${getBodyCode(allowSelection, nameColNumeric, descColNumeric, priceColNumeric, showPagination)}
+			${getHeadCode(
+				allowSelection,
+				showSelectAll,
+				allowSorting,
+				nameColNumeric,
+				descColNumeric,
+				priceColNumeric
+			)}
+			${getBodyCode(
+				allowSelection,
+				nameColNumeric,
+				descColNumeric,
+				priceColNumeric,
+				showPagination
+			)}
 			${getLinearProgressCode(showLinearProgress)}
 			${getPaginationCode(showPagination)}
 		`,
@@ -115,7 +128,7 @@
 		allowSortingValue: typeof allowSorting,
 		nameColNumericValue: typeof nameColNumeric,
 		descColNumericValue: typeof descColNumeric,
-		priceColNumericValue: typeof priceColNumeric,
+		priceColNumericValue: typeof priceColNumeric
 	) {
 		function selectAllCode() {
 			if (allowSelectionValue) {
@@ -125,36 +138,36 @@
 					</HeadCell>
 				`;
 			} else {
-				return ""
+				return "";
 			}
 		}
 
 		function colCode(label: string, numeric: boolean) {
-			const labelCode = `<Label>${label}</Label>`
-			const sortCode = allowSorting ? `<SortButton />` : ""
+			const labelCode = `<Label>${label}</Label>`;
+			const sortCode = allowSorting ? `<SortButton />` : "";
 			return `
 						${numeric ? sortCode : labelCode}
 						${numeric ? labelCode : sortCode}
-			`
+			`;
 		}
 
 		return `
 			<Head>
 				<HeadRow>
 					${selectAllCode()}
-					<HeadCell${
-						allowSortingValue ? ` columnId="name"` : ""
-					}${nameColNumericValue ? " numeric" : ""}>
+					<HeadCell${allowSortingValue ? ` columnId="name"` : ""}${
+			nameColNumericValue ? " numeric" : ""
+		}>
 						${colCode("Name", nameColNumeric)}
 					</HeadCell>
-					<HeadCell${
-						allowSortingValue ? ` columnId="description"` : ""
-					}${descColNumeric ? " numeric" : ""}>
+					<HeadCell${allowSortingValue ? ` columnId="description"` : ""}${
+			descColNumeric ? " numeric" : ""
+		}>
 						${colCode("Description", descColNumericValue)}
 					</HeadCell>
-					<HeadCell${
-						allowSortingValue ? ` columnId="price"` : ""
-					}${priceColNumeric ? " numeric" : ""}>
+					<HeadCell${allowSortingValue ? ` columnId="price"` : ""}${
+			priceColNumeric ? " numeric" : ""
+		}>
 						${colCode("Price", priceColNumericValue)}
 					</HeadCell>
 				</HeadRow>
@@ -177,13 +190,17 @@
 						</Cell>
 				`;
 			} else {
-				return ""
+				return "";
 			}
 		}
 
 		return `
 			<Body>
-				{#each ${showPaginationValue ? `rows.slice(pageIndex * pageSize, (pageIndex + 1) * pageSize)` : "rows"} as row (row.name)}
+				{#each ${
+					showPaginationValue
+						? `rows.slice(pageIndex * pageSize, (pageIndex + 1) * pageSize)`
+						: "rows"
+				} as row (row.name)}
 					<Row${allowSelectionValue ? ` value={row.name}` : ""}>
 						${selectRowCode()}
 						<Cell${nameColNumericValue ? ` numeric` : ""}>{row.name}</Cell>
@@ -198,17 +215,18 @@
 	function getLinearProgressCode(
 		showLinearProgressValue: typeof showLinearProgress
 	) {
-		return showLinearProgressValue ? `
+		return showLinearProgressValue
+			? `
 			<div slot="loader">
 				<LinearProgress ariaLabel="Loading data..." />
 			</div>
-		` : "";
+		`
+			: "";
 	}
 
-	function getPaginationCode(
-		showPaginationValue: typeof showPagination
-	) {
-		return showPaginationValue ? `
+	function getPaginationCode(showPaginationValue: typeof showPagination) {
+		return showPaginationValue
+			? `
 			<div slot="pagination">
 				<Pagination length={rows.length} bind:pageIndex bind:pageSize>
 					<div slot="pageSize">
@@ -219,7 +237,8 @@
 					</div>
 				</Pagination>
 			</div>
-		` : "";
+		`
+			: "";
 	}
 
 	function initPagination(showPaginationValue: typeof showPagination) {

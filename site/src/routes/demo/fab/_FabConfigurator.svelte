@@ -1,16 +1,16 @@
 <script lang="ts">
-	import { Fab, Icon, Label, FabVariant } from "@smui/fab";
-	import { Checkbox } from "@smui/checkbox";
-	import { FormField } from "@smui/form-field";
+	import { Fab, Icon, Label, FabVariant } from "@smui/core/fab";
+	import { Checkbox } from "@smui/core/checkbox";
+	import { FormField } from "@smui/core/form-field";
 	import {
 		Configurator,
 		generateSvelteCode,
 	} from "src/components/configurator";
-	import { Option, Select } from "@smui/select";
+	import { Option, Select } from "@smui/core/select";
 	import IconTypeOption, {
 		IconType,
 	} from "src/components/configurator/common-options/IconTypeOption.svelte";
-	import { StringListToFilter } from "@smui/common/functions";
+	import { StringListToFilter } from "@smui/core/common/functions";
 
 	let show: boolean = true;
 	let primary: boolean = false;

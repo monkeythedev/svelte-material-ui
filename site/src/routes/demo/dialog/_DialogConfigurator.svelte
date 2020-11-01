@@ -6,15 +6,15 @@
 		Actions,
 		OnCloseEventDetail,
 		Action,
-	} from "@smui/dialog";
-	import { Button, Label } from "@smui/button";
-	import { List, Item, Text } from "@smui/list";
-	import { FormField } from "@smui/form-field";
+	} from "@smui/core/dialog";
+	import { Button, Label } from "@smui/core/button";
+	import { List, Item, Text } from "@smui/core/list";
+	import { FormField } from "@smui/core/form-field";
 	import {
 		Configurator,
-		generateSvelteCode
+		generateSvelteCode,
 	} from "src/components/configurator";
-	import { Select, Option } from "@smui/select";
+	import { Select, Option } from "@smui/core/select";
 
 	let open: boolean;
 	let closeReason: string;
@@ -26,19 +26,14 @@
 
 	$: svelteCode = generateSvelteCode({
 		tag: "Dialog",
-		props: [
-			`bind:open`,
-			`on:closed={closeHandler}`
-		],
+		props: [`bind:open`, `on:closed={closeHandler}`],
 		content: `
 			<Title id="event-title">Dialog title</Title>
 			${getContentCode(layout)}
 		`,
 	});
 
-	function getContentCode(
-		layoutValue: typeof layout,
-	) {
+	function getContentCode(layoutValue: typeof layout) {
 		if (layoutValue === "alert") {
 			return `
 			<Content id="event-content">
@@ -52,7 +47,7 @@
 					<Label>All of Them</Label>
 				</Action>
 			</Actions>
-			`
+			`;
 		} else if (layoutValue === "list") {
 			return `
 			<List>
@@ -63,7 +58,7 @@
 					</Item>
 				{/each}
 			</List>
-			`
+			`;
 		} else {
 			return `
 			<Content id="event-content">
@@ -77,7 +72,7 @@
 					<Label>Accept</Label>
 				</Action>
 			</Actions>
-			`
+			`;
 		}
 	}
 
@@ -107,8 +102,7 @@
 			{:else if layout === 'list'}
 				<List>
 					{#each [...Array(100)].map((v, i) => i + 1) as item}
-						<Item
-							props={{ 'data-mdc-dialog-action': `item #${item}` }}>
+						<Item props={{ 'data-mdc-dialog-action': `item #${item}` }}>
 							<Text>Item #{item}</Text>
 						</Item>
 					{/each}

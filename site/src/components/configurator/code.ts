@@ -1,4 +1,7 @@
-import { StringListToFilter, filterStringList } from "@smui/common/functions";
+import {
+	StringListToFilter,
+	filterStringList,
+} from "@smui/core/common/functions";
 import { stripIndent } from "common-tags";
 
 export function generateSvelteCode({

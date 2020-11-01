@@ -1,20 +1,14 @@
 <script lang="ts">
-  import { Slider } from "@smui/slider";
-  import { FormField } from "@smui/form-field";
+	import { Slider } from "@smui/core/slider";
+	import { FormField } from "@smui/core/form-field";
 
-  let value = 0;
+	let value = 0;
 </script>
 
 <div>
-  Discrete with min/max/step and tick marks:
+	Discrete with min/max/step and tick marks:
 
-  <Slider
-    bind:value
-    min={-10}
-    max={10}
-    step={2}
-    discrete
-    displayMarkers />
+	<Slider bind:value min={-10} max={10} step={2} discrete displayMarkers />
 </div>
 
 <pre class="status">Value: {value}</pre>

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import {ImageList, Item, ImageAspectContainer, Image, Supporting, Label} from '@smui/image-list';
+  import {ImageList, Item, ImageAspectContainer, Image, Supporting, Label} from '@smui/core/image-list';
   import './image-list.scss';
 </script>
 

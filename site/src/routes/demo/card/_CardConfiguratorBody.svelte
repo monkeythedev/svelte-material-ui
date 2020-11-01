@@ -1,7 +1,7 @@
 <script lang="ts">
 	import CardConfiguratorContent from "./_CardConfiguratorContent.svelte";
 	import CardConfiguratorMedia from "./_CardConfiguratorMedia.svelte";
-	import { AspectRatio } from "@smui/card";
+	import { AspectRatio } from "@smui/core/card";
 
 	export let title: string;
 	export let subtitle: string;

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { AspectRatio } from "@smui/card";
+	import { AspectRatio } from "@smui/core/card";
 
 	export let media: AspectRatio = undefined;
 	export let horizontalLayout: boolean = false;

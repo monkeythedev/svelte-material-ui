@@ -1,15 +1,15 @@
 <script lang="ts">
-	import { Button, Label, Icon } from "@smui/button";
-	import { Checkbox } from "@smui/checkbox";
+	import { Button, Label, Icon } from "@smui/core/button";
+	import { Checkbox } from "@smui/core/checkbox";
 	import {
 		ChipSet,
 		ChipSetVariant,
 		SMUIChipRemoveEventDetail,
-	} from "@smui/chips";
+	} from "@smui/core/chips";
 	import Chip from "./_Chip.svelte";
-	import { StringListToFilter } from "@smui/common/functions";
-	import { FormField } from "@smui/form-field";
-	import { Select, Option } from "@smui/select";
+	import { StringListToFilter } from "@smui/core/common/functions";
+	import { FormField } from "@smui/core/form-field";
+	import { Select, Option } from "@smui/core/select";
 	import {
 		Configurator,
 		generateSvelteCode,
@@ -27,7 +27,7 @@
 	let chips: ChipConf[] = [];
 
 	let selectedChipValue: string;
-	$: selectedChip = {...getSelectedChip(chips, selectedChipValue)};
+	$: selectedChip = { ...getSelectedChip(chips, selectedChipValue) };
 
 	initialData();
 

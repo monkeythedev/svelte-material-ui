@@ -1,7 +1,7 @@
 <script lang="ts">
 	import classes from "./index.module.scss";
-	import { Media, MediaContent, AspectRatio } from "@smui/card";
-	import { Typography } from "@smui/typography";
+	import { Media, MediaContent, AspectRatio } from "@smui/core/card";
+	import { Typography } from "@smui/core/typography";
 
 	export let showMediaContent: boolean;
 	export let aspectRatio: AspectRatio;

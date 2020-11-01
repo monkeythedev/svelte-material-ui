@@ -9,14 +9,13 @@
 
 <script lang="ts">
 	import classes from "./index.module.scss";
-	import { Checkbox } from "@smui/checkbox";
-	import { FormField } from "@smui/form-field";
+	import { Checkbox } from "@smui/core/checkbox";
+	import { FormField } from "@smui/core/form-field";
 	import {
 		Configurator,
-		generateSCSSCode,
 		generateSvelteCode,
 	} from "src/components/configurator";
-	import { Option, Select } from "@smui/select";
+	import { Option, Select } from "@smui/core/select";
 	import {
 		Card,
 		PrimaryAction,
@@ -24,16 +23,15 @@
 		ActionButtons,
 		ActionIcons,
 		AspectRatio,
-	} from "@smui/card";
-	import { Button, Label } from "@smui/button";
-	import { IconButton, IconButtonToggle, Icon } from "@smui/icon-button";
+	} from "@smui/core/card";
+	import { Button, Label } from "@smui/core/button";
+	import { IconButton, IconButtonToggle, Icon } from "@smui/core/icon-button";
 	import CardConfiguratorBody from "./_CardConfiguratorBody.svelte";
-	import Typography from "@smui/typography/src/Typography.svelte";
+	import { Typography } from "@smui/core/typography";
 	import CardConfiguratorContent from "./_CardConfiguratorContent.svelte";
-	import { stripIndent } from "common-tags";
 	import UseCardCode from "./UseCardCode.svelte";
 	import UseCardStyleCode from "./UseCardStyleCode.svelte";
-	import { StringListToFilter } from "@smui/common/functions";
+	import { StringListToFilter } from "@smui/core/common/functions";
 
 	let outlined: boolean = false;
 

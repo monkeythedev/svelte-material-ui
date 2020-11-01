@@ -1,6 +1,6 @@
 <script lang="ts">
 	import CardConfigurator from "./_CardConfigurator.svelte";
-	import Typography from "@smui/typography/src/Typography.svelte";
+	import { Typography } from "@smui/core/typography";
 </script>
 
 <svelte:head>

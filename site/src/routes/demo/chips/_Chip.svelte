@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Chip, Text, Icon, Checkmark } from "@smui/chips";
+	import { Chip, Text, Icon, Checkmark } from "@smui/core/chips";
 	import { generateSvelteCode } from "src/components/configurator";
 	import { IconType } from "src/components/configurator/common-options/IconTypeOption.svelte";
 
@@ -51,7 +51,9 @@
 
 	function trailingIconCode() {
 		if (trailingIcon === "material-icon") {
-			return `<Icon>${removeOnTrailingIconClick ? "cancel" : "play_circle_filled"}</Icon>`;
+			return `<Icon>${
+				removeOnTrailingIconClick ? "cancel" : "play_circle_filled"
+			}</Icon>`;
 		} else if (trailingIcon === "svg") {
 			return `
 				<Icon type="svg" props={{ viewBox: '0 0 24 24' }}>
@@ -93,7 +95,7 @@
 	{/if}
 	<Text>{value}</Text>
 	{#if trailingIcon === 'material-icon'}
-		<Icon>{removeOnTrailingIconClick ? "cancel" : "play_circle_filled"}</Icon>
+		<Icon>{removeOnTrailingIconClick ? 'cancel' : 'play_circle_filled'}</Icon>
 	{:else if trailingIcon === 'svg'}
 		<Icon type="svg" props={{ viewBox: '0 0 24 24' }}>
 			<polygon points="0,24 12,0 24,24" />

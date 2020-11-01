@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { IconButton, IconButtonColor, Icon } from "@smui/icon-button";
-	import { Checkbox } from "@smui/checkbox";
-	import { FormField } from "@smui/form-field";
-	import { Option, Select } from "@smui/select";
+	import { IconButton, IconButtonColor, Icon } from "@smui/core/icon-button";
+	import { Checkbox } from "@smui/core/checkbox";
+	import { FormField } from "@smui/core/form-field";
+	import { Option, Select } from "@smui/core/select";
 	import {
 		Configurator,
 		generateSvelteCode,
@@ -10,7 +10,7 @@
 	import IconTypeOption, {
 		IconType,
 	} from "src/components/configurator/common-options/IconTypeOption.svelte";
-	import { StringListToFilter } from "@smui/common/functions";
+	import { StringListToFilter } from "@smui/core/common/functions";
 
 	let disabled: boolean = false;
 	let ripple: boolean = true;

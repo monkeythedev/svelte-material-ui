@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Typography } from "@smui/typography";
+	import { Typography } from "@smui/core/typography";
 	import ChipConfigurator from "./ChipConfigurator.svelte";
 </script>
 

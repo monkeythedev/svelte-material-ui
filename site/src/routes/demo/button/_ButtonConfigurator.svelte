@@ -1,10 +1,10 @@
 <script lang="ts">
-	import { Button, Label, ButtonVariant, Icon } from "@smui/button";
-	import { Checkbox } from "@smui/checkbox";
-	import { StringListToFilter } from "@smui/common/functions";
-	import { FormField } from "@smui/form-field";
-	import { Option, Select } from "@smui/select";
-	import { Slider } from "@smui/slider";
+	import { Button, Label, ButtonVariant, Icon } from "@smui/core/button";
+	import { Checkbox } from "@smui/core/checkbox";
+	import { StringListToFilter } from "@smui/core/common/functions";
+	import { FormField } from "@smui/core/form-field";
+	import { Option, Select } from "@smui/core/select";
+	import { Slider } from "@smui/core/slider";
 	import {
 		Configurator,
 		generateSvelteCode,

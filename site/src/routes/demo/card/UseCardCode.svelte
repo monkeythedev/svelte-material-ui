@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { AspectRatio } from "@smui/card";
+	import { AspectRatio } from "@smui/core/card";
 	import { ActionsLayout } from "./_CardConfigurator.svelte";
 
 	export let showTitle: boolean = false;
@@ -30,7 +30,7 @@
 			horizontalLayout
 		)}
 		${getActionsCode(actionsLayout)}
-	`
+	`;
 
 	function getBodyCode(
 		showBodyTitleValue: typeof showBodyTitle,
@@ -156,7 +156,12 @@
 		}
 
 		function getActionButtonsCode() {
-			if (actionsLayoutValue !== 'single' && actionsLayoutValue !== 'multi' && actionsLayoutValue !== 'all') return "";
+			if (
+				actionsLayoutValue !== "single" &&
+				actionsLayoutValue !== "multi" &&
+				actionsLayoutValue !== "all"
+			)
+				return "";
 
 			return `
 					<ActionButtons>
@@ -167,11 +172,11 @@
 								: ""
 						}
 					</ActionButtons>
-			`
+			`;
 		}
 
 		function getActionIconsCode() {
-			if (actionsLayout !== 'icons' && actionsLayout !== 'all') return "";
+			if (actionsLayout !== "icons" && actionsLayout !== "all") return "";
 
 			return `
 					<ActionIcons>
@@ -186,7 +191,7 @@
 							<Icon>more_vert</Icon>
 						</IconButton>
 					</ActionIcons>
-			`
+			`;
 		}
 
 		return `
