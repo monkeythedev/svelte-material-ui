@@ -24,7 +24,7 @@
 	"files": [],
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/hperrin/svelte-material-ui.git"
+		"url": "git+https://github.com/monkeythedev/svelte-material-ui.git"
 	},
 	"author": "Hunter Perrin <hperrin@gmail.com>",
 	"bugs": {

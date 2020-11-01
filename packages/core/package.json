@@ -1,5 +1,5 @@
 {
-	"name": "@smui/typography",
+	"name": "@monkeythedev/core",
 	"version": "2.0.0-beta.0",
 	"description": "Svelte Material UI - Core",
 	"keywords": [
@@ -15,11 +15,12 @@
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"publishConfig": {
-		"access": "public"
+		"access": "public",
+		"registry": "https://npm.pkg.github.com/"
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/hperrin/svelte-material-ui.git"
+		"url": "git+https://github.com/monkeythedev/svelte-material-ui.git"
 	},
 	"author": "Hunter Perrin <hperrin@gmail.com>",
 	"contributors": [
