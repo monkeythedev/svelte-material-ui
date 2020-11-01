@@ -1,4 +1,4 @@
-import { createContextPropBuilder } from "@smui/common/src";
+import { createContextPropBuilder } from "../../context";
 
 const [setIconBehaviour, getIconBehaviour] = createContextPropBuilder<
 	IconBehaviour

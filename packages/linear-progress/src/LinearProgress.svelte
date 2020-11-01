@@ -1,6 +1,6 @@
 <script lang="ts">
 	//#region Base
-	import { DOMEventsForwarder } from "@smui/common/actions/DOMEventsForwarder";
+	import { DOMEventsForwarder } from "@smui/common/actions";
 	const forwardDOMEvents = DOMEventsForwarder();
 	let className = "";
 	export { className as class };
@@ -15,7 +15,7 @@
 	// LinearProgress
 	import { MDCLinearProgress } from "@material/linear-progress";
 	import { onMount, onDestroy } from "svelte";
-	import { UseDebounce } from "@smui/common/src/hooks";
+	import { UseDebounce } from "@smui/common/hooks";
 	import { getCreateMDCLinearProgressInstance } from "./LinearProgressContext";
 
 	export let indeterminate: boolean = false;
@@ -77,6 +77,7 @@
 
 <div
 	bind:this={dom}
+	{...props}
 	{id}
 	class="
     mdc-linear-progress

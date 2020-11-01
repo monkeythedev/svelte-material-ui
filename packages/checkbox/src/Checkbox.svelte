@@ -29,8 +29,8 @@
 		getCheckboxBehaviour,
 		getDisableCheckboxMDCIstance,
 	} from "./CheckboxContext";
-	import { getFormFieldContext } from "@smui/form-field/src/FormFieldContext";
-	import { Selectable } from "@smui/common/src/hoc";
+	import { getFormFieldContext } from "@smui/form-field";
+	import { Selectable } from "@smui/common/hoc";
 	import { createEventDispatcher } from "svelte";
 	//#endregion
 

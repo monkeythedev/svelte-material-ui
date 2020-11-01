@@ -11,7 +11,7 @@
 
 	// Icon
 	import { GraphicElement } from "@smui/common/components";
-	import { parseClassList } from "@smui/common/src/functions";
+	import { parseClassList } from "@smui/common/functions";
 </script>
 
 <svelte:options immutable={true} />

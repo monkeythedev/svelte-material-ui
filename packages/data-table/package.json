@@ -28,10 +28,12 @@
 	"license": "Apache-2.0",
 	"dependencies": {
 		"@material/data-table": "^7.0.0",
-		"@smui/checkbox": "^1.0.0",
-		"@smui/select": "^1.0.0",
-		"@smui/icon-button": "^1.0.0",
-		"@smui/common": "^1.0.0"
+		"@smui/checkbox": "file:../checkbox",
+		"@smui/select": "file:../select",
+		"@smui/icon-button": "file:../icon-button",
+		"@smui/common": "file:../common",
+		"@smui/dialog": "file:../dialog",
+		"@smui/linear-progress": "file:../linear-progress"
 	},
 	"devDependencies": {
 		"glob-cmd": "0.0.7",

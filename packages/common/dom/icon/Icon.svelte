@@ -1,6 +1,6 @@
 <script lang="ts">
 	// Base
-	import { DOMEventsForwarder } from "@smui/common/actions/DOMEventsForwarder";
+	import { DOMEventsForwarder } from "../../actions";
 	const forwardDOMEvents = DOMEventsForwarder();
 	let className = "";
 	export { className as class };
@@ -55,4 +55,5 @@
     'trailing',
   ])}>
   <slot />
+	<slot />
 </i> -->

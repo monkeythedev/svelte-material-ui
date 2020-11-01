@@ -17,4 +17,4 @@ export {
 	ActionButtons,
 	ActionIcons,
 };
-export * from "./media.svelte";
+export * from "./Media.svelte";

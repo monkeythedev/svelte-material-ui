@@ -1,1 +1,3 @@
-@use "@material/textfield/icon/mdc-text-field-icon";
+@use "@material/textfield/icon";
+
+@include icon.icon-core-styles;

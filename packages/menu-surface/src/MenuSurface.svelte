@@ -6,7 +6,7 @@
 
 <script lang="ts">
 	//#region Base
-	import { DOMEventsForwarder } from "@smui/common/actions/DOMEventsForwarder";
+	import { DOMEventsForwarder } from "@smui/common/actions";
 	const forwardDOMEvents = DOMEventsForwarder();
 	let className = "";
 	export { className as class };
@@ -22,7 +22,6 @@
 	// MenuSurface
 	import { MDCMenuSurface } from "@material/menu-surface";
 	import { onMount, onDestroy } from "svelte";
-	import { setCreateMDCMenuInstance } from "@smui/menu/src/MenuContext";
 	import {
 		createMenuSurfaceContext,
 		getCreateMDCMenuSurfaceInstance,
@@ -38,8 +37,6 @@
 
 	const context$ = createMenuSurfaceContext();
 	let anchorElement: HTMLElement = null; // It seems not worthy to export this prop because makes API confusing since the only anchor that makes sense is the parent
-
-	setCreateMDCMenuInstance(false);
 
 	$: $context$.open = open;
 

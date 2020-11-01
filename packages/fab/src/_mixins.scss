@@ -3,7 +3,7 @@
 @use "@material/theme";
 
 @mixin smui-fab-core-styles($query: feature-targeting.all()) {
-  .smui-fab--color-primary {
-    @include fab.accessible(theme.$primary, $query: $query);
-  } 
-} 
+	.smui-fab--color-primary {
+		@include fab.accessible(theme.$primary, $query: $query);
+	}
+}

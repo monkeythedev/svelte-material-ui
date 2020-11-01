@@ -4,12 +4,10 @@
 
 <script lang="ts">
 	import { Use, UseState } from "../../hooks";
-	import { OnSelectableGroupChange } from "../types";
 	import { initTabIndex } from "../initTabIndex";
 	import { createEventDispatcher, tick } from "svelte";
 	import { arrEquals } from "../../utils";
 	import { SelectableContext, SelectionType } from "../";
-	import A from "@smui/common/dom/A.svelte";
 
 	export let value: any = undefined;
 	export let selectionType: SelectionType = "multi";

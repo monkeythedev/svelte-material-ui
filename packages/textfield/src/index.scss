@@ -1,7 +1,7 @@
 @use "smui-theme";
 @use "@material/textfield/mdc-text-field";
-@use "@smui/floating-label";
-@use "@smui/notched-outline";
+// @use "@smui/floating-label";
+// @use "@smui/notched-outline";
 @use "./mixins";
 
 @include mixins.smui-text-field-core-styles;

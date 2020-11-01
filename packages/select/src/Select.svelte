@@ -6,7 +6,7 @@
 	const _count = count++;
 
 	//#region Base
-	import { DOMEventsForwarder } from "@smui/common/actions/DOMEventsForwarder";
+	import { DOMEventsForwarder } from "@smui/common/actions";
 	const forwardDOMEvents = DOMEventsForwarder();
 	let className = "";
 	export { className as class };
@@ -31,14 +31,13 @@
 	import { FloatingLabel } from "@smui/floating-label";
 	import { LineRipple } from "@smui/line-ripple";
 	import { NotchedOutline } from "@smui/notched-outline";
-	import { setCreateMDCMenuInstance } from "@smui/menu/src/MenuContext";
+	import { setCreateMDCMenuInstance } from "@smui/menu";
 	import { Span } from "@smui/common/dom";
 	import { ExtractNamedSlot } from "@smui/common/components";
-	import { createInputFieldContext } from "@smui/textfield/src/TextFieldContext";
+	import { createInputFieldContext } from "@smui/textfield";
 	import { OnSelectChangeEventDetail, SelectVariant } from "./types";
 	import { UseState } from "@smui/common/hooks";
-	import SelectableGroup from "@smui/common/src/hoc/selectable-group/SelectableGroup.svelte";
-	import { OnSelectableGroupChange } from "@smui/common/hoc";
+	import { OnSelectableGroupChange, SelectableGroup } from "@smui/common/hoc";
 
 	export let ripple: boolean = true;
 	export let disabled: boolean = false;

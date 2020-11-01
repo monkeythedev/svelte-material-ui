@@ -3,4 +3,4 @@ import Label from "./Label.svelte";
 import Icon from "./Icon.svelte";
 
 export { Fab, Label, Icon };
-export * from "./fab.svelte";
+export * from "./Fab.svelte";

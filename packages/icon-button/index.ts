@@ -1,2 +1,2 @@
-import './src/index.scss';
-export * from './src';
+import "./src/index.scss";
+export * from "./src";

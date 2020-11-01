@@ -4,7 +4,7 @@
 
 <script lang="ts">
 	//#region Base
-	import { DOMEventsForwarder } from "@smui/common/events/DOMEventsForwarder";
+	import { DOMEventsForwarder } from "@smui/common/events";
 	const forwardDOMEvents = DOMEventsForwarder();
 	let className = "";
 	export { className as class };
@@ -22,12 +22,11 @@
 	//#region import
 	import { onMount, onDestroy, createEventDispatcher } from "svelte";
 	import { Ripple3 } from "@smui/ripple";
-	import { Li, A, Span } from "@smui/common/dom";
+	import { Li, A } from "@smui/common/dom";
 	import { getListContext } from "../";
-	import { createItemContext, ItemContext, getIsSelectionGroup } from "./";
-	import { getMenuSurfaceContext } from "@smui/menu-surface/src/MenuSurfaceContext";
+	import { createItemContext, ItemContext } from "./";
+	import { getMenuSurfaceContext } from "@smui/menu-surface";
 	import { Selectable, OnSelectableChange } from "@smui/common/hoc";
-	import { MDCDialogCloseEvent } from "@material/dialog";
 	//#endregion
 
 	export let ripple: boolean = true;
@@ -41,8 +40,6 @@
 	export let value: any = undefined;
 
 	const dispatch = createEventDispatcher<{
-		opened: undefined;
-		closed: MDCDialogCloseEvent;
 		selected: ListItemDOMElement;
 	}>();
 

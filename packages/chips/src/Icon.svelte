@@ -1,6 +1,6 @@
 <script lang="ts">
 	// Base
-	import { DOMEventsForwarder } from "@smui/common/events/DOMEventsForwarder";
+	import { DOMEventsForwarder } from "@smui/common/events";
 	const forwardDOMEvents = DOMEventsForwarder();
 	let className = undefined;
 	export { className as class };
@@ -17,7 +17,7 @@
 		GraphicElement,
 		GraphicType,
 	} from "@smui/common/components";
-	import { parseClassList } from "@smui/common/src/functions";
+	import { parseClassList } from "@smui/common/functions";
 	import { onMount, tick } from "svelte";
 	import { getChipContext } from "./ChipContext";
 	import { getChipSetContext } from "./ChipSetContext";

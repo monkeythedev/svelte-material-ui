@@ -8,48 +8,48 @@ https://github.com/material-components/material-components-web/issues/31
 @use "@material/theme/functions" as theme-functions;
 @use "@material/theme/variables" as theme-variables;
 
-@mixin smui-list-core-styles($query: functions.all()) { 
-  $feat-structure: functions.create-target($query, structure);
+@mixin smui-list-core-styles($query: functions.all()) {
+	$feat-structure: functions.create-target($query, structure);
 
-  .smui-list--three-line {
-    .mdc-list-item__text {
-      @include mixins.targets($feat-structure) {
-        align-self: flex-start;
-      }
-    }
+	.smui-list--three-line {
+		.mdc-list-item__text {
+			@include mixins.targets($feat-structure) {
+				align-self: flex-start;
+			}
+		}
 
-    .mdc-list-item {
-      @include mixins.targets($feat-structure) {
-        height: 88px;
-      }
-    }
+		.mdc-list-item {
+			@include mixins.targets($feat-structure) {
+				height: 88px;
+			}
+		}
 
-    &.mdc-list--dense {
-      .mdc-list-item {
-        @include mixins.targets($feat-structure) {
-          height: 76px;
-        }
-      }
-    }
-  }
+		&.mdc-list--dense {
+			.mdc-list-item {
+				@include mixins.targets($feat-structure) {
+					height: 76px;
+				}
+			}
+		}
+	}
 
-  .smui-list--horizontal {
-    display: flex;
-    flex-direction: row;
-    padding: 0;
+	.smui-list--horizontal {
+		display: flex;
+		flex-direction: row;
+		padding: 0;
 
-    .mdc-list-divider {
-      $divider-color: if(
-        theme-functions.tone(theme-variables.$background) == "dark",
-        variables.$divider-color-on-dark-bg,
-        variables.$divider-color-on-light-bg
-      );
+		.mdc-list-divider {
+			$divider-color: if(
+				theme-functions.tone(theme-variables.$background) == "dark",
+				variables.$divider-color-on-dark-bg,
+				variables.$divider-color-on-light-bg
+			);
 
-      border-bottom: none;
-      border-left-color: $divider-color;
-      border-left-width: 1px;
-      border-left-style: solid;
-      height: auto;
-    }
-  }
+			border-bottom: none;
+			border-left-color: $divider-color;
+			border-left-width: 1px;
+			border-left-style: solid;
+			height: auto;
+		}
+	}
 }

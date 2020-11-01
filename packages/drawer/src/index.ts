@@ -6,5 +6,6 @@ import Title from "./Title.svelte";
 import Subtitle from "./Subtitle.svelte";
 import Scrim from "./Scrim.svelte";
 
-export * from "./types";
 export { Drawer, AppContent, Content, Header, Title, Subtitle, Scrim };
+export * from "./types";
+export * from "./DrawerContext";

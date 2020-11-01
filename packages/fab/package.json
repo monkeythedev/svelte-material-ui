@@ -1,40 +1,40 @@
 {
-  "name": "@smui/fab",
-  "version": "1.0.0",
-  "description": "Svelte Material UI - Floating Action Button",
-  "keywords": [
-    "svelte",
-    "svelte3",
-    "material-ui",
-    "material-design",
-    "material",
-    "svelte-components",
-    "sveltejs"
-  ],
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "publishConfig": {
-    "access": "public"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/hperrin/svelte-material-ui.git"
-  },
-  "author": "Hunter Perrin <hperrin@gmail.com>",
-  "bugs": {
-    "url": "https://github.com/hperrin/svelte-material-ui/issues"
-  },
-  "license": "Apache-2.0",
-  "dependencies": {
-    "@material/fab": "^7.0.0",
-    "@material/ripple": "^7.0.0",
-    "@material/feature-targeting": "^7.0.0",
-    "@smui/common": "^1.0.0",
-    "@smui/ripple": "^1.0.0"
-  },
-  "devDependencies": {
-    "glob-cmd": "0.0.7",
-    "sass": "^1.26.10"
-  }
+	"name": "@smui/fab",
+	"version": "1.0.0",
+	"description": "Svelte Material UI - Floating Action Button",
+	"keywords": [
+		"svelte",
+		"svelte3",
+		"material-ui",
+		"material-design",
+		"material",
+		"svelte-components",
+		"sveltejs"
+	],
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/hperrin/svelte-material-ui.git"
+	},
+	"author": "Hunter Perrin <hperrin@gmail.com>",
+	"bugs": {
+		"url": "https://github.com/hperrin/svelte-material-ui/issues"
+	},
+	"license": "Apache-2.0",
+	"dependencies": {
+		"@material/fab": "^7.0.0",
+		"@material/ripple": "^7.0.0",
+		"@material/feature-targeting": "^7.0.0",
+		"@smui/common": "file:../common",
+		"@smui/ripple": "file:../ripple"
+	},
+	"devDependencies": {
+		"glob-cmd": "0.0.7",
+		"sass": "^1.26.10"
+	}
 }

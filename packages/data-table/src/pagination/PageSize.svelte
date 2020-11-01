@@ -8,8 +8,8 @@
 
 <script lang="ts">
 	//#region Base
-	import { parseClassList } from "@smui/common/src/functions";
-	import { DOMEventsForwarder } from "@smui/common/actions/DOMEventsForwarder";
+	import { parseClassList } from "@smui/common/functions";
+	import { DOMEventsForwarder } from "@smui/common/actions";
 	const forwardDOMEvents = DOMEventsForwarder();
 	let className = undefined;
 	export { className as class };
@@ -30,7 +30,8 @@
 	export let pageSizeOptions: number[] = [10, 20, 50];
 	export let pageSize: number = pageSizeOptions[0];
 
-	$: if (pageSizeOptions == null || pageSizeOptions.length === 0) pageSizeOptions = [10, 20, 50];
+	$: if (pageSizeOptions == null || pageSizeOptions.length === 0)
+		pageSizeOptions = [10, 20, 50];
 	$: if (pageSize == null) pageSize = pageSizeOptions[0];
 
 	const dispatch = createEventDispatcher<{

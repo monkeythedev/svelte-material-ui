@@ -1,39 +1,39 @@
 <script lang="ts">
-  // import { onDestroy } from "svelte";
-  import { Use } from "@smui/common/hooks";
+	// import { onDestroy } from "svelte";
+	import { Use } from "../hooks";
 
-  export let target: HTMLElement;
+	export let target: HTMLElement;
 
-  // let dom: HTMLDivElement;
+	// let dom: HTMLDivElement;
 
-  // onDestroy(() => {
-  //   target?.removeChild(dom);
-  // });
+	// onDestroy(() => {
+	//   target?.removeChild(dom);
+	// });
 
-  // function init() {
-  //   target?.appendChild(dom);
-  // }
-  
-  let dom: HTMLDivElement;
+	// function init() {
+	//   target?.appendChild(dom);
+	// }
 
-  function init() {
-    while(dom.firstChild) {
-      target.appendChild(dom.firstChild);
-    }
-  }
+	let dom: HTMLDivElement;
+
+	function init() {
+		while (dom.firstChild) {
+			target.appendChild(dom.firstChild);
+		}
+	}
 </script>
 
 <style>
-  .portal {
-    display: none;
-  }
+	.portal {
+		display: none;
+	}
 
-  /* .portal-wrapper {
+	/* .portal-wrapper {
     display: contents;
   } */
 </style>
 
-<Use once effect hook={init} when={!!target}></Use>
+<Use once effect hook={init} when={!!target} />
 
 <!-- {#if target}
   <div class="portal">
@@ -44,5 +44,5 @@
 {/if} -->
 
 <div class="portal" bind:this={dom}>
-  <slot />
+	<slot />
 </div>

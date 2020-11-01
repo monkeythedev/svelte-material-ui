@@ -1,5 +1,5 @@
+@use "smui-theme";
 @use "@material/list";
-@use "@smui/ripple";
 @use "./mixins";
 
 @include list.core-styles();

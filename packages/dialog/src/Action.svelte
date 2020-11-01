@@ -4,8 +4,8 @@
 
 <script lang="ts">
 	//#region Base
-	import { parseClassList } from "@smui/common/src/functions";
-	import { DOMEventsForwarder } from "@smui/common/events/DOMEventsForwarder";
+	import { parseClassList } from "@smui/common/functions";
+	import { DOMEventsForwarder } from "@smui/common/events";
 	const forwardDOMEvents = DOMEventsForwarder();
 	let className = undefined;
 	export { className as class };

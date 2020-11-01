@@ -4,7 +4,7 @@
 
 <script lang="ts">
 	//#region Base
-	import { DOMEventsForwarder } from "@smui/common/events/DOMEventsForwarder";
+	import { DOMEventsForwarder } from "@smui/common/events";
 	const forwardDOMEvents = DOMEventsForwarder();
 	let className = undefined;
 	export { className as class };
@@ -28,14 +28,14 @@
 		ListRole,
 	} from "./ListContext";
 	import { ItemContext } from "./item";
-	import { getMenuSurfaceContext } from "@smui/menu-surface/src/MenuSurfaceContext";
-	import { getDrawerContext } from "@smui/drawer/src/DrawerContext";
+	import { getMenuSurfaceContext } from "@smui/menu-surface";
+	import { getDrawerContext } from "@smui/drawer";
 	import {
 		SelectableGroup,
 		SelectionType,
 		OnSelectableGroupChange,
 	} from "@smui/common/hoc";
-	import { getDialogContext } from "@smui/dialog";
+	import { getDialogContext } from "../../../packages/dialog"; // TODO: fix circular dep
 	import { setDisableCheckboxMDCIstance } from "@smui/checkbox";
 	//#endregion
 
