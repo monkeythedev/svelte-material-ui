@@ -1,1 +1,1 @@
-#New repo: https://github.com/svelte-material-design
+# New repo: https://github.com/svelte-material-design
